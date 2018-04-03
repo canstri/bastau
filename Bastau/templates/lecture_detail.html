@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load urlify %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}
+{{ instance.title }} | {{ block.super }}
+{% endblock head_title %}
+
+
+{% block content %}
+<div class='ui container'>
+    <div class="ui list">
+        <a class="button ui blue" href='{{ instance.content_object.get_absolute_url }}'>
+            <i class="fas fa-chevron-circle-left"></i> Back to course
+        </a>
+        <br><br>
+        <h1 class="oneline">Lecture {{ instance.title }}</h1>
+        <h1 style="color: gold" class="oneline spacex2"> 
+            {% if pass_lecture == 0 %}
+                <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+            {% endif %}
+            {% if pass_lecture == 1 %}
+                <i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+            {% endif %}
+            {% if pass_lecture == 2 %}
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+            {% endif %}
+            {% if pass_lecture == 3 %}
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            {% endif %}
+        </h1>
+        <h3 class="oneline spacex2">Solved {{ number_of_solved }} of {{ instance.problems|length }} problems</h3>
+        <h4>Author of lecture: <a href="{{ instance.get_profile }}">{{ instance.user.username }}</a></h4>
+
+        {% if staff == "yes" %}
+        <a href='{{ instance.get_delete_url }}' style="color: red;" class="">Delete</a>
+        {% endif %}
+        <h5>{{ instance.content }}</h5>
+    </div>
+    <div class="ui grid">
+    <div class="ten wide column">
+        <table class="ui celled table">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Status</th>
+            {% if staff == 'yes' %}        
+                <th>Action</th>
+            {% endif %}    
+            </tr>
+            </thead>
+            <tbody>
+            {% for element_of_user in array_of_user %}
+
+            <tr>
+
+                <td><a href='{{ element_of_user.0.get_absolute_url }}' class="item"><span>{{ element_of_user.0.title }}</span>
+                </a>
+                </td>
+                <td>
+                    {% if is_auth == True %}
+                    {% if element_of_user.1.0.solved == False %}
+                    <span class="item">Not solved</span>
+                    {% else %}
+                    <span class="item">Solved</span>
+                    {% endif %}
+                    {% endif %}
+                </td>
+                {% if staff == "yes" %}
+                    <td>
+                        <a href='{{ element_of_user.0.get_delete_url }}' class="item">Delete</a>
+                    </td>
+                {% endif %}
+
+            </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+    </div>
+    {% if staff == "yes" %}
+    <h4 style="color: red"> Staff only</h4><h4>Create new Problem:</h4>
+    <br>
+    <form class="comment_form" method="POST" action='' enctype='multipart/form-data'> {% csrf_token %}
+        <div class="ui form" id="submit-problem">
+            {{ create_problem_form|crispy }}
+        </div>
+        <div class="ui input">
+            <input type='submit' class='ui button green' style="margin-top:20px" value='Create problem'>
+        </div>
+    </form>
+    {% endif %}
+</div>
+
+
+{% endblock content %}

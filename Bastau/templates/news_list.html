@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<div class='ui container'>
+    <div class="ui grid">
+        <div class="ui horizontal list twelve wide column">
+
+            {% if staff == "yes" %}
+            <h3 style="color: red"> Staff only: <a class="ui button red" href='{% url "news:create" %}'>Create Post</a>
+            </h3>
+            {% endif %}
+
+        </div>
+  <!--      <div class='four wide column' style="padding-left: 10px">
+            <form method='GET' action=''>
+                <div class="ui action input">
+                    <input type='text' name='q' placeholder='Search news' value='{{ request.GET.q }}'/>
+                    <button class="ui button" type="submit">Search</button>
+                </div>
+            </form>
+
+        </div>-->
+    </div>
+
+
+    {% for obj in object_list %}
+    <div class="ui segment" style="width:70%;">
+
+        {% if obj.draft %}<h3>Staff only: Draft</h3>{% endif %} {% if obj.publish > today %}<h3>Staff Only: Future
+        Post</h3>{% endif %}
+
+
+        <a href="{{ obj.get_author }}">{{ obj.user.username }}</a>
+        ({{ obj.publish }})
+
+        <h1 style="margin-top: 10px;">
+            <a class="post-title" href='{{ obj.get_absolute_url }}'>{{ obj.title }}</a>
+        </h1>
+
+
+        {% if staff == "yes" %}
+        <a href='{{ obj.get_update_url }}'>Edit</a> |
+        <a href='{{ obj.get_delete_url }}'>Delete</a>
+        {% endif %}
+
+        <p>{{ obj.get_markdown|truncatechars_html:120}}</p>
+
+            {% if obj.image %}
+                <img src='{{ obj.image.url }}'/>
+            {% endif %}
+        <!--{% if obj.image %}
+            <img src='{{ obj.image.url }}'/>
+        {% endif %}-->
+
+        <br>
+        <div class="more" style="margin-bottom: 20px;">
+            <a class="ui button green" href="{{ obj.get_absolute_url }}">Read more<i class="angle right icon"></i></a>
+        </div>
+
+
+        <div class="ui horizontal list">
+
+            <a href=""><i class="fas fa-arrow-up item" style="font-size: 15px;"></i></a>
+            <p class="oneline likes_count space item" style="font-size: 18px;position: relative;top: -3px;margin-left: 7px;">{{ obj.likes }} </p>
+            <a href=""><i class="fas fa-arrow-down item" style="font-size: 15px;margin-left: 7px;"></i></a>
+
+            
+            <a class="item btn btn-default" href="{{ obj.get_absolute_url }}"
+            style="position: relative;
+                   top: -3px;
+                   font-size: 17px;
+                   margin-left: 4px;
+                   color:black"
+            ><i class="fas fa-comment item" style="font-size: 15px; margin-left: 20px;"></i> {{ obj.comments.count }}</a>
+        </div>
+        <!--  <div class='post-foot'>
+
+          </div>-->
+    </div>
+    {% endfor %}
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if object_list.has_previous %}
+                <a href="?{{ page_request_var }}={{ object_list.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.
+            </span>
+
+            {% if object_list.has_next %}
+                <a href="?{{ page_request_var }}={{ object_list.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">next</a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+
+
+{% endblock content %}

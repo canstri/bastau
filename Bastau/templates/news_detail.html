@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+{% load urlify %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}
+{{ instance.title }} | {{ block.super }}
+{% endblock head_title %}
+
+
+{% block content %}
+<style type="text/css">
+    .target-news {
+        color: #ff7477 !important;
+    }
+</style>
+
+<div class='ui container'>
+    <div class="ui list">
+        <a class="button ui blue" href='{% url "news:list" %}'>
+            <i class="fas fa-chevron-circle-left"></i> Back to list
+        </a>
+        {% if staff == "yes" %}
+        <h3 style="color: red;"> Staff only: <a class="button ui green" href='{% url "news:create" %}'>Create Post</a>
+        </h3>
+        {% endif %}
+
+        <div class="ui segment">
+            <a href="{{ instance.get_author }}">{{ instance.user.username }}</a>({{ instance.publish }})
+            <h1 style="margin-top: 10px;">{{ title }}</h1>
+            {{ instance.get_markdown }}
+            {% if instance.image %}
+            <img src='{{ instance.image.url }}'/>
+            {% endif %}
+
+
+        </div>
+
+
+        {% if staff == "yes" %}
+        <a href='{{ instance.get_update_url }}' class="">Edit</a> |
+        <a href='{{ instance.get_delete_url }}' style="color: red;" class="space">Delete</a>
+        {% endif %}
+
+
+
+        <div class="ui segment">
+          <!--  <p class='lead'>
+                {{ comments.count }} Comment{% if comments.count > 1 or comments.count == 0 %}s{% endif %}
+            </p>-->
+            {% if is_auth == False %}
+            Please, <a href='{% url "login" %}'>login</a> to comment other users.
+            <br>
+            <br>
+            {% endif %}
+
+           <!-- {% for comment in comments_parents %}
+
+
+           &lt;!&ndash; {% if comment.author.image %}
+            <a href="{{ comment.get_profile }}">
+                <img class="user_img_comments" src="{{ comment.author.image.url }}" style="    width: 40px;
+                height: 30px;">
+            </a>
+            {% endif %}
+
+
+            <a href="{{ comment.get_profile }}">
+                {{ comment.user }}
+            </a>
+            <p>{{ comment.content }}</p>
+            <div class="small-details" style="margin-bottom:20px">
+                {{ comment.timestamp|timesince }} ago
+                {% if is_auth == True %}
+                <a class='button ui green' href='#'>
+                    Reply
+                </a>
+                {% endif %}
+                {% if request.user == comment.user or staff == "yes" %} <a href='{{ comment.get_delete_url }}'
+                                                                           class="ui red button">Delete</a>
+                {% endif %}
+            </div>
+            {% if is_auth == True %}
+            <div class='comment-reply'>
+                <form method="POST" action="." enctype="multipart/form-data"> {% csrf_token %}
+                    {{ comment_form }}
+                    <br><br>
+                    <input type='hidden' name='parent_id' value='{{ comment.id }}'>
+                    <input type='submit' value='Reply' class='ui button green'>
+                </form>
+            </div>
+            {% endif %}
+
+            {% for child_comment in comment.children %}
+
+            {% if child_comment.author.image %}
+            <a href="{{ child_comment.get_profile }}">
+                <img class="user_img_comments" src="{{ child_comment.author.image.url }}">
+            </a>
+            {% endif %}
+
+            <a href="{{ child_comment.get_profile }}">{{ child_comment.user }}</a>
+            <p>{{ child_comment.content }}</p>
+            <div class="small-details">{{ child_comment.timestamp|timesince }} ago
+                {% if is_auth == True %}
+                <a class='comment-children-reply-btn' href='#'>
+                    | Reply
+                </a>
+                {% endif %}
+                {% if request.user == child_comment.user or staff == "yes"%}
+                | <a href='{{ child_comment.get_delete_url }}'>Delete</a>
+                {% endif %}
+            </div>
+            {% if is_auth == True %}
+            <div class='comment-reply'>
+                <form method="POST" action="."> {% csrf_token %}
+                    {{ comment_form }}
+                    <br><br>
+                    <input type='hidden' name='parent_id' value='{{ comment.id }}'>
+                    <input type='submit' value='Reply' class='ui button green'>
+                </form>
+            </div>
+            {% endif %}&ndash;&gt;
+            {% endfor %}
+
+
+            {% endfor %}-->
+            <div class="ui comments">
+                <h3 class="ui dividing header">Comments</h3>
+                <div class="comment">
+                    <div class="content" style="    margin: 0;">
+                        <a class="author">Matt</a>
+                        <div class="metadata">
+                            <span class="date">Today at 5:42PM</span>
+                        </div>
+                        <div class="text">
+                            How artistic!
+                        </div>
+                        <div class="actions">
+                            <a class="reply">Reply</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="comment">
+                    <div class="content" style="    margin: 0;">
+                        <a class="author">Elliot Fu</a>
+                        <div class="metadata">
+                            <span class="date">Yesterday at 12:30AM</span>
+                        </div>
+                        <div class="text">
+                            <p>This has been very useful for my research. Thanks as well!</p>
+                        </div>
+                        <div class="actions">
+                            <a class="reply">Reply</a>
+                        </div>
+                    </div>
+                    <div class="comments">
+                        <div class="comment">
+                            <div class="content" style="    margin: 0;">
+                                <a class="author">Jenny Hess</a>
+                                <div class="metadata">
+                                    <span class="date">Just now</span>
+                                </div>
+                                <div class="text">
+                                    Elliot you are always so right :)
+                                </div>
+                                <div class="actions">
+                                    <a class="reply">Reply</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="comment">
+                    <div class="content" style="    margin: 0;">
+                        <a class="author">Joe Henderson</a>
+                        <div class="metadata">
+                            <span class="date">5 days ago</span>
+                        </div>
+                        <div class="text">
+                            Dude, this is awesome. Thanks so much
+                            <i class="disabled users icon"></i>
+                        </div>
+                        <div class="actions">
+                            <a class="reply">Reply</a>
+                        </div>
+                    </div>
+                </div>
+                <form class="ui reply form">
+                    <div class="field">
+                        <textarea></textarea>
+                    </div>
+                    <div class="ui blue submit icon button">
+                        Add Reply
+                    </div>
+                </form>
+            </div>
+            {% if is_auth == True %}
+            <form class="comment_form" method="POST" action='' enctype='multipart/form-data'> {% csrf_token %}
+                {{ comment_form }}
+                <br>
+                <input type='submit' class='ui button green' value='Post comment'>
+            </form>
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock content %}

@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% load urlify %}
+{% load crispy_forms_tags %}
+{% block head_extra %}
+{{ form.media }}
+{% endblock head_extra %}
+
+{% block head_title %}
+{{ instance.title }} | {{ block.super }}
+{% endblock head_title %}
+
+
+{% block content %}
+
+
+<div class='ui container' id="course-detail">
+
+    <a class="button ui blue" href='{% url "courses:list" %}'>
+        <i class="angle left icon"></i>Back to course list
+    </a>  
+    <div>
+        <div class="ui horizontal list course-info">
+            <h1 class="item title-course">{{ instance.title }} </h1>
+            <div class="item star-rating">
+                {% if is_course_passed == 0 %}
+                <i class="icon star outline"></i><i class="icon star outline"></i><i class="icon star outline"></i>
+                {% endif %}
+                {% if is_course_passed == 1 %}
+                <i class="icon star "></i><i class="icon star outline"></i><i class="icon star outline"></i>
+                {% endif %}
+                {% if is_course_passed == 2 %}
+                <i class="icon star "></i><i class="icon star "></i><i class="icon star outline"></i>
+                {% endif %}
+                {% if is_course_passed == 3 %}
+                <i class="icon star "></i><i class="icon star "></i><i class="icon star "></i>
+                {% endif %}
+            </div>
+        </div>
+
+
+        <div class="course-lvl">
+            Level:
+            {% if instance.level == 1 %}
+                <span href="">Easy</span>
+            {% endif %}
+            {% if instance.level == 2 %}
+                <span href="">Middle</span>
+            {% endif %}
+            {% if instance.level == 3 %}
+                <span href="">Hard</span>
+            {% endif %}
+        </div>
+
+        {% if staff == "yes" %} 
+            <a href='{{ instance.get_update_url }}' class="ui tiny button">Edit</a>
+            <a href='{{ instance.get_delete_url }}' class="ui tiny button">Delete</a>
+        {% endif %}
+        <div class="course-content">
+            <p>{{ instance.content }}</p>
+        </div>
+        {% if instance.image %}
+            <img style="width: 80px;" class="" src='{{ instance.image.url }}'/>
+        {% endif %}
+    </div>
+
+    {% for obj in array_of_user %}
+            <div class="ui segment" style="width:70%;">
+                {% if obj.0.draft %}<h4 style="color: red">Staff only: Draft</h4>{% endif %} {% if obj.0.publish > today %}<h4>Staff Only: Future Olympiad</h4>{% endif %}
+                {% if obj.0.image %}
+                    <a class="" href='{{ obj.0.get_absolute_url }}'><img style="width: 80px;" class="olymp-image" src='{{ obj.0.image.url }}'/></a>
+                {% endif %}
+                <h2 style="margin-top: 0px;" class="">
+                    <a class="post-title" href='{{ obj.0.get_absolute_url }}'>{{ obj.0.title }}</a> 
+                </h2>
+                <div class="ui horizontal list course-info">
+                    <div class="item star-rating">
+                        {% if obj.1.passed == 0 %}
+                            <i class="icon star outline"></i><i class="icon star outline"></i><i class="icon star outline"></i>
+                        {% endif %}
+                        {% if obj.1.passed == 1 %}
+                            <i class="icon star "></i><i class="icon star outline"></i><i class="icon star outline"></i>
+                        {% endif %}
+                        {% if obj.1.passed == 2 %}
+                            <i class="icon star "></i><i class="icon star "></i><i class="icon star outline"></i>
+                        {% endif %}
+                        {% if obj.1.passed  == 3 %}
+                            <i class="icon star "></i><i class="icon star"></i><i class="icon star "></i>
+                        {% endif %}
+                    </div>
+                    <h3 class=" spacex2">Solved {{ obj.1.passed }} of {{ obj.0.problems|length }} problems</h3>
+                    <h5 class="">Author: <a href="{{ obj.0.get_profile }}">{{ obj.0.user.username }}</a></h5>
+                    <h5 class="">Level: 
+                        {% if obj.0.level == 1 %}
+                            <a href="">Easy</a>
+                        {% endif %}
+                        {% if obj.0.level == 2 %}
+                            <a href="">Middle</a> 
+                        {% endif %}
+                        {% if obj.0.level == 3 %}
+                            <a href="">Hard</a>
+                        {% endif %}
+                    </h5>
+
+                    {% if staff == "yes" %}
+                        <a class="" href='{{ obj.get_update_url }}'>Edit</a>
+                        <a class="space" style="color: red" href='{{ obj.0.get_delete_url }}'>Delete</a>
+                    {% endif %}
+                </div>
+            </div>
+    {% endfor %}
+
+
+    {% if staff == "yes" %} 
+       <h4 style="color: red"> Staff only</h4><h4>Create new Lecture:</h4>
+        <form class="comment_form" method="POST" action='' enctype='multipart/form-data'> {% csrf_token %}
+            <div class="ui form" id="course-submit">
+                {{ form|crispy }}
+                <div class="ui input">
+                    <input type='submit' class='ui button green' style="margin-top:20px" value='Create Lecture' >
+                </div>
+            </div>
+
+        </form>
+ 
+    {% endif %}   
+
+
+</div>
+
+{% endblock content %}
