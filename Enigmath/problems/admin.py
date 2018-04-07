@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from .models import Problem
-from .models import CheckProblem
+from .models import CheckProblem, Lemma
 
 
 class ProblemModelAdmin(admin.ModelAdmin):
@@ -21,7 +21,13 @@ class CheckProblemModelAdmin(admin.ModelAdmin):
     search_fields = ["user", "problem_id"]
     class Meta:
         model = CheckProblem
+class LemmaModelAdmin(admin.ModelAdmin):
+    list_display = ["id", "name"]
+    list_display_links = ["name"]
+    class Meta:
+        model = Lemma
 
 admin.site.register(Problem, ProblemModelAdmin)
 
 admin.site.register(CheckProblem, CheckProblemModelAdmin)
+admin.site.register(Lemma, LemmaModelAdmin)

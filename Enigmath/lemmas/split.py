@@ -17,7 +17,7 @@ def splitting(string):
             #i += 2
             skip = True
             continue
-        elif string[i] == ">" or string[i] == "<" or string[i] == "=":
+        elif string[i] == ">" or string[i] == "<" or string[i] == "=" or string[i] == "#":
             met = True
             znak = string[i]
             #i += 2
@@ -28,10 +28,7 @@ def splitting(string):
         else:
             rhs += string[i]
 
-#    print (lhs, rhs, znak)
-    if lhs == '' or rhs == '':
-        return "Wrong"    
     lhs = sympify(lhs)
     rhs = sympify(rhs)
-    result_array = [lhs, rhs, znak]
-    return result_array
+    #result_array = [lhs, rhs, znak]
+    return(lhs, rhs, znak)

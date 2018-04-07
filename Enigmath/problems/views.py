@@ -34,7 +34,7 @@ def problem_delete(request, id):
         obj.delete()
         messages.success(request, "This has been deleted.")
         return HttpResponseRedirect(parent_obj_url)
-    
+
     profile = 'admin'
     if request.user.is_authenticated:
         profile = Profile.objects.get(user = request.user.id)
@@ -56,7 +56,7 @@ def problem_thread(request, id):
     except:
         raise Http404
 
-    content_object = obj.content_object 
+    content_object = obj.content_object
     content_id = obj.content_object.id
     initial_data = {
             "content_type": obj.content_type,
@@ -67,7 +67,7 @@ def problem_thread(request, id):
     else:
         messages.warning(request, "You need to authanticate to see problems")
         return HttpResponseRedirect(obj.content_object.get_absolute_url())
-    
+
     expression_form = ExpressionForm(request.POST or None)
     save_problem_form = SaveProblemForm(request.POST or None)
     expr1 = ''
@@ -77,12 +77,12 @@ def problem_thread(request, id):
 
     if len(check_problem.actions) > 0:
         if check_problem.actions[0][1] == 'first_hidden':
-            check_problem.actions.pop(0) 
+            check_problem.actions.pop(0)
             check_problem.save()
     if expression_form.is_valid():
         expr_id = expression_form.cleaned_data.get('exp_id')-1
         if 'delete' in request.POST:
-            check_problem.actions.pop(expr_id) 
+            check_problem.actions.pop(expr_id)
             check_problem.save()
             return HttpResponseRedirect(obj.get_absolute_url())
         if 'use' in request.POST:
@@ -90,18 +90,19 @@ def problem_thread(request, id):
                 'expr2': check_problem.actions[expr_id][0]
             }
             save_problem_form = SaveProblemForm(request.POST or None, initial = init_data)
-        
+
     if save_problem_form.is_valid():
         expr1 = save_problem_form.cleaned_data.get('expr1')
         expr2 = save_problem_form.cleaned_data.get('expr2')
         for i in range (0, len(Lemma.objects.filter())):
-            if action_check == "Correct" and action_check2 == "Correct":
-                break
-            if expr1 != '':    
+            if expr1 != '':
                 action_check =  getattr(LemmaCode, Lemma.objects.filter()[i].name)(expr1)
             if expr2 != '' and expr1 == '':
                 expr1 = expr2
                 action_check = getattr(LemmaCode, Lemma.objects.filter()[i].name)(expr2)
+            print(action_check)
+            if action_check == "Correct" or action_check2 == "Correct":
+                break
         all_solved = True
         for actn in check_problem.actions:
             if actn[1] == 'Need to prove':
@@ -111,10 +112,10 @@ def problem_thread(request, id):
         if all_solved == True:
             check_problem.solved = True
         check_problem.save()
-                                        
+
         if 'save' in request.POST:
             if action_check == '' and action_check2 == '':
-                return HttpResponseRedirect(obj.get_absolute_url()) 
+                return HttpResponseRedirect(obj.get_absolute_url())
             if action_check == '' and action_check2 != '':
                 action_check = action_check2
             found_old = False
@@ -125,16 +126,16 @@ def problem_thread(request, id):
                     break
             if found_old == False:
                 check_problem.actions.append([expr1, action_check])
-            check_problem.save()    
-            return HttpResponseRedirect(obj.get_absolute_url())  
-    
+            check_problem.save()
+            return HttpResponseRedirect(obj.get_absolute_url())
+
     profile = 'admin'
     if request.user.is_authenticated:
         profile = Profile.objects.get(user = request.user.id)
     staff = "no"
     if request.user.is_staff or request.user.is_superuser:
         staff = "yes"
-    
+
     context = {
         "staff":staff,
         "profile":profile,
