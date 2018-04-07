@@ -44,3 +44,25 @@ class LemmaCode(object):
         if status == True:
             return('Correct')
         return('Wrong')
+
+    def finalCheck(input_exp1,input_exp2,input_exp3): #n**3-n =(n-1)*n*(n + 1) Correct
+                                                  #(n-1)*n*(n + 1)#24 Correct
+                                                  # n**3-n#24
+        status = False
+        expressionFirst, statusFirst = splitFinal(input_exp1)
+        expressionSecond, statusSecond = splitFinal(input_exp2)
+
+        partOne, partTwo, sign = splitting(expressionFirst)
+        partThree, dividerOne, sign = splitting(expressionSecond)
+        partFour, dividerTwo, sign = splitting(input_exp3)
+
+        if((factor(partOne) == factor (partThree)) and (statusFirst == statusSecond == 'Correct')
+            and (sympify(partOne) == sympify(partFour)) and (dividerOne == dividerTwo)):
+            status = True
+        if((factor(partTwo) == factor(partThree)) and (statusFirst == statusSecond == 'Correct')
+            and (sympify(partTwo) == sympify(partFour)) and (dividerOne == dividerTwo)):
+            status = True
+
+        if status == True:
+                return('Correct')
+        return('Wrong')
