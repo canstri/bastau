@@ -23,12 +23,19 @@ class LemmaCode(object):
         return('Wrong')
 
     def is_sequence(input_exp):
+        print(input_exp)
         status = False
+
         newStr = str(input_exp)
+        for i in range(len(newStr) - 1):
+            if (newStr[i] == ';'):
+                return('Wrong')
+
         try:
             part1, part2,part3 = newStr.split('*')
+            print(part1)
         except Exception as e:
-            return('Exception')  # later need to change
+            return('Exception')  # later need to change to Wrong
 
         input1 = parse_expr(part1)
         input2 = parse_expr(part2)
@@ -45,9 +52,17 @@ class LemmaCode(object):
             return('Correct')
         return('Wrong')
 
-    def finalCheck(input_exp1,input_exp2,input_exp3): #n**3-n =(n-1)*n*(n + 1) Correct
+
+    def finalCheck(input_exp): #n**3-n =(n-1)*n*(n + 1) Correct
                                                   #(n-1)*n*(n + 1)#24 Correct
                                                   # n**3-n#24
+
+        print(input_exp)
+        try:
+             input_exp1, input_exp2, input_exp3  = input_exp.split(';')
+        except Exception as e:
+            return('Exception')  # later need to change
+
         status = False
         expressionFirst, statusFirst = splitFinal(input_exp1)
         expressionSecond, statusSecond = splitFinal(input_exp2)

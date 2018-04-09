@@ -72,6 +72,7 @@ def problem_thread(request, id):
     save_problem_form = SaveProblemForm(request.POST or None)
     expr1 = ''
     expr2 = ''
+    expr3 = ''
     action_check = ''
     action_check2 = ''
 
@@ -86,23 +87,36 @@ def problem_thread(request, id):
             check_problem.save()
             return HttpResponseRedirect(obj.get_absolute_url())
         if 'use' in request.POST:
-            init_data = {
-                'expr2': check_problem.actions[expr_id][0]
-            }
-            save_problem_form = SaveProblemForm(request.POST or None, initial = init_data)
+            if expr2 == '':
+                expr2 = check_problem.actions[expr_id][0]
+                expr2 += check_problem.actions[expr_id][1]
+            else:
+                expr3 = check_problem.actions[expr_id][0]
+                expr3 += check_problem.actions[expr_id][1]
+            # print("tut:")
+            # print(expr2)
+            # # init_data = {
+            #     'expr2': check_problem.actions[expr_id][0]
+            # }
+            # save_problem_form = SaveProblemForm(request.POST or None, initial = init_data)
 
     if save_problem_form.is_valid():
         expr1 = save_problem_form.cleaned_data.get('expr1')
-        expr2 = save_problem_form.cleaned_data.get('expr2')
+        if expr2 == '':
+            expr2 = save_problem_form.cleaned_data.get('expr2')
+        # print("tut2:")
+        # print(expr2)
         for i in range (0, len(Lemma.objects.filter())):
-            if expr1 != '':
-                action_check =  getattr(LemmaCode, Lemma.objects.filter()[i].name)(expr1)
-            if expr2 != '' and expr1 == '':
-                expr1 = expr2
-                action_check = getattr(LemmaCode, Lemma.objects.filter()[i].name)(expr2)
-            print(action_check)
+            #print(expr3,expr2,expr1)
             if action_check == "Correct" or action_check2 == "Correct":
                 break
+            if expr1 != '' and expr2 == '' and expr3 == '':
+                action_check =  getattr(LemmaCode, Lemma.objects.filter()[i].name)(expr1)
+            if expr2 != '' and expr1 == '' and expr3 == '':
+                action_check = getattr(LemmaCode, Lemma.objects.filter()[i].name)(expr2)
+            if expr1 != '' and expr2 != '' and expr3 != '':
+                expr1 = expr1 + ";" + expr2 + ";" + expr3
+                action_check = getattr(LemmaCode, Lemma.objects.filter()[i].name)(expr1)
         all_solved = True
         for actn in check_problem.actions:
             if actn[1] == 'Need to prove':
@@ -125,7 +139,7 @@ def problem_thread(request, id):
                     found_old = True
                     break
             if found_old == False:
-                check_problem.actions.append([expr1, action_check])
+                check_problem.actions.append([expr1, action_check, 'not_in_task'])
             check_problem.save()
             return HttpResponseRedirect(obj.get_absolute_url())
 
