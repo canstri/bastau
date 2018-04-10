@@ -23,13 +23,14 @@ class LemmaCode(object):
         return('Wrong')
 
     def is_sequence(input_exp):
-        print(input_exp)
-        status = False
 
+        status = False
         newStr = str(input_exp)
-        for i in range(len(newStr) - 1):
-            if (newStr[i] == ';'):
-                return('Wrong')
+        newStr, divider, sign1 = splitting(input_exp)
+        print(sign1)
+        #for i in range(len(newStr) - 1):
+        #    if (newStr[i] == ';'):
+        #        return('Wrong')
 
         try:
             part1, part2,part3 = newStr.split('*')
@@ -57,7 +58,8 @@ class LemmaCode(object):
                                                   #(n-1)*n*(n + 1)#24 Correct
                                                   # n**3-n#24
 
-        print(input_exp)
+
+        print('will try')
         try:
              input_exp1, input_exp2, input_exp3  = input_exp.split(';')
         except Exception as e:
@@ -67,10 +69,10 @@ class LemmaCode(object):
         expressionFirst, statusFirst = splitFinal(input_exp1)
         expressionSecond, statusSecond = splitFinal(input_exp2)
 
-        partOne, partTwo, sign = splitting(expressionFirst)
-        partThree, dividerOne, sign = splitting(expressionSecond)
-        partFour, dividerTwo, sign = splitting(input_exp3)
-
+        partOne, partTwo, sign1 = splitting(expressionFirst)
+        partThree, dividerOne, sign2 = splitting(expressionSecond)
+        partFour, dividerTwo, sign3 = splitting(input_exp3)
+        
         if((factor(partOne) == factor (partThree)) and (statusFirst == statusSecond == 'Correct')
             and (sympify(partOne) == sympify(partFour)) and (dividerOne == dividerTwo)):
             status = True

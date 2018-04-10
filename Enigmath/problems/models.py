@@ -69,12 +69,11 @@ class Problem(models.Model):
 class CheckProblem(models.Model):
     user = models.PositiveIntegerField(null = True)
     problem_id = models.PositiveIntegerField(null = True)
-    actions = ArrayField(ArrayField(models.TextField()), default=[['first', 'first_hidden']])
+    actions = ArrayField(ArrayField(models.TextField()), default=[['first', 'first_hidden', 'not_in_task']])
     solved = models.BooleanField(default=False) 
+    current_string = models.TextField(default = 'de')
 
 
-    # def delete():
-    #     return reverse("problems:exp_delete")
 class Lemma(models.Model):
     name = models.TextField(default='de')
 
