@@ -1,6 +1,7 @@
 from sympy import *
-from lemmas.split import splitting
-from lemmas.splitFinal import splitFinal
+from split import splitting
+from splitFinal import splitFinal
+from containsChar import ContainsChar
 from sympy.parsing.sympy_parser import parse_expr
 class LemmaCode(object):
     def isequal(input_exp):
@@ -22,28 +23,20 @@ class LemmaCode(object):
             return('Correct')
         return('Wrong')
 
-    def is_sequence(input_exp):
+    def is_sequence(input_exp): #uncomment lines in codes.py
 
         status = False
-        newStr = str(input_exp)
-        newStr, divider, sign1 = splitting(input_exp)
-        print(sign1)
-        #for i in range(len(newStr) - 1):
-        #    if (newStr[i] == ';'):
-        #        return('Wrong')
+        expression, divider, sign1 = splitting(input_exp)
+        expression = str(expression)
 
         try:
-            part1, part2,part3 = newStr.split('*')
-            print(part1)
+            part1, part2,part3 = ContainsChar(expression).split('*')
+
         except Exception as e:
             return('Exception')  # later need to change to Wrong
 
-        input1 = parse_expr(part1)
-        input2 = parse_expr(part2)
-        input3 = parse_expr(part3)
-
-        arr = [input1,input2,input3]
-        array = sympify(arr)
+        arr = [int(expand(part1)),int(expand(part2)),int(expand(part3))]
+        array = sorted(arr)
 
         delta = 1
         for index in range(len(array) - 1):
@@ -72,7 +65,7 @@ class LemmaCode(object):
         partOne, partTwo, sign1 = splitting(expressionFirst)
         partThree, dividerOne, sign2 = splitting(expressionSecond)
         partFour, dividerTwo, sign3 = splitting(input_exp3)
-        
+
         if((factor(partOne) == factor (partThree)) and (statusFirst == statusSecond == 'Correct')
             and (sympify(partOne) == sympify(partFour)) and (dividerOne == dividerTwo)):
             status = True
@@ -83,3 +76,4 @@ class LemmaCode(object):
         if status == True:
                 return('Correct')
         return('Wrong')
+    print(is_sequence('(n-1)*n*(n + 1)#24'))

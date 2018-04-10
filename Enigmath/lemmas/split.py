@@ -28,7 +28,7 @@ def splitting(string):
         else:
             rhs += string[i]
 
-    lhs = sympify(lhs)
-    rhs = sympify(rhs)
+    lhs = sympify(lhs) #comment this line
+    rhs = sympify(rhs) #comment this line
     #result_array = [lhs, rhs, znak]
     return(lhs, rhs, znak)
