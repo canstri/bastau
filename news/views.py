@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
+from django.views.generic import RedirectView
 
 from .forms import PostForm
 from .models import Post, Action
@@ -138,7 +139,6 @@ def news_list(request):
         # If page is out of range (e.g. 9999), deliver last page of results.
         queryset = paginator.page(paginator.num_pages)
 
-    likes = Post.likes
     
     profile = 'admin'
     if request.user.is_authenticated:
@@ -158,7 +158,92 @@ def news_list(request):
     return render(request, "news_list.html", context)
 
 
+class PostLikeToggle(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        slug = self.kwargs.get("slug")
+        obj = get_object_or_404(Post, slug=slug)
+        user = self.request.user
+        if user.is_authenticated:
+            if user in obj.likes.all():
+                obj.likes.remove(user)
+            else:
+                if user in obj.dislikes.all():
+                    obj.dislikes.remove(user)
+                obj.likes.add(user)
+        return obj.get_absolute_url()
+class PostDisLikeToggle(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        slug = self.kwargs.get("slug")
+        obj = get_object_or_404(Post, slug=slug)
+        user = self.request.user
+        if user.is_authenticated:
+            if user in obj.dislikes.all():
+                obj.dislikes.remove(user)
+            else:
+                if user in obj.likes.all():
+                    obj.likes.remove(user)
+                obj.dislikes.add(user)
+        return obj.get_absolute_url()
 
+
+
+# from rest_framework.views import APIView
+# from rest_framework.response import Response
+# from rest_framework import authentication, permissions
+
+# class PostLikeAPIToggle(APIView):
+#     authentication_classes = (authentication.SessionAuthentication,)
+#     permission_classes = (permissions.IsAuthenticated,)
+
+#     def get(self, request, slug=None, format=None):
+#         # slug = self.kwargs.get("slug")
+#         obj = get_object_or_404(Post, slug=slug)
+#         url_ = obj.get_absolute_url()
+#         user = self.request.user
+#         updated = False
+#         liked = False
+#         if user.is_authenticated:
+#             if user in obj.likes.all():
+#                 liked = False
+#                 obj.likes.remove(user)
+#             else:
+#                 if user in obj.dislikes.all():
+#                     obj.dislikes.remove(user)
+#                 liked = True
+#                 obj.likes.add(user)
+#             updated = True
+#         data = {
+#             "updated": updated,
+#             "liked": liked
+#         }
+#         return Response(data)
+
+# class PostDisLikeAPIToggle(APIView):
+#     authentication_classes = (authentication.SessionAuthentication,)
+#     permission_classes = (permissions.IsAuthenticated,)
+
+#     def get(self, request, slug=None, format=None):
+#         # slug = self.kwargs.get("slug")
+#         obj = get_object_or_404(Post, slug=slug)
+#         url_ = obj.get_absolute_url()
+#         user = self.request.user
+#         updated = False
+#         disliked = False
+#         if user.is_authenticated:
+#             if user in obj.dislikes.all():
+#                 disliked = False
+#                 obj.dislikes.remove(user)
+#             else:
+#                 if user in obj.likes.all():
+#                     obj.likes.remove(user)
+#                 disliked = True
+#                 obj.dislikes.add(user)
+#             updated = True
+#         data = {
+#             "updated": updated,
+#             "disliked": disliked
+#         }
+#         return Response(data)
 
 
 def news_update(request, slug=None):

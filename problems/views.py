@@ -9,7 +9,7 @@ from .solve_problem_form import CheckProblemForm
 from .expression_form import ExpressionForm
 from .models import Problem, CheckProblem, Lemma
 
-from olymps.models import Olymp
+from olymps.models import Olymp, RatingOlymp
 from lemmas.codes import LemmaCode
 from news.views import create_action
 
@@ -196,6 +196,13 @@ def problem_thread(request, id):
             all_solved = False
         if all_solved == True: #if problem is fully solved 
             if check_problem.solved == False: # if problem was not solved before
+                rating_olymp = RatingOlymp.objects.get_or_create(
+                        user = request.user,
+                        olymp = content_object,
+                    )
+                #print(rating_olymp[0])
+                rating_olymp[0].points.append([str(obj.title), '7'])
+                rating_olymp[0].save()
                 for hashtag in obj.hashtags: 
                     hashtag = hashtag[1:]  # cross out "#" from hashtag name
                     #print("hash:", hashtag)

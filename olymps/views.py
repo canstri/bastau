@@ -9,7 +9,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 
 from .forms import OlympForm
-from .models import Olymp
+from .models import Olymp, RatingOlymp
 
 from problems.models import Problem, CheckProblem
 from problems.views import create_problem

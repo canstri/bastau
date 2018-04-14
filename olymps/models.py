@@ -12,6 +12,7 @@ from markdown_deux import markdown
 from problems.models import Problem
 from django.utils.safestring import mark_safe
 from transliterate import translit, get_available_language_codes
+from django.contrib.postgres.fields import ArrayField
 
 class OlympManager(models.Manager):
     def active(self, *args, **kwargs):
@@ -40,6 +41,8 @@ class Olymp(models.Model):
     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
 
     objects = OlympManager()
+    participants = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name='olymp_participants')
+
 
     def __unicode__(self):
         return self.title
@@ -73,6 +76,10 @@ class Olymp(models.Model):
         content_type = ContentType.objects.get_for_model(instance.__class__)
         return content_type
 
+class RatingOlymp(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete = models.PROTECT)
+    olymp = models.ForeignKey(Olymp, on_delete = models.PROTECT)
+    points = ArrayField(ArrayField(models.TextField()), default=[['first', ' ']])
 
 
 def create_slug(instance, new_slug=None):

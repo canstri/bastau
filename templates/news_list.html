@@ -48,9 +48,9 @@
 
                 <div class="ui grid" id="news-features">
                     <div class="three wide column">
-                        <i class="arrow up icon item"></i>
-                        <span class="oneline likes_count space item">{{ obj.likes }} </span>
-                        <i class="arrow down icon item"></i>
+                        <a href="{{ obj.get_like_url }}"><i class="arrow up icon item"></i></a>
+                        <span class="oneline likes_count space item">{{ obj.likes.count }} </span>
+                        <a href="{{ obj.get_dislike_url }}"><i class="arrow down icon item"></i></a>
                     </div>
                     <div class="three wide column">
                         <i class="eye icon"></i>

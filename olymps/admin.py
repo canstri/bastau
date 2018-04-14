@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Olymp
+from .models import Olymp, RatingOlymp
 
 class OlympModelAdmin(admin.ModelAdmin):
 	list_display = ["title", "start_time", "timestamp"]
@@ -15,3 +15,15 @@ class OlympModelAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Olymp, OlympModelAdmin)
+
+class RatingOlympModelAdmin(admin.ModelAdmin):
+    list_display = ["olymp", "user"]
+    list_display_links = ["olymp"]
+    list_filter = ["olymp", "user"]
+
+    search_fields = ["olymp", "user"]
+    class Meta:
+        model = RatingOlymp
+
+
+admin.site.register(RatingOlymp, RatingOlympModelAdmin)

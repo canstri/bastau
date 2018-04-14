@@ -16,7 +16,6 @@ from transliterate import translit, get_available_language_codes
 from django.urls import reverse
 
 from django.db import models
-from django.contrib.postgres.fields import HStoreField
 from django.contrib.postgres.fields import ArrayField
 
 from accounts.models import Profile

@@ -23,8 +23,8 @@
         <tbody>
             {% for obj in object_list %}
             <tr>
-                <td>1</td>
-                <td class="text-left">{{ obj.user.username }} {% if obj.country %}({{obj.country}}){% endif %}</td>
+                <td>{{ forloop.counter }}</td>
+                <td class="text-left"><a href="{{obj.get_absolute_url}}">{{ obj.user.username }} {% if obj.country %}({{obj.country}}){% endif %}</a></td>
                 <td>{{ obj.rating }}</td>
                 {% for skill in obj.skills %}
                     <td>{{ skill.1 }}</td>
