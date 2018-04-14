@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load urlify %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}
+{{ user }} | {{ block.super }}
+{% endblock head_title %}
+
+
+{% block head_extra %} 
+	{{ form.media }}
+{% endblock head_extra %}
+
+
+{% block content %}
+	<div class="ui container">
+		<div class="ui grid" id="my-profile">
+            <div class="five wide column">
+                <div class="ui raised card">
+                    <div class="image">
+                        {% if hisprofile.image %}
+                        <img src={{ hisprofile.image.url }}>
+                        {% endif %}
+                    </div>
+                    <div class="content">
+                        <div class="header">{{ hisprofile.user }}</div>
+                        <div class="meta">
+                            <p>{{ status }}</p>
+                        </div>
+                        <div class="description">
+
+                            {% if user == hisprofile.user %}
+                                <form method='POST' action='' enctype="multipart/form-data" class="ui form">{% csrf_token %}
+                                    {{ form|crispy }}
+                                    <br>
+                                    <input type='submit' class='ui button green' value='Save' />
+                                </form>
+                            {% else %}
+                            <label>School: {{ school }}</label>
+                            <label>Birthday: {{ birthday }}</label>
+
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="extra content">
+                  <span class="right floated">
+                        Rating: {{ rating }}
+                  </span>
+                    </div>
+                </div>
+                <div class="ui raised card created-problems">
+                    <div class="content created-content">
+                        <div class="header">Created problems:</div>
+                        <div class="description">
+                            {% for problem in problem_set %}
+                            <div class="ui feed">
+                                <div class="event">
+                                    <div class="content">
+                                        <div class="date">
+                                            {{ problem.timestamp|timesince }} ago
+                                        </div>
+                                        <div class="summary">
+                                            <a href="{{ problem.get_absolute_url }}">
+                                                {{ problem.title }}
+                                            </a> in <a href="{{ problem.content_object.get_absolute_url }}">{{ problem.content_object.title }}</a>
+                                            {% if problem.content_type|slugify == "olymp" %}
+                                            olympiad
+                                            {% endif %}
+                                            {% if problem.content_type|slugify == "lecture" %}
+                                            lecture
+                                            {% endif %}
+
+                                            <br>
+                                            {{ problem.content }}
+                                            <hr>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="eleven wide column ui raised card">
+                <div class="ui top attached tabular menu">
+                    <a class="item active" data-tab="first">MY STATS</a>
+                    <a class="item" data-tab="second">GRAPHICS</a>
+                </div>
+                <div class="ui bottom attached tab segment active" data-tab="first">
+                    <div class="ui equal width grid">
+                        <div class="column">
+                            <div class="header-stats text-center"><p>{{ hisprofile.skills.0.0 }}</p></div>
+                            <div class="semicircle green-border"></div>
+                            <div class="number-stats green-s ">
+                                {{ hisprofile.skills.0.1 }}
+                            </div>
+                            {% for skill in hisprofile.number_theory_skills %}
+                                <h5>{{ skill.0 }}  {{ skill.1 }}</h5>
+                            {% endfor %}
+                        
+                        </div>
+                        <div class="column">
+                            <div class="header-stats text-center"><p>{{ hisprofile.skills.1.0 }}</p></div>
+                            <div class="semicircle green-border"></div>
+                            <div class="number-stats green-s ">
+                                {{ hisprofile.skills.1.1 }}
+                            </div>
+                            {% for skill in hisprofile.inequalities_skills %}
+                                <h5>{{ skill.0 }}  {{ skill.1 }}</h5>
+                            {% endfor %}
+                        
+                        </div>
+
+                    </div>
+                </div>
+                <div class="ui bottom attached tab segment" data-tab="second">
+                    <canvas id="myCanvas" width="700" height="300" style="border:1px solid #000000;">
+                        Your browser does not support the HTML5 canvas tag.
+                    </canvas>
+                </div>
+            </div>
+
+
+
+
+		</div>
+	</div>
+
+
+
+	
+{% endblock content %}
+

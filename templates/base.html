@@ -1,0 +1,177 @@
+{% load staticfiles %}
+<!--DOCTYPE html -->
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>{% block head_title %}Bastau{% endblock head_title %}</title>
+
+
+
+	<!-- CSS -->
+	<link href="https://fonts.googleapis.com/css?family=Roboto:400,500&amp;subset=cyrillic" rel="stylesheet">
+	<link rel='stylesheet' href='{% static "css/app.css" %}' />
+	<!-- <link rel="shortcut icon" href='{% static "images/favicon.ico" %}' type="image/png">
+ -->
+
+
+	<link href="https://fonts.googleapis.com/css?family=Anton|Francois+One|Kanit|Oswald" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Changa:800|Montserrat:900" rel="stylesheet">
+
+
+	<script src='{% static "js/scripts.js" %}'></script>
+
+
+	<style>
+		{% block style %}{% endblock style %}
+	</style>
+	{% block head_extra %} {% endblock head_extra %}
+</head>
+
+<body>
+
+<div class="ui inverted menu" id="main-menu">
+	<div class="ui container">
+		<a href='{% url "main:home" %}' class="header item logo">
+			BASTAU ACADEMY
+		</a>
+        <a class="item" href='{% url "news:list" %}'>
+            News
+        </a>
+        <a class="item" href='{% url "olymps:list" %}' >
+            Olympiads
+        </a>
+        <a class="item" href='{% url "main:ratings" %}'>
+            Ratings
+        </a>
+        <a class="item" href='{% url "courses:list" %}' >
+            Courses
+        </a>
+        <a class="item" href='{% url "main:contacts" %}'>
+            Contacts
+        </a>
+        <div class="right menu">
+            <div class="ui right aligned category search item search-block">
+                <div class="ui transparent icon input">
+                    <input class="prompt" type="text" placeholder="Search theorems...">
+                    <i class="search link icon"></i>
+                </div>
+                <div class="results"></div>
+            </div>
+			<div class="item">
+				<div class="ui floating dropdown labeled icon">
+					<i class="bell outline icon notify" style="font-size: 18px;"></i>
+					<div class="menu">
+						<div class="header">
+							Notifications
+						</div>
+						<div class="scrolling menu">
+							<div class="item">
+								<div class="ui red empty circular label"></div>
+								John Weak added you to his friends list.
+							</div>
+							<div class="item">
+								<div class="ui blue empty circular label"></div>
+								Announcement has been reported.
+							</div>
+							<div class="item">
+								<div class="ui black empty circular label"></div>
+								Kuanysh Oteu changed his status to Married.
+							</div>
+							<div class="item">
+								<div class="ui purple empty circular label"></div>
+								Kuanysh Oteu does not recognize his name.
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+            {% if request.user.is_authenticated %}
+            <div class="item">
+                <a href='{{ profile.get_absolute_url }}' class="ui button tiny green-c"><i class="user icon"></i> {{ user }}</a>
+            </div>
+            <div class="item no-before" style="padding-left: 0px;">
+                <a href='{% url "logout" %}' class="ui button tiny green-c"><i class="sign out alternate icon"></i>Logout</a>
+            </div>
+
+            {% else %}
+            <div class="item">
+                <a href='{% url "login" %}' class="ui button tiny">Login</a>
+            </div>
+            <div class="item no-before" style="padding-left: 0px;">
+                <a href='{% url "register" %}' class="ui button tiny">Sign up</a>
+            </div>
+
+            {% endif %}
+
+        </div>
+	</div>
+</div>
+
+
+
+
+
+
+
+{% include "messages_display.html" %}
+<div class='content-container'>
+	{% block content %}{% endblock content %}
+</div>
+
+
+<div class="ui inverted vertical footer segment" id="footer">
+	<div class="ui center aligned container">
+		<div class="ui stackable inverted divided grid">
+			<div class="seven wide column">
+				<h4 class="ui inverted header">Start from yourself</h4>
+				<p>Your motivation creates a great opportunity to be on the top of the world</p>
+			</div>
+			<div class="three wide column">
+				<h4 class="ui inverted header">About</h4>
+				<div class="ui inverted link list">
+					<a href="#" class="item">News</a>
+					<a href="#" class="item">Our team</a>
+					<a href="#" class="item">Our supporters</a>
+					<a href="#" class="item">Our contributors</a>
+				</div>
+			</div>
+			<div class="three wide column">
+				<h4 class="ui inverted header">Contacts</h4>
+				<div class="ui inverted link list">
+					<p href="#" class="item">Write us on mail</p>
+					<a href="#" class="item">enigmath@enigmath.com</a>
+				</div>
+			</div>
+			<div class="three wide column">
+				<h4 class="ui inverted header">Subjects</h4>
+				<div class="ui inverted link list">
+					<a href="#" class="item">Math for silly</a>
+					<a href="#" class="item">Math for old</a>
+					<a href="#" class="item">Math for animals</a>
+					<a href="#" class="item">Math for olympiads</a>
+				</div>
+			</div>
+
+		</div>
+		<div class="ui inverted section divider"></div>
+		<div class="logo-footer centered">ENIGMATH</div>
+		<div class="ui horizontal inverted small divided link list">
+			<a class="item" href="#">Site Map</a>
+			<a class="item" href="#">Contact Us</a>
+			<a class="item" href="#">Terms and Conditions</a>
+			<a class="item" href="#">Privacy Policy</a>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js'></script>
+
+
+
+</body>
+</html>

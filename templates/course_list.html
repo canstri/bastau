@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+{% block head_extra %}
+{{ form.media }}
+{% endblock head_extra %}
+{% block content %}
+
+
+<div class='ui container' id="course-list">
+    <div class="ui grid">
+        <div class=" twelve wide column">
+            <h1>{{ title }}</h1>
+                {% if staff == "yes" %}
+                <h3> Staff only: <a class="ui button tiny" href='{% url "courses:create" %}' >Create Course</a></h3>
+            {% endif %}
+        </div>
+
+
+
+
+        {% for obj in array_of_user %}
+            <div class="ui card text-center" id="card-course">
+                {% if obj.0.draft %}<h4>Staff only: Draft</h4>{% endif %} {% if obj.0.publish > today %}<h4>Staff Only:
+                Future Course</h4>{% endif %}
+
+                <div class="image">
+                    {% if obj.0.image %}
+                    <a href="{{ obj.0.get_absolute_url }}"><img class="olymp-image" src="{{ obj.0.image.url }}"></a>
+                    {% endif %}
+                </div>
+                <div class="content">
+                    <a class="header" href="{{ obj.0.get_absolute_url }}">{{ obj.0.title }}</a>
+                    <div class="star-rating">
+                        {% if obj.1.passed == 0 %}
+                        <i class="icon star outline"></i><i class="icon star outline"></i><i class="icon star outline"></i>
+                        {% endif %}
+                        {% if obj.1.passed == 1 %}
+                        <i class=" icon star"></i><i class="icon star outline"></i><i class="icon star outline"></i>
+                        {% endif %}
+                        {% if obj.1.passed == 2 %}
+                        <i class="icon star"></i><i class="icon star"></i><i class="icon star outline"></i>
+                        {% endif %}
+                        {% if obj.1.passed  == 3 %}
+                        <i class="icon star"></i><i class="icon star"></i><i class="icon star"></i>
+                        {% endif %}
+                    </div>
+                    <div class="course-level">Level:
+                        {% if obj.0.level == 1 %}
+                        <span href="">Easy</span>
+                        {% endif %}
+                        {% if obj.0.level == 2 %}
+                        <span href="">Middle</span>
+                        {% endif %}
+                        {% if obj.0.level == 3 %}
+                        <span href="">Hard</span>
+                        {% endif %}
+                    </div>
+                    <div class="description">
+                        {{ obj.0.content|truncatechars_html:200 }}
+                    </div>
+                    {% if staff == "yes" %}
+                    <a class="ui tiny button green" href='{{ obj.0.get_update_url }}'>Edit</a>
+                    <a href='{{ obj.0.get_delete_url }} 'class="ui tiny button green">Delete</a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
+
+
+
+
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if object_list.has_previous %}
+                <a href="?{{ page_request_var }}={{ object_list.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.
+            </span>
+
+            {% if object_list.has_next %}
+                <a href="?{{ page_request_var }}={{ object_list.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">next</a>
+            {% endif %}
+        </span>
+    </div>
+
+
+
+
+</div>
+
+
+
+{% endblock content %}

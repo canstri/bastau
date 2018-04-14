@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load urlify %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+
+<div class="ui container">
+    <h1>Rating</h1>
+
+    <table class="ui celled table text-center">
+        <thead>
+        <tr>
+            <th>№</th>
+            <th class="text-left" style="width: 40%;">Name</th>
+            <th>Summary Rating</th>
+            <th>Number theory</th>
+            <th>Inequalities</th>
+            <th>Polynoms</th>
+            <th>Functions</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for obj in object_list %}
+            <tr>
+                <td>1</td>
+                <td class="text-left">{{ obj.user.username }} {% if obj.country %}({{obj.country}}){% endif %}</td>
+                <td>{{ obj.rating }}</td>
+                {% for skill in obj.skills %}
+                    <td>{{ skill.1 }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+    <div class="pagination">
+        <span class="step-links">
+            {% if object_list.has_previous %}
+                <a href="?{{ page_request_var }}={{ object_list.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.
+            </span>
+
+            {% if object_list.has_next %}
+                <a href="?{{ page_request_var }}={{ object_list.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">next</a>
+            {% endif %}
+        </span>
+    </div>
+
+
+
+{% endblock content %}

@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+{% block content %}
+<div class='ui container'>
+    <div class="ui grid">
+        <div class="ui horizontal list twelve wide column">
+            {% if staff == "yes" %}
+            <h3>
+                Staff only: <a class="ui button tiny" href='{% url "news:create" %}'>Create Post</a>
+            </h3>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <div class="ui grid">
+        <div class="twelve wide column">
+            {% for obj in object_list %}
+            <div id="news-form">
+
+                {% if obj.draft %}
+
+                <h3>Staff only: Draft</h3>
+
+                {% endif %}
+
+                {% if obj.publish > today %}
+
+                <h3>Staff Only: Future Post</h3>
+
+                {% endif %}
+                <a href="{{ obj.get_author }}" class="author-name">{{ obj.user.username }}</a>
+                {{ obj.publish }}
+                <h1>
+                    <a class="post-title" href='{{ obj.get_absolute_url }}'>{{ obj.title }}</a>
+                </h1>
+                <p>{{ obj.get_markdown|truncatechars_html:120}}</p>
+                {% if obj.image %}
+                    <img class="responsive-img" src='{{ obj.image.url }}'/>
+                {% endif %}
+
+                <div class="more">
+                    <a class="ui button green inverted" href="{{ obj.get_absolute_url }}">
+                        Read more
+                        <i class="arrow right icon"></i>
+                    </a>
+                </div>
+
+
+                <div class="ui grid" id="news-features">
+                    <div class="three wide column">
+                        <i class="arrow up icon item"></i>
+                        <span class="oneline likes_count space item">{{ obj.likes }} </span>
+                        <i class="arrow down icon item"></i>
+                    </div>
+                    <div class="three wide column">
+                        <i class="eye icon"></i>
+                        <span>22.2k</span>
+                    </div>
+                    <div class="three wide column">
+                        <i class="comment alternate icon item"></i>
+                        <a class="item btn btn-default" href="{{ obj.get_absolute_url }}">
+                            {{ obj.comments.count }}
+                        </a>
+                    </div>
+
+
+
+                </div>
+
+                <div class="admin-rights">
+                    {% if staff == "yes" %}
+                    <a href='{{ obj.get_update_url }}' class="ui button tiny">Edit</a>
+                    <a href='{{ obj.get_delete_url }}' class="ui button tiny">Delete</a>
+                    {% endif %}
+                </div>
+
+            </div>
+            {% endfor %}
+        </div>
+        <div class="four wide column" >
+            <div id="best-authors-news">
+                <span>Топ 5:</span>
+                <div class="ui divider"></div>
+                <div class="ui grid one-author">
+                    <div class="three wide column">
+                        
+                        <img src="../static/images/main.jpg">
+                    </div>
+                    <div class="thirteen wide column ui grid right-side">
+                        <div class="eight wide column name-author">
+                            <span>K24</span>
+                        </div>
+                        <div class="seven wide column rating-autor">
+                            <span>2200,2</span>
+                        </div>
+                        <div class="ui tiny progress success">
+                            <div class="bar" style="width: 88%;">
+                                <div class="progress"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui grid one-author">
+                    <div class="three wide column">
+                        <img src="../static/images/main.jpg">
+                    </div>
+                    <div class="thirteen wide column ui grid right-side">
+                        <div class="eight wide column name-author">
+                            <span>Andrey31</span>
+                        </div>
+                        <div class="seven wide column rating-autor">
+                            <span>1700,5</span>
+                        </div>
+                        <div class="ui tiny progress success">
+                            <div class="bar" style="width: 78%;">
+                                <div class="progress"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui sticky reading-now text" id="reading-right-now">
+                <span>Читают сейчас:</span>
+                <div class="ui divider"></div>
+                {% for obj in object_list %}
+                    <div class="post">
+                        <a class="post-title" href='{{ obj.get_absolute_url }}'>{{ obj.title }}</a>
+                        <div class="ui grid news-details">
+                            <div class="six wide column">
+                                <i class="eye icon"></i>
+                                <span>22.2k</span>
+                            </div>
+                            <div class="ten wide column">
+                                <a href="#">
+                                    <i class="comment icon"></i>
+                                    <span>22 </span>
+                                </a>
+
+                            </div>
+                        </div>
+                        <div class="ui divider"></div>
+                    </div>
+                {% endfor %}
+
+            </div>
+            <br>
+            <div class="ui sticky reading-now text" id="reading-right-now">
+                <span>Последние дейтсвия:</span>
+                <div class="ui divider"></div>
+                    <div class="post">
+                        {{ action_list.0.user }} {% if action_list.0.object_type == 'problem' %}solved{% endif %}{% if action_list.0.object_type == 'lecture' %}passed{% endif %} {{ action_list.0.title }}
+                        <div class="ui divider"></div>
+                    </div>
+                    <div class="post">
+                        {{ action_list.1.user }} {% if action_list.1.object_type == 'problem' %}solved{% endif %}{% if action_list.1.object_type == 'lecture' %}passed{% endif %} {{ action_list.1.title }}
+                        <div class="ui divider"></div>
+                    </div>
+                    <div class="post">
+                        {{ action_list.2.user }} {% if action_list.2.object_type == 'problem' %}solved{% endif %}{% if action_list.2.object_type == 'lecture' %}passed{% endif %} {{ action_list.2.title }}
+                        <div class="ui divider"></div>
+                    </div>
+                    <div class="post">
+                        {{ action_list.3.user }} {% if action_list.3.object_type == 'problem' %}solved{% endif %}{% if action_list.3.object_type == 'lecture' %}passed{% endif %} {{ action_list.3.title }}
+                        <div class="ui divider"></div>
+                    </div>
+                    <div class="post">
+                        {{ action_list.4.user }} {% if action_list.4.object_type == 'problem' %}solved{% endif %}{% if action_list.4.object_type == 'lecture' %}passed{% endif %} {{ action_list.4.title }}
+                        <div class="ui divider"></div>
+                    </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if object_list.has_previous %}
+                <a href="?{{ page_request_var }}={{ object_list.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.
+            </span>
+
+            {% if object_list.has_next %}
+                <a href="?{{ page_request_var }}={{ object_list.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">next</a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+
+
+{% endblock content %}

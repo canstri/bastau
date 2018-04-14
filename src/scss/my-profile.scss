@@ -1,0 +1,57 @@
+
+
+#my-profile{
+  .created-content{
+    margin-top: 10px !important;
+  }
+
+  .header-stats p{
+    width: 90px;
+    font-weight: 600;
+    margin-bottom: 15px;
+  }
+
+  .semicircle {
+    border-top-left-radius: 45px * 2;
+    border-top-right-radius: 45px * 2;
+    height: 45px;
+    width: 45px * 2;
+    display: inline-block;
+    margin: 0 1em 1em 0;
+
+  }
+  .green-border{
+    border: 6px solid #1aae68;
+    border-bottom: none;
+
+  }
+  .red-border{
+    border: 6px solid #db2828;
+    border-bottom: none;
+
+  }
+  .yellow-border{
+    border: 6px solid #fbbd08;
+    border-bottom: none;
+
+  }
+  .number-stats{
+    position: relative;
+    top: -34px;
+    font-size: 24px;
+    left: 29px;
+
+  }
+  .green-s{
+    color: #1aae68;
+  }
+  .yellow{
+    color: #fbbd08;
+  }
+  .red{
+    color: #db2828;
+  }
+
+
+
+}

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load urlify %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+	<div class="main-header-part">
+			<div class="ui column centered grid" id="content-choice">
+				<div class="ui segment" id="segment-choice">
+					<div class="content">
+						<h1 class="words">Individual math coach.</h1>
+						<h2 class="white up">For everyone.</h2>
+						<a href='{% url "register" %}'>
+							<button class="btn-journey">Start your journey.</button>
+						</a>
+
+					</div>
+				</div>
+			</div>
+	</div>
+
+		<div class="ui container">
+			<div class="ui divider"></div>
+
+			<div class="ui grid" id="content-subject">
+				<div class="five wide column category-name">
+					<h3>Math by subject</h3>
+				</div>
+				<div class="three wide column ui segment category-card">
+					<p class="topic-name">Values from 20 to 21</p>
+				</div>
+				<div class="three wide column ui segment category-card ">
+					<p class="topic-name">Values from 20 to 21</p>
+				</div>
+				<div class="three wide column ui segment category-card " style="margin-bottom: 1em">
+					<p class="topic-name">Values from 20 to 21</p>
+				</div>
+			</div>
+			<div class="ui divider"></div>
+
+		</div>
+		<div class="ui container">
+			<div class="ui grid" id="content-subject">
+				<div class="five wide column category-name">
+					<h3>Math by subject</h3>
+				</div>
+				<div class="three wide column ui segment category-card">
+					<p class="topic-name">Values from 20 to 21</p>
+				</div>
+				<div class="three wide column ui segment category-card">
+					<p class="topic-name">Values from 20 to 21</p>
+				</div>
+				<div class="three wide column ui segment category-card"  style="margin-bottom: 1em">
+					<p class="topic-name">Values from 20 to 21</p>
+				</div>
+			</div>
+			<div class="ui divider"></div>
+
+		</div>
+		<div class="ui container">
+			<div class="ui grid" id="content-subject">
+				<div class="five wide column category-name">
+					<h3>Math by subject</h3>
+				</div>
+				<div class="three wide column ui segment category-card">
+					<p class="topic-name">Values from 20 to 21</p>
+					<div class="go-about">
+						<button class="ui button">Go to study!</button>
+					</div>
+				</div>
+				<div class="three wide column ui segment category-card">
+					<p class="topic-name">Values from 20 to 21</p>
+				</div>
+				<div class="three wide column ui segment category-card"  style="margin-bottom: 1em">
+					<p class="topic-name">Values from 20 to 21</p>
+				</div>
+			</div>
+			<div class="ui divider"></div>
+
+		</div>
+
+
+{% endblock content %}

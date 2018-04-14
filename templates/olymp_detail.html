@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load urlify %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}
+{{ instance.title }} | {{ block.super }}
+{% endblock head_title %}
+
+
+{% block content %}
+<style type="text/css">
+    .target-olymps {
+        color: #ff7477 !important;
+    }
+</style>
+
+<div class='ui container'>
+    <a class="button ui blue" href='{% url "olymps:list" %}'>
+        <i class="angle left icon"></i> Back to olympiads
+    </a>
+    <h3></h3>
+    {% if staff == "yes" %}
+    <h3 style="color: red"> Staff only: <a class="btn btn-info" href='{% url "olymps:create" %}'>Create Olympiad</a>
+    </h3>
+    {% endif %}
+    <div>
+        <h2>{{ instance.title }} </h2>
+        {% if staff == "yes" %}
+        <a href='{{ instance.get_update_url }}' class="ui tiny button">Edit</a>
+        <a href='{{ instance.get_delete_url }}' class="ui tiny button">Delete</a>
+        {% endif %}
+    </div>
+
+
+    <table class="ui celled table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for element_of_user in array_of_user %}
+
+        <tr>
+
+            <td><a href='{{ element_of_user.0.get_absolute_url }}' class="item"><span>{{ element_of_user.0.title }}</span>
+            </a>
+            </td>
+            <td>
+                {% if is_auth == True %}
+                {% if element_of_user.1.0.solved == False %}
+                <span class="item">Not solved</span>
+                {% else %}
+                <span class="item">Solved</span>
+                {% endif %}
+                {% endif %}
+            </td>
+            <td>
+                {% if staff == "yes" %}
+                <a href='{{ element_of_user.0.get_delete_url }}' class="item">Delete</a>
+                {% endif %}
+            </td>
+
+        </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+    {% if staff == "yes" %}
+    <h4 style="color: red"> Staff only</h4><h4>Create new Problem:</h4>
+    <br>
+    <form class="comment_form" method="POST" action='' enctype='multipart/form-data'> {% csrf_token %}
+        <div class="ui form" id="submit-problem">
+            {{ create_problem_form|crispy }}
+        </div>
+        <div class="ui input">
+            <input type='submit' class='ui button green' style="margin-top:20px" value='Create problem'>
+        </div>
+    </form>
+    {% endif %}
+
+</div>
+
+
+{% endblock content %}
