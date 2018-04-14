@@ -1,1 +1,1 @@
-web: gunicorn bastau.Enigmath.wsgi --log-file -
+web: gunicorn Enigmath.wsgi --log-file -
