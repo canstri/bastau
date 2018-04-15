@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+
+<div class="ui container">
+    <a class="button ui blue" href='{{ olymp.get_absolute_url }}'>
+        <i class="angle left icon"></i> Back to olympiads
+    </a>
+
+    <h1>Rating</h1>
+
+    <table class="ui celled table text-center">
+        <thead>
+        <tr>
+            <th>№</th>
+            <th class="text-left" style="width: 40%;">Name</th>
+            {% for problem_name in problem_names %}
+                <th>{{ problem_name }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+            {% for obj in table %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td class="text-left"><a href="{{obj.user.get_absolute_url}}">{{ obj.user.user }} {% if obj.user.country %}({{ obj.user.country }}){% endif %}</a></td>
+                {% for point in obj.points %}
+                    <td>{{ point.1 }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+</div>
+
+
+
+
+{% endblock content %}

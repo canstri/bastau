@@ -28,6 +28,7 @@
 </head>
 
 <body>
+{% include "registration.html" %}
 
 <div class="ui inverted menu" id="main-menu">
 	<div class="ui container">
@@ -98,7 +99,7 @@
                 <a href='{% url "login" %}' class="ui button tiny">Login</a>
             </div>
             <div class="item no-before" style="padding-left: 0px;">
-                <a href='{% url "register" %}' class="ui button tiny">Sign up</a>
+                <a class="ui button tiny" onclick="$('#registration-modal').modal('show')">Sign up</a>
             </div>
 
             {% endif %}

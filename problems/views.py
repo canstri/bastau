@@ -196,8 +196,8 @@ def problem_thread(request, id):
             all_solved = False
         if all_solved == True: #if problem is fully solved 
             if check_problem.solved == False: # if problem was not solved before
-                rating_olymp = RatingOlymp.objects.get_or_create(
-                        user = request.user,
+                rating_olymp = RatingOlymp.objects.get(
+                        user = profile,
                         olymp = content_object,
                     )
                 #print(rating_olymp[0])

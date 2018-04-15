@@ -10,6 +10,7 @@ from django.utils import timezone
 from django.utils.text import slugify
 from markdown_deux import markdown
 from problems.models import Problem
+from accounts.models import Profile
 from django.utils.safestring import mark_safe
 from transliterate import translit, get_available_language_codes
 from django.contrib.postgres.fields import ArrayField
@@ -57,6 +58,8 @@ class Olymp(models.Model):
 
     def get_update_url(self):
         return reverse("olymps:update", kwargs={"slug": self.slug})
+    def rating_url(self):
+        return reverse("olymps:rating", kwargs={"slug": self.slug})
 
     class Meta:
         ordering = ["start_time", "-timestamp"]
@@ -77,7 +80,7 @@ class Olymp(models.Model):
         return content_type
 
 class RatingOlymp(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete = models.PROTECT)
+    user = models.ForeignKey(Profile, on_delete = models.PROTECT)
     olymp = models.ForeignKey(Olymp, on_delete = models.PROTECT)
     points = ArrayField(ArrayField(models.TextField()), default=[['first', ' ']])
 

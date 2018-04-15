@@ -7,6 +7,7 @@ from .views import (
 	olymp_detail,
 	olymp_update,
 	olymp_delete,
+    rating_page,
 	)
 
 app_name = 'Enigmath'
@@ -16,4 +17,5 @@ urlpatterns = [
     url(r'^(?P<slug>[\w-]+)/$', olymp_detail, name='detail'),
     url(r'^(?P<slug>[\w-]+)/edit/$', olymp_update, name='update'),
     url(r'^(?P<slug>[\w-]+)/delete/$', olymp_delete, name='delete'),
+    url(r'^(?P<slug>[\w-]+)/standings/$', rating_page, name='rating'),
 ]

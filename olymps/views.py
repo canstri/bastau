@@ -38,6 +38,17 @@ def olymp_create(request):
     if request.user.is_authenticated:
         profile = Profile.objects.get(user = request.user.id)
     
+    rating_olymp = RatingOlymp.objects.create(
+            user = request.user,
+            olymp = instance,
+        )
+    #print(rating_olymp[0])
+    rating_olymp[0].points.append([str(obj.title), '7'])
+    rating_olymp[0].save()
+    if rating_olymp[0].points[0][0] == 'first':
+        rating_olymp[0].points.pop(0) 
+        rating_olymp[0].save()    
+
     context = {
         "form": form,
         "staff":staff,
@@ -182,3 +193,32 @@ def olymp_delete(request, slug=None):
     }
     return render(request, "confirm_delete.html", context)
 
+def rating_page(request, slug):
+    try:
+        olymp = Olymp.objects.get(slug=slug)
+    except:
+        raise Http404
+    table = RatingOlymp.objects.filter(olymp = olymp)
+    staff = "no"
+    if request.user.is_staff or request.user.is_superuser:
+        staff = "yes"
+
+    profile = 'admin'
+    is_auth = False
+    if request.user.is_authenticated:
+        profile = Profile.objects.get(user = request.user.id)
+        is_auth = True
+    problem_names = []
+    for i in range(0, len(table[0].points)):
+        problem_names.append(table[0].points[i][0])
+
+    context = {
+        "table": table,
+        "problem_names":problem_names,
+        "staff":staff,
+        "profile":profile,
+        "user":request.user,
+        "is_auth": is_auth,
+        "olymp":olymp,
+    }
+    return render(request, "olymp_rating.html", context)
