@@ -27,6 +27,13 @@ def olymp_create(request):
         instance = form.save(commit=False)
         instance.user = request.user
         instance.save()
+        for p in Profile.objects.all():
+            rating_olymp = RatingOlymp.objects.create(
+                    user = p,
+                    olymp = instance,
+                )
+            rating_olymp.save()
+        
         messages.success(request, "Successfully Created")
         return HttpResponseRedirect(instance.get_absolute_url())
     
@@ -38,17 +45,8 @@ def olymp_create(request):
     if request.user.is_authenticated:
         profile = Profile.objects.get(user = request.user.id)
     
-    rating_olymp = RatingOlymp.objects.create(
-            user = request.user,
-            olymp = instance,
-        )
-    #print(rating_olymp[0])
-    rating_olymp[0].points.append([str(obj.title), '7'])
-    rating_olymp[0].save()
-    if rating_olymp[0].points[0][0] == 'first':
-        rating_olymp[0].points.pop(0) 
-        rating_olymp[0].save()    
 
+     
     context = {
         "form": form,
         "staff":staff,
@@ -185,6 +183,9 @@ def olymp_delete(request, slug=None):
                 checkprblm.delete()
             prblm.delete()
 
+        ratings = RatingOlymp.objects.filter(olymp = instance)
+        for rtng in ratings:
+            rtng.delete()
         instance.delete()
         messages.success(request, "Successfully deleted")
         return redirect("olymps:list")

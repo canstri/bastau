@@ -42,7 +42,7 @@ class Olymp(models.Model):
     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
 
     objects = OlympManager()
-    participants = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name='olymp_participants')
+    participants = models.ManyToManyField(Profile, blank=True, related_name='olymp_participants')
 
 
     def __unicode__(self):
@@ -82,7 +82,7 @@ class Olymp(models.Model):
 class RatingOlymp(models.Model):
     user = models.ForeignKey(Profile, on_delete = models.PROTECT)
     olymp = models.ForeignKey(Olymp, on_delete = models.PROTECT)
-    points = ArrayField(ArrayField(models.TextField()), default=[['first', ' ']])
+    points = ArrayField(ArrayField(models.TextField()), default=[['Summary', '0']])
 
 
 def create_slug(instance, new_slug=None):

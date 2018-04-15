@@ -30,20 +30,21 @@ def create_problem(request, input_form):
         wright = False
         hashtag_array = []
         hashtag_string = form.cleaned_data.get("hashtags")
-
+        hashtag_string += ' ,' 
         for i in range(0, len(hashtag_string)):
             if hashtag_string[i] == '#':
                 wright = True
             if hashtag_string[i] == ' ':
-                new_problem.hashtags.append(temp_hashtag)
+                if temp_hashtag != '':
+                    new_problem.hashtags.append(temp_hashtag)
                 new_problem.save()
-                print("create_hash: ", new_problem.hashtags)
+                #print("create_hash: ", new_problem.hashtags)
                 temp_hashtag = ''
                 wright = False
             if wright == True:
                 temp_hashtag += hashtag_string[i]
 
-        for p in Profile.objects.filter():
+        for p in Profile.objects.all():
             check_problem, created2 = CheckProblem.objects.get_or_create(
                 user = p.user.id,
                 problem_id = new_problem.id,
@@ -76,6 +77,17 @@ def create_problem(request, input_form):
                     temp_str2 = ''
                     counter2 = 0
             check_problem.save()
+
+        olymp_any = Olymp.objects.all()[0]
+        content_type_olymp = ContentType.objects.get_for_model(olymp_any.__class__)
+        if new_problem.content_type == content_type_olymp:
+            qset = RatingOlymp.objects.filter(olymp = new_problem.content_object)
+            array_for_user = [new_problem.title, '0']
+            for r in qset:
+                r.points.append(array_for_user)
+                r.save()
+
+
         return HttpResponseRedirect(new_problem.content_object.get_absolute_url())
     
 
@@ -196,13 +208,18 @@ def problem_thread(request, id):
             all_solved = False
         if all_solved == True: #if problem is fully solved 
             if check_problem.solved == False: # if problem was not solved before
+
                 rating_olymp = RatingOlymp.objects.get(
                         user = profile,
                         olymp = content_object,
                     )
-                #print(rating_olymp[0])
-                rating_olymp[0].points.append([str(obj.title), '7'])
-                rating_olymp[0].save()
+                #print(rating_olymp)
+                for prblm in rating_olymp.points:
+                    if prblm[0] == obj.title:
+                        prblm[1] = '7'
+                rating_olymp.points[0][1] = str(int(rating_olymp.points[0][1])+7)
+                rating_olymp.save()
+
                 for hashtag in obj.hashtags: 
                     hashtag = hashtag[1:]  # cross out "#" from hashtag name
                     #print("hash:", hashtag)

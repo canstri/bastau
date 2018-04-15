@@ -12,8 +12,10 @@
 
              <a href="{{ problem.get_profile }}">{{ problem.user }}</a>
 
-            <h2 style="margin-top: 10px">{{ problem.title }}</h2> 
-
+            <h3 style="margin-top: 10px">Olympiad: {{ problem.content_object.title }}</h3>
+            <a href='{{ problem.content_object.rating_url }}'>Results</a>
+            <h4>Problem: {{ problem.title }}</h4> 
+            
 
             <div class="ui segment">{{ problem.content }}</div>
             ee: {{ check_problem.current_string }}
