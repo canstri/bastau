@@ -129,7 +129,7 @@ pre_save.connect(pre_save_post_receiver, sender=Post)
 
 class Action(models.Model):
     user = models.ForeignKey(Profile, on_delete = models.PROTECT)
-#    problem = models.ForeignKey(Problem, on_delete = models.PROTECT)
+    problem = models.ForeignKey(Problem, on_delete = models.PROTECT)
     title = models.CharField(max_length=120, default = '')
     object_type = models.CharField(max_length=120, default = '')
     timestamp = models.DateTimeField(auto_now_add=True)
