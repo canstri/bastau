@@ -12,6 +12,9 @@ from markdown_deux import markdown
 from comments.models import Comment
 from django.utils.safestring import mark_safe
 from transliterate import translit, get_available_language_codes
+from accounts.models import Profile
+from lectures.models import Lecture
+from problems.models import Problem
 
 
 class PostManager(models.Manager):
@@ -125,9 +128,11 @@ pre_save.connect(pre_save_post_receiver, sender=Post)
 
 
 class Action(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete = models.PROTECT)
+    user = models.ForeignKey(Profile, on_delete = models.PROTECT)
+    problem = models.ForeignKey(Problem, on_delete = models.PROTECT)
     title = models.CharField(max_length=120, default = '')
     object_type = models.CharField(max_length=120, default = '')
     timestamp = models.DateTimeField(auto_now_add=True)
+    
     class Meta:
         ordering = ["-timestamp"]

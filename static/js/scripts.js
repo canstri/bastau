@@ -19136,13 +19136,6 @@ $(function (){
     })
 */
 
-    $('.ui.sticky')
-        .sticky({
-            offset:20,
-            context: '#footer',
-            bottomOffset:150
-        })
-    ;
 
 
 

@@ -127,7 +127,7 @@ def news_list(request):
     #             Q(user__first_name__icontains=query) |
     #             Q(user__last_name__icontains=query)
     #             ).distinct()
-    paginator = Paginator(queryset_list, 10) # Show 25 contacts per page
+    paginator = Paginator(queryset_list, 5) # Show 25 contacts per page
     page_request_var = "page"
     page = request.GET.get(page_request_var)
     try:
@@ -145,6 +145,8 @@ def news_list(request):
         profile = Profile.objects.get(user = request.user.id)
     
     action_list = Action.objects.all()
+    
+    rating = Profile.objects.all()
     context = {
         "object_list": queryset, 
         "title": "News",
@@ -154,6 +156,7 @@ def news_list(request):
         "profile": profile,
         "user":request.user,
         "action_list":action_list,
+        "rating":rating,
     }
     return render(request, "news_list.html", context)
 
@@ -297,9 +300,8 @@ def news_delete(request, slug=None):
     return render(request, "confirm_delete.html", context)
 
 
-def create_action(request, title, object_type):
+def create_action(profile, problem):
     new_action = Action.objects.get_or_create(
-                            user = request.user,
-                            title = title,
-                            object_type = object_type,
+                            user = profile,
+                            problem = problem,
                         )

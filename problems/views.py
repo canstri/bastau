@@ -240,7 +240,7 @@ def problem_thread(request, id):
                         rating += float(skill[1])
                     profile.rating = rating
                     profile.save()
-                    x=create_action(request, obj.title, "problem")
+                    x=create_action(profile, obj)
             check_problem.solved = True
         check_problem.save()
                                         

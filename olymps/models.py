@@ -83,6 +83,9 @@ class RatingOlymp(models.Model):
     user = models.ForeignKey(Profile, on_delete = models.PROTECT)
     olymp = models.ForeignKey(Olymp, on_delete = models.PROTECT)
     points = ArrayField(ArrayField(models.TextField()), default=[['Summary', '0']])
+    summary = models.IntegerField(default = 0)
+    class Meta:
+        ordering = ["-summary"]
 
 
 def create_slug(instance, new_slug=None):

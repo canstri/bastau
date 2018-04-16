@@ -15,7 +15,7 @@
     <div class="ui grid">
         <div class="twelve wide column">
             {% for obj in object_list %}
-            <div id="news-form">
+            <div id="news-form" class="ui segment">
 
                 {% if obj.draft %}
 
@@ -33,7 +33,7 @@
                 <h1>
                     <a class="post-title" href='{{ obj.get_absolute_url }}'>{{ obj.title }}</a>
                 </h1>
-                <p>{{ obj.get_markdown|truncatechars_html:120}}</p>
+                <p>{{ obj.get_markdown|truncatechars_html:120 }}</p>
                 {% if obj.image %}
                     <img class="responsive-img" src='{{ obj.image.url }}'/>
                 {% endif %}
@@ -53,12 +53,8 @@
                         <a href="{{ obj.get_dislike_url }}"><i class="arrow down icon item"></i></a>
                     </div>
                     <div class="three wide column">
-                        <i class="eye icon"></i>
-                        <span>22.2k</span>
-                    </div>
-                    <div class="three wide column">
-                        <i class="comment alternate icon item"></i>
                         <a class="item btn btn-default" href="{{ obj.get_absolute_url }}">
+                             <i class="comment icon item"></i>
                             {{ obj.comments.count }}
                         </a>
                     </div>
@@ -83,15 +79,18 @@
                 <div class="ui divider"></div>
                 <div class="ui grid one-author">
                     <div class="three wide column">
-                        
-                        <img src="../static/images/main.jpg">
+                        <a href="{{ rating.0.get_absolute_url }}">
+                        {% if rating.0.image %}
+                            <img src="{{ rating.0.image.url }}">
+                        {% endif %}
+                        </a>
                     </div>
                     <div class="thirteen wide column ui grid right-side">
                         <div class="eight wide column name-author">
-                            <span>K24</span>
+                            <a href="{{ rating.0.get_absolute_url }}"><span>{{ rating.0.user.username }}</span></a>
                         </div>
                         <div class="seven wide column rating-autor">
-                            <span>2200,2</span>
+                            <span>{{ rating.0.rating }}</span>
                         </div>
                         <div class="ui tiny progress success">
                             <div class="bar" style="width: 88%;">
@@ -102,17 +101,87 @@
                 </div>
                 <div class="ui grid one-author">
                     <div class="three wide column">
-                        <img src="../static/images/main.jpg">
+                        <a href="{{ rating.1.get_absolute_url }}">
+                        {% if rating.1.image %}
+                            <img src="{{ rating.1.image.url }}">
+                        {% endif %}
+                        </a>
                     </div>
                     <div class="thirteen wide column ui grid right-side">
                         <div class="eight wide column name-author">
-                            <span>Andrey31</span>
+                            <a href="{{ rating.1.get_absolute_url }}"><span>{{ rating.1.user.username }}</span></a>
                         </div>
                         <div class="seven wide column rating-autor">
-                            <span>1700,5</span>
+                            <span>{{ rating.1.rating }}</span>
                         </div>
                         <div class="ui tiny progress success">
-                            <div class="bar" style="width: 78%;">
+                            <div class="bar" style="width: 88%;">
+                                <div class="progress"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui grid one-author">
+                    <div class="three wide column">
+                        <a href="{{ rating.2.get_absolute_url }}">
+                        {% if rating.2.image %}
+                            <img src="{{ rating.2.image.url }}">
+                        {% endif %}
+                        </a>
+                    </div>
+                    <div class="thirteen wide column ui grid right-side">
+                        <div class="eight wide column name-author">
+                            <a href="{{ rating.2.get_absolute_url }}"><span>{{ rating.2.user.username }}</span></a>
+                        </div>
+                        <div class="seven wide column rating-autor">
+                            <span>{{ rating.2.rating }}</span>
+                        </div>
+                        <div class="ui tiny progress success">
+                            <div class="bar" style="width: 88%;">
+                                <div class="progress"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui grid one-author">
+                    <div class="three wide column">
+                        <a href="{{ rating.3.get_absolute_url }}">
+                        {% if rating.3.image %}
+                            <img src="{{ rating.3.image.url }}">
+                        {% endif %}
+                        </a>
+                    </div>
+                    <div class="thirteen wide column ui grid right-side">
+                        <div class="eight wide column name-author">
+                            <a href="{{ rating.3.get_absolute_url }}"><span>{{ rating.3.user.username }}</span></a>
+                        </div>
+                        <div class="seven wide column rating-autor">
+                            <span>{{ rating.3.rating }}</span>
+                        </div>
+                        <div class="ui tiny progress success">
+                            <div class="bar" style="width: 88%;">
+                                <div class="progress"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui grid one-author">
+                    <div class="three wide column">
+                        <a href="{{ rating.4.get_absolute_url }}">
+                        {% if rating.4.image %}
+                            <img src="{{ rating.4.image.url }}">
+                        {% endif %}
+                        </a>
+                    </div>
+                    <div class="thirteen wide column ui grid right-side">
+                        <div class="eight wide column name-author">
+                            <a href="{{ rating.4.get_absolute_url }}"><span>{{ rating.4.user.username }}</span></a>
+                        </div>
+                        <div class="seven wide column rating-autor">
+                            <span>{{ rating.4.rating }}</span>
+                        </div>
+                        <div class="ui tiny progress success">
+                            <div class="bar" style="width: 88%;">
                                 <div class="progress"></div>
                             </div>
                         </div>
@@ -124,18 +193,19 @@
                 <div class="ui divider"></div>
                 {% for obj in object_list %}
                     <div class="post">
-                        <a class="post-title" href='{{ obj.get_absolute_url }}'>{{ obj.title }}</a>
+                        <a class="post-title" href='{{ obj.get_absolute_url }}'>
+                            <span style="color: blue">{{ obj.title|truncatechars_html:30 }}</span>
+                        </a>
                         <div class="ui grid news-details">
-                            <div class="six wide column">
-                                <i class="eye icon"></i>
-                                <span>22.2k</span>
-                            </div>
                             <div class="ten wide column">
                                 <a href="#">
-                                    <i class="comment icon"></i>
-                                    <span>22 </span>
+                                    <i class="like icon"></i>
+                                    <span>{{ obj.likes.count }} </span>
                                 </a>
-
+                                <a href="#">
+                                    <i class="comment icon"></i>
+                                    <span>{{ obj.comments.count }} </span>
+                                </a>
                             </div>
                         </div>
                         <div class="ui divider"></div>
@@ -144,27 +214,27 @@
 
             </div>
             <br>
-            <div class="ui sticky reading-now text" id="reading-right-now">
+            <div id="best-authors-news">
                 <span>Последние дейтсвия:</span>
                 <div class="ui divider"></div>
                     <div class="post">
-                        {{ action_list.0.user }} {% if action_list.0.object_type == 'problem' %}solved{% endif %}{% if action_list.0.object_type == 'lecture' %}passed{% endif %} {{ action_list.0.title }}
+                        <a href="{{ action_list.0.user.get_absolute_url }}">{{ action_list.0.user.user }}</a> solved <a href="{{ action_list.0.problem.get_absolute_url }}">{{ action_list.0.problem.title }}</a>
                         <div class="ui divider"></div>
                     </div>
                     <div class="post">
-                        {{ action_list.1.user }} {% if action_list.1.object_type == 'problem' %}solved{% endif %}{% if action_list.1.object_type == 'lecture' %}passed{% endif %} {{ action_list.1.title }}
+                        <a href="{{ action_list.1.user.get_absolute_url }}">{{ action_list.1.user.user }}</a> solved <a href="{{ action_list.1.problem.get_absolute_url }}">{{ action_list.1.problem.title }}</a>
                         <div class="ui divider"></div>
                     </div>
                     <div class="post">
-                        {{ action_list.2.user }} {% if action_list.2.object_type == 'problem' %}solved{% endif %}{% if action_list.2.object_type == 'lecture' %}passed{% endif %} {{ action_list.2.title }}
+                        <a href="{{ action_list.2.user.get_absolute_url }}">{{ action_list.2.user.user }}</a> solved <a href="{{ action_list.2.problem.get_absolute_url }}">{{ action_list.2.problem.title }}</a>
                         <div class="ui divider"></div>
                     </div>
                     <div class="post">
-                        {{ action_list.3.user }} {% if action_list.3.object_type == 'problem' %}solved{% endif %}{% if action_list.3.object_type == 'lecture' %}passed{% endif %} {{ action_list.3.title }}
+                        <a href="{{ action_list.3.user.get_absolute_url }}">{{ action_list.3.user.user }}</a> solved <a href="{{ action_list.3.problem.get_absolute_url }}">{{ action_list.3.problem.title }}</a>
                         <div class="ui divider"></div>
                     </div>
                     <div class="post">
-                        {{ action_list.4.user }} {% if action_list.4.object_type == 'problem' %}solved{% endif %}{% if action_list.4.object_type == 'lecture' %}passed{% endif %} {{ action_list.4.title }}
+                        <a href="{{ action_list.4.user.get_absolute_url }}">{{ action_list.4.user.user }}</a> solved <a href="{{ action_list.4.problem.get_absolute_url }}">{{ action_list.4.problem.title }}</a>
                         <div class="ui divider"></div>
                     </div>
             </div>
