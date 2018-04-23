@@ -3,96 +3,89 @@
 {% load crispy_forms_tags %}
 {% block content %}
 {{ object }}
-<div class='ui container grid' id="problem-solve">
-    <div class="eleven wide column">
-        <a class="ui button blue" href="{{ problem.content_object.get_absolute_url }}">
-            <i class="arrow left icon"></i> List of problems 
-        </a>
-        <p></p>
+<div class='ui container' id="problem-solve">
+    <h3 style="margin-top: 10px"> <a class="ui button blue" href="{{ problem.content_object.get_absolute_url }}">
+    <i class="arrow left icon"></i>Olympiad: {{ problem.content_object.title }}</a> <a href='{{ problem.content_object.rating_url }}'>Results</a></h3>
+                 
+    {% if check_problem.solved == False %}
+        <h4>Problem: {{ problem.title }} Not solved
+    {% else %}
+        <h4 style="color: green;">Problem: {{ problem.title }} Solved
+    {% endif %}
+    <a href="{{ problem.get_profile }}" style="margin-left: 30px">by {{ problem.user }}</a>
+    {% if request.user == problem.user %}
+        <a href='{{ problem.get_delete_url }}' class="ui tiny button" style="margin-left: 30px">Delete</a>
+    {% endif %}
 
-             <a href="{{ problem.get_profile }}">{{ problem.user }}</a>
+    </h4>
+    <div class="ui segment">{{ problem.content }}</div>
+    <div><h4>Status: {{ action_check }} {{ check_problem.current_string }}</h4></div>
 
-            <h3 style="margin-top: 10px">Olympiad: {{ problem.content_object.title }}</h3>
-            <a href='{{ problem.content_object.rating_url }}'>Results</a>
-            <h4>Problem: {{ problem.title }}</h4> 
-            
+</div>
 
-            <div class="ui segment">{{ problem.content }}</div>
-            ee: {{ check_problem.current_string }}
-            {% if check_problem.solved == False %}
-                <h5 class="grey small oneline">Not solved</h5>
-            {% else %}
-                <h5 class="green small oneline">Solved</h5>
-            {% endif %}
+<div class='ui container grid' id="problem-solve" style="margin-top:33px">
+    <div class="four wide column" >            
+        <div class="ui segment">
+            <h4>{% if check_problem.actions|length == 0 %}
+                    Here will be your saved expressions{% endif %}{% if check_problem.actions|length > 0 %}
+                    {{ check_problem.actions|length }} expression{% if check_problem.actions|length > 1 %}s{% endif %}:
+                {% endif %}</h4>
+            {% for c in check_problem.actions %}
+                {% if c.1 != 'f' %}
+                    <form method="POST" action='' enctype='multipart/form-data'>{% csrf_token %}
+                        <div class="ui form">
+                            <div class="ui input list">
+                                <input type='hidden' name='exp_id' value='{{ forloop.counter }}'>
+                                <input type='submit' name = 'use' class='ui tiny green button' value='{{ c.0 }}' >
+                                <p style="margin-left: 10px;">{{ c.1 }}</p>
 
-            <div class="small-details">
-              {% if request.user == problem.user %}
-                <a href='{{ problem.get_delete_url }}' class="ui tiny button">Delete</a>
-              {% endif %}
-            </div>
+                                {% if c.2 == 'not_in_task' %}
+                                    <input type='submit' name='delete' class='ui tiny red button' value='×' style="margin-left:20px" >
+                                {% endif %}  
+                            </div>
+                        </div>
+                    </form>
+                {% endif %}
+                <hr>
+            {% endfor %}
+            <br>
+        </div>
+    </div>
+
+    <div class="eight wide column" >
         <div>
             <form method="POST" action='' enctype='multipart/form-data'> {% csrf_token %}
-            <div class="form ui solve-area" style="margin-top:10px">
+            <div class="form ui solve-area" >
                 <div class="ui action input">
-                <div class="field"> {{ check_problem_form }}</div>
-                <div class="field" style="margin-left:20px">                   
-                    <input type='submit' name = 'check' class='ui button tiny' value='Check' >
-                    <input type='submit' name = 'save' class='ui button tiny' value='Save' >
+                <div class="field"> {{ check_problem_form }}
+                    <!-- <input type='submit' name = 'check' class='ui button tiny' style="margin-top: 10px;" value='Check' >
+                     --><input type='submit' name = 'save' class='ui button tiny'  style="margin-top: 10px;" value='Save' >
                 </div>
-           
-
                 </div>
-             </div>
-            </form>
-            <!-- <form  method="POST" action='' enctype='multipart/form-data'> {% csrf_token %}
-                {{ check_problem_form }}
-                <br><br>
-                <input type='submit' class='btn btn-info' value='Check' >
-            </form> -->
-           
-        </div>
-        </div>
-            
-        <div class="five wide column" style="margin-top:120px">
-            <div><h4>Status: {{ action_check }}</h4></div>
-            <div>
-                <h4>{% if check_problem.actions|length == 0 %}
-                        Here will be your saved expressions{% endif %}{% if check_problem.actions|length > 0 %}
-                        {{ check_problem.actions|length }} Saved expression{% if check_problem.actions|length > 1 %}s{% endif %}:
-                    {% endif %}</h4>
-                {% for c in check_problem.actions %}
-                    <div class="ui segment">
-                    {% if c.1 != 'f' %}
-                        {{ c.0 }}<br>
-                        {{ c.1 }}
-                        <form method="POST" action='' enctype='multipart/form-data'>{% csrf_token %}
-                            <div class="ui form">
-                            <div class="field">
-                                  {{ delete_expression_form }}
-                            </div>
-                              
-                                <div class="ui input list">
-                                    <div class="field">
-                                        <input type='hidden' name='exp_id' value='{{ forloop.counter }}'>
-                                    </div>
-                                    <input type='submit' name = 'use' class='ui tiny green button' value='Use' >
-                                    {% if c.2 == 'not_in_task' %}
-                                        <input type='submit' name='delete' class='ui tiny red button' value='Delete' style="margin-left:20px" >
-                                    {% endif %}  
-                                </div>
-                            </div>
-                        </form>
-                    {% endif %}
-                    </div>
-                {% endfor %}
-                <br>
-
-
             </div>
+            </form>
         </div>
+    </div>
+            
+    <div class="four wide column">            
+        <div>
+            <h4>Theorems</h4>
+            {% for thrm in theorems %}
+                    <form method="POST" action='' enctype='multipart/form-data'>{% csrf_token %}
+                        <div class="ui form">
+                            <div class="ui input list">
+                                {{ theorem_form }}
+                                <input type='submit' name = '{{ thrm.name }}' class='ui tiny green button' value='{{ thrm.name }}' >
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            {% endfor %}
+            <br>
 
 
-        
+        </div>
+    </div>
 </div>
 
 

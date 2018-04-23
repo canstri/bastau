@@ -42,8 +42,7 @@ class Olymp(models.Model):
     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
 
     objects = OlympManager()
-    participants = models.ManyToManyField(Profile, blank=True, related_name='olymp_participants')
-
+    participants = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name='olymp_participants')
 
     def __unicode__(self):
         return self.title
@@ -60,6 +59,9 @@ class Olymp(models.Model):
         return reverse("olymps:update", kwargs={"slug": self.slug})
     def rating_url(self):
         return reverse("olymps:rating", kwargs={"slug": self.slug})
+
+    def get_like_url(self):
+        return reverse("olymps:olymp-reg-toggle", kwargs={"slug": self.slug})
 
     class Meta:
         ordering = ["start_time", "-timestamp"]

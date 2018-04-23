@@ -7,10 +7,12 @@ from accounts.models import Profile
 from .solve_problem_form import CheckProblemForm
 
 from .expression_form import ExpressionForm
-from .models import Problem, CheckProblem, Lemma
+from .theorem_form import TheoremForm
+from .models import Problem, CheckProblem, Lemma, Theorem
 
 from olymps.models import Olymp, RatingOlymp
-from lemmas.codes import LemmaCode
+from maths.lemmas import LemmaCode
+from maths.theorems import TheoremCode
 from news.views import create_action
 
 def create_problem(request, input_form):
@@ -139,6 +141,7 @@ def problem_thread(request, id):
     if request.user.is_staff or request.user.is_superuser:
         staff = "yes"
 
+    #Checking expression inserted by user with basic lemmas
     content_object = obj.content_object 
     content_id = obj.content_object.id
     initial_data = {
@@ -153,12 +156,11 @@ def problem_thread(request, id):
     
     expression_form = ExpressionForm(request.POST or None)
     check_problem_form = CheckProblemForm(request.POST or None)
+    theorem_form = TheoremForm(request.POST or None)
     expr1 = ''
-    expr2 = ''
     expr3 = ''
     action_check = ''
-    action_check2 = ''
-    print("current_str: ", check_problem.current_string)
+
     if len(check_problem.actions) > 0:
         if check_problem.actions[0][1] == 'first_hidden':
             check_problem.actions.pop(0) 
@@ -174,34 +176,54 @@ def problem_thread(request, id):
                 check_problem.current_string += '; '
                 check_problem.save()
             check_problem.current_string += check_problem.actions[expr_id][0] + ' ' + check_problem.actions[expr_id][1]
+            check_problem.current_status = check_problem.actions[expr_id][1]
+            check_problem.save()
+            return HttpResponseRedirect(obj.get_absolute_url())
+
+    if theorem_form.is_valid():
+        if 'Replace variable' in request.POST:
+            expr1 = theorem_form.cleaned_data.get('expr1')
+            print(expr1)
+            if check_problem.current_string != '':
+                expr3 = check_problem.current_string
+                check_problem.current_string = ''
+            input_string = expr3 + '; ' + expr1
+            action_check = getattr(TheoremCode, 'zamena')(input_string)
+            
+            if action_check == '':
+                return HttpResponseRedirect(obj.get_absolute_url()) 
+            found_old = False
+            for actn in check_problem.actions:
+                if expr1 == actn[0]:
+                    actn[1] = action_check
+                    found_old = True
+                    break
+            if found_old == False:
+                check_problem.actions.append([action_check, check_problem.current_status, 'not_in_task'])
+            check_problem.current_string = ''
             check_problem.save()
             return HttpResponseRedirect(obj.get_absolute_url())
             
     if check_problem_form.is_valid():
         expr1 = check_problem_form.cleaned_data.get('expr1')
-        expr2 = check_problem_form.cleaned_data.get('expr2')
         if check_problem.current_string != '':
             expr3 = check_problem.current_string
             check_problem.current_string = ''
             
         for i in range (0, len(Lemma.objects.filter())):
-            if action_check == "Correct" or action_check2 == "Correct":
+            if action_check == "Correct":
                 break
             input_string = ''
-            if expr1 != '' and expr2 == '' and expr3 != '':
+            if expr1 != '' and expr3 != '':
                 input_string = expr3 + '; ' + expr1
-            if expr1 == '' and expr2 != '' and expr3 != '':    
-                input_string = expr3 + '; ' + expr2
-            if expr1 != '' and expr2 == '' and expr3 == '':
+            if expr1 != '' and expr3 == '':
                 input_string = expr1
-            if expr1 == '' and expr2 != '' and expr3 == '':    
-                input_string = expr2
             print("input:",input_string)
-            action_check =  getattr(LemmaCode, Lemma.objects.filter()[i].name)(input_string) #Вызов лемм
+            action_check =  getattr(LemmaCode, Lemma.objects.filter()[i].name)(input_string) #Call all basic lemmas
         all_solved = True
         for actn in check_problem.actions:
             if actn[1] == 'Need to prove':
-                if actn[0] != expr1 and actn[0] != expr2:
+                if actn[0] != expr1:
                     all_solved = False
                     
         if action_check != "Correct":
@@ -213,16 +235,15 @@ def problem_thread(request, id):
                         user = profile,
                         olymp = content_object,
                     )
-                #print(rating_olymp)
                 for prblm in rating_olymp.points:
                     if prblm[0] == obj.title:
                         prblm[1] = '7'
                 rating_olymp.points[0][1] = str(int(rating_olymp.points[0][1])+7)
+                rating_olymp.summary = rating_olymp.points[0][1]
                 rating_olymp.save()
 
                 for hashtag in obj.hashtags: 
                     hashtag = hashtag[1:]  # cross out "#" from hashtag name
-                    #print("hash:", hashtag)
                     number_theory_skill = 0
                     inequalities_skill = 0
                     for skill in profile.number_theory_skills: #search in number theory skills
@@ -245,10 +266,8 @@ def problem_thread(request, id):
         check_problem.save()
                                         
         if 'save' in request.POST:
-            if action_check == '' and action_check2 == '':
+            if action_check == '':
                 return HttpResponseRedirect(obj.get_absolute_url()) 
-            if action_check == '' and action_check2 != '':
-                action_check = action_check2
             found_old = False
             for actn in check_problem.actions:
                 if expr1 == actn[0]:
@@ -261,13 +280,16 @@ def problem_thread(request, id):
             check_problem.save()
             return HttpResponseRedirect(obj.get_absolute_url())  
 
+    theorems = Theorem.objects.all()
     context = {
         "staff":staff,
         "profile":profile,
         "problem": obj,
         "check_problem_form": check_problem_form,
+        "theorem_form": theorem_form,
         "check_problem": check_problem,
         "action_check":action_check,
         "expression_form": expression_form,
+        "theorems":theorems,
     }
     return render(request, "problem.html", context)

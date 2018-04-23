@@ -4,10 +4,9 @@ from django.contrib import admin
 from .models import Olymp, RatingOlymp
 
 class OlympModelAdmin(admin.ModelAdmin):
-	list_display = ["title", "start_time", "timestamp"]
-	list_display_links = ["start_time"]
-	list_editable = ["title"]
-	list_filter = ["start_time", "timestamp"]
+	list_display = ["title", "timestamp"]
+	list_display_links = ["title"]
+	list_filter = ["timestamp"]
 
 	search_fields = ["title"]
 	class Meta:
@@ -17,11 +16,11 @@ class OlympModelAdmin(admin.ModelAdmin):
 admin.site.register(Olymp, OlympModelAdmin)
 
 class RatingOlympModelAdmin(admin.ModelAdmin):
-    list_display = ["olymp", "user"]
+    list_display = ["olymp"]
     list_display_links = ["olymp"]
-    list_filter = ["olymp", "user"]
+    list_filter = ["olymp"]
 
-    search_fields = ["olymp", "user"]
+    search_fields = ["olymp"]
     class Meta:
         model = RatingOlymp
 

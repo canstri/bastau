@@ -7,9 +7,11 @@ from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
+from django.views.generic import RedirectView
 
 from .forms import OlympForm
 from .models import Olymp, RatingOlymp
+from news.models import Post, Action
 
 from problems.models import Problem, CheckProblem
 from problems.views import create_problem
@@ -17,23 +19,24 @@ from problems.forms import CreateProblemForm
 
 from accounts.models import Profile
 
-
 def olymp_create(request):
     if not request.user.is_staff and not request.user.is_superuser:
         raise Http404
+
+    profile = 'admin'
+    if request.user.is_authenticated:
+        profile = Profile.objects.get(user = request.user.id)
         
     form = OlympForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         instance = form.save(commit=False)
         instance.user = request.user
         instance.save()
-        for p in Profile.objects.all():
-            rating_olymp = RatingOlymp.objects.create(
-                    user = p,
-                    olymp = instance,
-                )
-            rating_olymp.save()
-        
+        rating_olymp = RatingOlymp.objects.create(
+            user = profile,
+            olymp = instance,
+        )
+        rating_olymp.save()    
         messages.success(request, "Successfully Created")
         return HttpResponseRedirect(instance.get_absolute_url())
     
@@ -41,12 +44,7 @@ def olymp_create(request):
     if request.user.is_staff or request.user.is_superuser:
         staff = "yes"
     
-    profile = 'admin'
-    if request.user.is_authenticated:
-        profile = Profile.objects.get(user = request.user.id)
     
-
-     
     context = {
         "form": form,
         "staff":staff,
@@ -125,9 +123,23 @@ def olymps_list(request):
         # If page is out of range (e.g. 9999), deliver last page of results.
         queryset = paginator.page(paginator.num_pages)
 
+    olymps = []
+    in_olymp = False
+    for ol in queryset:
+        for usr in ol.participants.all():
+            if request.user == usr:
+                in_olymp = True
+        olymps.append([ol, in_olymp])
+    
     profile = 'admin'
     if request.user.is_authenticated:
         profile = Profile.objects.get(user = request.user.id)
+    
+    action_list = Action.objects.all()
+    
+    rating = Profile.objects.all()
+    news_list = Post.objects.active() #.order_by("-timestamp")
+
     context = {
         "object_list": queryset, 
         "title": "Olympiads",
@@ -136,12 +148,30 @@ def olymps_list(request):
         "staff" : staff,
         "profile": profile,
         "user":request.user,
+        "action_list":action_list,
+        "rating":rating,
+        "news_list": news_list,
+        "olymps":olymps,         
     }
     return render(request, "olymps_list.html", context)
 
-
-
-
+class OlympRegToggle(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        slug = self.kwargs.get("slug")
+        obj = get_object_or_404(Olymp, slug=slug)
+        user = self.request.user
+        profile = get_object_or_404(Profile, user=user)
+        if user.is_authenticated:
+            if not user in obj.participants.all():
+                obj.participants.add(user)
+                rating_olymp = RatingOlymp.objects.create(
+                    user = profile,
+                    olymp = obj,
+                )
+                for prblm in obj.problems:
+                    rating_olymp.points.append([prblm.title, '0'])
+                rating_olymp.save() 
+        return obj.get_absolute_url()
 
 def olymp_update(request, slug=None):
     if not request.user.is_staff and not request.user.is_superuser:
@@ -203,7 +233,6 @@ def rating_page(request, slug):
     staff = "no"
     if request.user.is_staff or request.user.is_superuser:
         staff = "yes"
-
     profile = 'admin'
     is_auth = False
     if request.user.is_authenticated:
@@ -212,7 +241,6 @@ def rating_page(request, slug):
     problem_names = []
     for i in range(0, len(table[0].points)):
         problem_names.append(table[0].points[i][0])
-
     context = {
         "table": table,
         "problem_names":problem_names,

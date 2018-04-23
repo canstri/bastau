@@ -13,7 +13,7 @@
 			<h1>Create Post</h1>
 			<div>
 				<form method='POST' action='' enctype='multipart/form-data'>{% csrf_token %}
-					{{ form|crispy }}
+					{{ form.as_p  }}
 					<input type='submit' class='ui green button' style="margin-top:10px" value='Create Post' />
 				</form>
 			</div>

@@ -95,7 +95,11 @@ def news_detail(request, slug=None):
         is_auth = True
 
 
+    action_list = Action.objects.all()
     
+    rating = Profile.objects.all()
+    news_list = Post.objects.active() #.order_by("-timestamp")
+
     context = {
         "title": instance.title,
         "instance": instance,
@@ -108,6 +112,9 @@ def news_detail(request, slug=None):
         "profile":profile,
         "user":request.user,
         "is_auth":is_auth,
+        "action_list":action_list,
+        "rating":rating,
+        "news_list": news_list, 
     }
     return render(request, "news_detail.html", context)
 

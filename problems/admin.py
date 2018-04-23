@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Problem, CheckProblem, Lemma
+from .models import Problem, CheckProblem, Lemma, Theorem
 
 
 class ProblemModelAdmin(admin.ModelAdmin):
@@ -11,6 +11,7 @@ class ProblemModelAdmin(admin.ModelAdmin):
     search_fields = ["title", "content_object"]
     class Meta:
         model = Problem
+admin.site.register(Problem, ProblemModelAdmin)
 
 class CheckProblemModelAdmin(admin.ModelAdmin):
     list_display = ["id", "user", "problem_id", "solved"]
@@ -20,15 +21,18 @@ class CheckProblemModelAdmin(admin.ModelAdmin):
     search_fields = ["user", "problem_id"]
     class Meta:
         model = CheckProblem
+admin.site.register(CheckProblem, CheckProblemModelAdmin)
 
 class LemmaModelAdmin(admin.ModelAdmin):
     list_display = ["id", "name"]
     list_display_links = ["name"]  
     class Meta:
         model = Lemma
-
-admin.site.register(Problem, ProblemModelAdmin)
-
-admin.site.register(CheckProblem, CheckProblemModelAdmin)
-
 admin.site.register(Lemma, LemmaModelAdmin)
+
+class ThoeremModelAdmin(admin.ModelAdmin):
+    list_display = ["id", "name"]
+    list_display_links = ["name"]  
+    class Meta:
+        model = Theorem
+admin.site.register(Theorem, ThoeremModelAdmin)

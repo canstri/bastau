@@ -122,7 +122,9 @@ def register_view(request):
                 course_id = crs.id,
                 passed = 0,
             )
-
+        profile = Profile.objects.get(user = new_user)
+        profile.rating = 0
+        profile.save()
         if next:
             return redirect(next)
         return redirect("/")

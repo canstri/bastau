@@ -13,62 +13,41 @@
         <i class="angle left icon"></i> Back to olympiads
     </a>
     <br><br>
-    {% if staff == "yes" %}
-    <h3 style="color: red"> Staff only: <a class="btn btn-info" href='{% url "olymps:create" %}'>Create Olympiad</a>
-    </h3>
-    {% endif %}
     <div>
-        <h3>{{ instance.title }}</h3>
-        <a href='{{ instance.rating_url }}'>Results</a>
+        <h3>Olympiad: {{ instance.title }} <a style="margin-left: 30px;" href='{{ instance.rating_url }}'>Results</a>
         {% if staff == "yes" %}
-        <a href='{{ instance.get_update_url }}' class="ui tiny button">Edit</a>
+        <a href='{{ instance.get_update_url }}' style="margin-left: 30px;" class="ui tiny button">Edit</a>
         <a href='{{ instance.get_delete_url }}' class="ui tiny button">Delete</a>
+        <a class="ui tiny button" href='{% url "olymps:create" %}'>Create new olympiad</a>
         {% endif %}
+        </h3>
+        
     </div>
 
 
-    <table class="ui celled table">
-        <thead>
-        <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Status</th>
-            {% if staff == "yes" %}
-                <th>Action</th>
-            {% endif %}
-        </tr>
-        </thead>
-        <tbody>
         {% for element_of_user in array_of_user %}
-
-        <tr>
-        <td>{{ forloop.counter }}</td>
-            <td><a href='{{ element_of_user.0.get_absolute_url }}' class="item"><span>{{ element_of_user.0.title }}</span>
-            </a>
-            </td>
-            <td>
-                {% if is_auth == True %}
-                {% if element_of_user.1.0.solved == False %}
-                <span class="item">Not solved</span>
-                {% else %}
-                <span class="item">Solved</span>
-                {% endif %}
-                {% endif %}
-            </td>
-            <td>
-                {% if staff == "yes" %}
-                    <a href='{{ element_of_user.0.get_delete_url }}' class="item">Delete</a>
-                {% endif %}
-            </td>
-
-        </tr>
+            <div class="ui segment" >
+                <h4> 
+                    <a href='{{ element_of_user.0.get_absolute_url }}' class="item">
+                        {{ forloop.counter }}. <span>{{ element_of_user.0.title }}</span>
+                    </a> 
+                    {% if is_auth == True %}
+                    {% if element_of_user.1.0.solved == False %}
+                    <span class="item" style="margin-left: 30px;">Not solved</span>
+                    {% else %}
+                    <span class="item" style="margin-left: 30px; color: green">Solved</span>
+                    {% endif %}
+                    {% endif %}
+                    {% if staff == "yes" %}
+                        <a href='{{ element_of_user.0.get_delete_url }}' class="ui tiny button" style="margin-left: 30px;">Delete</a>
+                    {% endif %}
+                </h4>
+                <p>{{ element_of_user.0.content }}</p>
+            </div>
         {% endfor %}
 
-        </tbody>
-    </table>
     {% if staff == "yes" %}
-    <h4 style="color: red"> Staff only</h4><h4>Create new Problem:</h4>
-    <br>
+    <h4 style="margin-top: 150px;"> Staff only: Create new Problem:</h4>
     <form class="comment_form" method="POST" action='' enctype='multipart/form-data'> {% csrf_token %}
         <div class="ui form" id="submit-problem">
             {{ create_problem_form|crispy }}

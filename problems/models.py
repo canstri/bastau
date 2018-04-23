@@ -73,11 +73,14 @@ class CheckProblem(models.Model):
     actions = ArrayField(ArrayField(models.TextField()), default=[['first', 'first_hidden', 'not_in_task']])
     solved = models.BooleanField(default=False) 
     current_string = models.TextField(default = 'de')
+    current_status = models.TextField(default = 'Wrong')
 
 
 class Lemma(models.Model):
-    name = models.TextField(default='de')
+    name = models.TextField(default='')
 
+class Theorem(models.Model):
+    name = models.TextField(default='')
 
 
 

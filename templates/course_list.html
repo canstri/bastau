@@ -15,14 +15,14 @@
                 <h3> Staff only: <a class="ui button tiny" href='{% url "courses:create" %}' >Create Course</a></h3>
             {% endif %}
         </div>
-
-
-
-
         {% for obj in array_of_user %}
             <div class="ui card text-center" id="card-course">
-                {% if obj.0.draft %}<h4>Staff only: Draft</h4>{% endif %} {% if obj.0.publish > today %}<h4>Staff Only:
-                Future Course</h4>{% endif %}
+                {% if obj.0.draft %}<h4>Staff only: Draft</h4>{% endif %} {% if obj.0.publish > today %}
+                <h4>
+                    Staff Only:
+                    Future Course
+                </h4>
+                {% endif %}
 
                 <div class="image">
                     {% if obj.0.image %}
@@ -57,7 +57,7 @@
                         {% endif %}
                     </div>
                     <div class="description">
-                        {{ obj.0.content|truncatechars_html:200 }}
+                        <p class="content-markdown">{{ obj.0.content|truncatechars_html:200 }}</p>
                     </div>
                     {% if staff == "yes" %}
                     <a class="ui tiny button green" href='{{ obj.0.get_update_url }}'>Edit</a>

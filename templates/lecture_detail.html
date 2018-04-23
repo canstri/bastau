@@ -36,7 +36,7 @@
             {% endif %}
         </h1>
         <h3 class="oneline spacex2">Solved {{ number_of_solved }} of {{ instance.problems|length }} problems</h3>
-        <h4>Author of lecture: <a href="{{ instance.get_author }}">{{ instance.user.username }}</a></h4>
+        <h4>Author of lecture: <a href="{{ instance.get_profile }}">{{ instance.user.username }}</a></h4>
 
         {% if staff == "yes" %}
         <a href='{{ instance.get_delete_url }}' style="color: red;" class="">Delete</a>

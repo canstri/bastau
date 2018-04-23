@@ -10,8 +10,20 @@
 	<!-- CSS -->
 	<link href="https://fonts.googleapis.com/css?family=Roboto:400,500&amp;subset=cyrillic" rel="stylesheet">
 	<link rel='stylesheet' href='{% static "css/app.css" %}' />
-	<!-- <link rel="shortcut icon" href='{% static "images/favicon.ico" %}' type="image/png">
- -->
+	<link rel="shortcut icon" href='{% static "images/favicon.ico" %}' type="image/png">
+
+	<!-- Charts -->
+
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/modules/series-label.js"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+	<script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+
+	<!-- Statistics -->
+
+	<script src="http://code.highcharts.com/highcharts-more.js"></script>
+	<script src="http://code.highcharts.com/modules/solid-gauge.src.js"></script>
 
 
 	<link href="https://fonts.googleapis.com/css?family=Anton|Francois+One|Kanit|Oswald" rel="stylesheet">
@@ -28,7 +40,6 @@
 </head>
 
 <body>
-{% include "registration.html" %}
 
 <div class="ui inverted menu" id="main-menu">
 	<div class="ui container">
@@ -96,7 +107,7 @@
 
             {% else %}
             <div class="item">
-                <a href='{% url "login" %}' class="ui button tiny">Login</a>
+                <a href='{% url "login" %}' class="ui button tiny" onclick="$('#login-modal').modal('show')">Login</a>
             </div>
             <div class="item no-before" style="padding-left: 0px;">
                 <a class="ui button tiny" onclick="$('#registration-modal').modal('show')">Sign up</a>
@@ -115,6 +126,7 @@
 
 
 {% include "messages_display.html" %}
+{% include "modals/registration.html" %}
 <div class='content-container'>
 	{% block content %}{% endblock content %}
 </div>
@@ -140,7 +152,7 @@
 				<h4 class="ui inverted header">Contacts</h4>
 				<div class="ui inverted link list">
 					<p href="#" class="item">Write us on mail</p>
-					<a href="#" class="item">enigmath@enigmath.com</a>
+					<a href="#" class="item">Bastau@Bastau.com</a>
 				</div>
 			</div>
 			<div class="three wide column">
@@ -155,7 +167,7 @@
 
 		</div>
 		<div class="ui inverted section divider"></div>
-		<div class="logo-footer centered">ENIGMATH</div>
+		<div class="logo-footer centered">Bastau</div>
 		<div class="ui horizontal inverted small divided link list">
 			<a class="item" href="#">Site Map</a>
 			<a class="item" href="#">Contact Us</a>
@@ -170,53 +182,51 @@
 
 
 
-<script   src="http://code.jquery.com/jquery-1.12.2.min.js"   integrity="sha256-lZFHibXzMHo3GGeehn1hudTAP3Sc0uKXBXAzHX1sjtk="   crossorigin="anonymous"></script>
-
-
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-
 <script src='https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js'></script>
 
-<script type="text/javascript">
-	$(document).ready(function(){
-	    $(".content-markdown").each(function(){
-	            var content = $(this).text()
-	            var markedContent = marked(content)
-	            $(this).html(markedContent)
-	    })
-	    $(".post-detail-item img").each(function(){
-	            $(this).addClass("img-responsive");
-	    })
-	    
-	    var contentInput = $("#id_content");
-	    function setContent(value){
-	        var markedContent = marked(value)
-	        $("#preview-content").html(markedContent)
-	        $("#preview-content img").each(function(){
-	            $(this).addClass("img-responsive")
-	        })
-	    }
-	    setContent(contentInput.val())
-	    contentInput.keyup(function(){
-	        var newContent = $(this).val()
-	        setContent(newContent)
-	    })
-	    var titleInput = $("#id_title");
-	    
-	    function setTitle(value) {
-	        $("#preview-title").text(value)
-	    }
-	    setTitle(titleInput.val())
-	    titleInput.keyup(function(){
-	        var newContent = $(this).val()
-	        setTitle(newContent)
-	    })
 
-	    $(".comment-reply-btn").click(function(event){
-	        event.preventDefault();
-	        $(this).parent().parent().next(".comment-reply").fadeToggle();
-	    })
-	})
+<script type="text/javascript">
+$(document).ready(function(){
+    $(".content-markdown").each(function(){
+            var content = $(this).text()
+            var markedContent = marked(content)
+            $(this).html(markedContent)
+    })
+    $(".post-detail-item img").each(function(){
+            $(this).addClass("img-responsive");
+    })
+    
+    var contentInput = $("#id_content");
+    function setContent(value){
+        var markedContent = marked(value)
+        $("#preview-content").html(markedContent)
+        $("#preview-content img").each(function(){
+            $(this).addClass("img-responsive")
+        })
+    }
+    setContent(contentInput.val())
+    contentInput.keyup(function(){
+        var newContent = $(this).val()
+        setContent(newContent)
+    })
+    var titleInput = $("#id_title");
+    
+    function setTitle(value) {
+        $("#preview-title").text(value)
+    }
+    setTitle(titleInput.val())
+    titleInput.keyup(function(){
+        var newContent = $(this).val()
+        setTitle(newContent)
+    })
+    $(".comment-reply-btn").click(function(event){
+        event.preventDefault();
+        $(this).parent().parent().next(".comment-reply").fadeToggle();
+    })
+    // preview-title
+    // preview-content
+})
 </script>
+
 </body>
 </html>

@@ -16,17 +16,11 @@
         <div class="twelve wide column">
             {% for obj in object_list %}
             <div id="news-form" class="ui segment">
-
                 {% if obj.draft %}
-
                 <h3>Staff only: Draft</h3>
-
                 {% endif %}
-
                 {% if obj.publish > today %}
-
                 <h3>Staff Only: Future Post</h3>
-
                 {% endif %}
                 <a href="{{ obj.get_author }}" class="author-name">{{ obj.user.username }}</a>
                 {{ obj.publish }}
@@ -37,15 +31,12 @@
                 {% if obj.image %}
                     <img class="responsive-img" src='{{ obj.image.url }}'/>
                 {% endif %}
-
                 <div class="more">
                     <a class="ui button green inverted" href="{{ obj.get_absolute_url }}">
                         Read more
                         <i class="arrow right icon"></i>
                     </a>
                 </div>
-
-
                 <div class="ui grid" id="news-features">
                     <div class="three wide column">
                         <a href="{{ obj.get_like_url }}"><i class="arrow up icon item"></i></a>
@@ -58,18 +49,13 @@
                             {{ obj.comments.count }}
                         </a>
                     </div>
-
-
-
                 </div>
-
                 <div class="admin-rights">
                     {% if staff == "yes" %}
                     <a href='{{ obj.get_update_url }}' class="ui button tiny">Edit</a>
                     <a href='{{ obj.get_delete_url }}' class="ui button tiny">Delete</a>
                     {% endif %}
                 </div>
-
             </div>
             {% endfor %}
         </div>

@@ -39450,7 +39450,7 @@ a:hover {
 }
 
 #content-choice {
-  height: 330px;
+  height: 94vh;
 }
 
 #segment-choice {
@@ -39459,11 +39459,17 @@ a:hover {
   border: none;
   -webkit-box-shadow: none;
           box-shadow: none;
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0) 60%, #fff), linear-gradient(70deg, #dbedff 80%, #ebfff0);
+  background: #003973;
+  /* fallback for old browsers */
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: -webkit-gradient(linear, left top, left bottom, from(#E5E5BE), to(#003973));
+  background: linear-gradient(to bottom, #E5E5BE, #003973);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 #segment-choice .content {
-  margin-top: 70px;
+  position: relative;
+  top: 30%;
 }
 
 .content {
@@ -39605,6 +39611,69 @@ button {
   left: 0;
 }
 
+#main-part .statistics {
+  margin-top: 55px;
+  margin-bottom: 40px;
+}
+
+#main-part .statistics .statistic {
+  margin: 0em 4.5em 2em;
+}
+
+#main-part .third-part {
+  background: #4b6cb7;
+  margin-top: 30px;
+  padding-left: 60px;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  padding-right: 60px;
+}
+
+#main-part .third-part p {
+  line-height: 24px;
+}
+
+#main-part .fourth-part {
+  margin-top: 50px;
+  padding-left: 60px;
+}
+
+#main-part .fourth-part h2 {
+  margin-bottom: 50px;
+}
+
+#main-part .fifth-part {
+  margin-top: 50px;
+  background: #4b6cb7;
+  padding-bottom: 50px;
+  padding-top: 50px;
+}
+
+#main-part .fifth-part h2 {
+  padding-bottom: 10px;
+}
+
+#main-part .fifth-part p {
+  margin-bottom: 40px;
+}
+
+#main-part .fifth-part .first-col {
+  margin-top: 1em;
+  margin-right: 3em;
+}
+
+#main-part .fifth-part .second-col {
+  margin-right: 3em;
+}
+
+#main-part .fifth-part .third-col {
+  margin-bottom: 1em;
+}
+
+#main-part .fifth-part .column {
+  height: 350px;
+}
+
 #submit-problem {
   width: 50%;
 }
@@ -39679,6 +39748,35 @@ button {
   height: auto;
 }
 
+#course-details {
+  background-color: #2c333b;
+  width: 30%;
+  float: left;
+  margin-right: 50px;
+}
+
+#course-details .admin-rules {
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+#course-details a,
+#course-details span,
+#course-details h3 {
+  color: #fff;
+}
+
+#course-details .star-rating {
+  font-size: 20px;
+  color: #fff;
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+
+#course-details h3 {
+  margin-top: 10px;
+}
+
 #comments .avatar {
   margin-right: 10px;
 }
@@ -39703,10 +39801,6 @@ button {
 
 #reply-comments .content {
   margin: 0;
-}
-
-#news-form {
-  width: 70%;
 }
 
 #news-form .author-name {
@@ -39813,52 +39907,14 @@ button {
   margin-top: 10px !important;
 }
 
-#my-profile .header-stats p {
-  width: 90px;
-  font-weight: 600;
-  margin-bottom: 15px;
+#my-profile #chart-graphics {
+  min-width: 310px;
+  max-width: 800px;
+  height: 400px;
+  margin: 0 auto;
 }
 
-#my-profile .semicircle {
-  border-top-left-radius: 90px;
-  border-top-right-radius: 90px;
-  height: 45px;
-  width: 90px;
-  display: inline-block;
-  margin: 0 1em 1em 0;
-}
-
-#my-profile .green-border {
-  border: 6px solid #1aae68;
-  border-bottom: none;
-}
-
-#my-profile .red-border {
-  border: 6px solid #db2828;
-  border-bottom: none;
-}
-
-#my-profile .yellow-border {
-  border: 6px solid #fbbd08;
-  border-bottom: none;
-}
-
-#my-profile .number-stats {
-  position: relative;
-  top: -34px;
-  font-size: 24px;
-  left: 29px;
-}
-
-#my-profile .green-s {
-  color: #1aae68;
-}
-
-#my-profile .yellow {
-  color: #fbbd08;
-}
-
-#my-profile .red {
-  color: #db2828;
+#my-profile .highcharts-yaxis-grid .highcharts-grid-line {
+  display: none;
 }
 
