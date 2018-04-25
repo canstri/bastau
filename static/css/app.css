@@ -20420,10 +20420,6 @@ ol.ui.horizontal.list li:before,
   vertical-align: top;
 }
 
-.ui.grid > * {
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
 
 /*-------------------
         Rows

@@ -1,29 +1,30 @@
 from sympy import *
-from maths.split import splitting
-from maths.splitFinal import splitFinal
-from maths.containsChar import ContainsChar
+from .split import splitting
+from .splitFinal import splitFinal
+from .containsChar import ContainsChar
 from sympy.parsing.sympy_parser import parse_expr
 class LemmaCode(object):
-    def isequal(input_exp):
+    def isEqual(input_exp):
         status = False
         newStr = str(input_exp)
         RHS = ""
         LHS = ""
-        znak = ""
+        sign = ""
 
         bool = False
         try:
-            LHS,RHS,znak = splitting(newStr)
+            LHS,RHS,sign = splitting(newStr)
         except Exception as e:
             return('Wrong')
 
-        if LHS.factor() == RHS.factor() and znak == '=':
+        if LHS.factor() == RHS.factor() and sign == '=':
             status = True
         if status == True:
             return('Correct')
         return('Wrong')
+    print(isEqual('(a-1)*(a+1)=a**2-1'))
 
-    def is_sequence(input_exp): #uncomment lines in codes.py
+    def isSequence(input_exp): #uncomment lines in codes.py
 
         status = False
         try:
@@ -34,7 +35,7 @@ class LemmaCode(object):
 
 
         try:
-            part1, part2,part3 = ContainsChar(expression).split('*')
+            part1, part2,part3 = containsChar(expression).split('*')
 
         except Exception as e:
             return('Exception')  # later need to change to Wrong
@@ -54,7 +55,9 @@ class LemmaCode(object):
     def finalCheck(input_exp): #n**3-n =(n-1)*n*(n + 1) Correct
                                                   #(n-1)*n*(n + 1)#24 Correct
                                                   # n**3-n#24
-        print('will try')
+
+
+
         try:
              input_exp1, input_exp2, input_exp3  = input_exp.split(';')
         except Exception as e:
@@ -201,7 +204,7 @@ class LemmaCode(object):
             leftPartThree,rightPartThree,signThree = splitting(input_exp3)
         except Exception as e:
             return('Wrong')
-
+        #lemma 12
         one = {leftPartOne, rightPartOne}
         two = {leftPartTwo, rightPartTwo}
         three = {leftPartThree, rightPartThree}
@@ -248,8 +251,8 @@ class LemmaCode(object):
 
         #lemma 15
         if(rightPartOne == rightPartTwo == rightPartThree == 0):
-            if((statusFirst == statusSecond == 'Correct') and ((simplify(input_exp3) == True) or (leftPartOne/leftPartTwo == leftPartThree) or ((leftPartTwo/leftPartOne == leftPartThree)))):
-                if(signOne == signTwo and signThree == '>'):
+            if((statusFirst == statusSecond == 'Correct')  or (leftPartOne/leftPartTwo == leftPartThree) or ((leftPartTwo/leftPartOne == leftPartThree))):
+                if(signOne == signTwo and signThree == '>'): #and ((simplify(input_exp3) == True)
                     status = True
             #lemma16
                 elif(signOne != signTwo and signThree == '<'):
@@ -357,4 +360,4 @@ class LemmaCode(object):
         if status == True:
                 return('Correct!')
         return('Wrong')
-    print(fourInputsEquality('a=b Correct; c=d Correct; e=f Correct; a*c*e = b*d*f'))
+    #print(fourInputsEquality('a=b Correct; c=d Correct; e=f Correct; a*c*e = b*d*f'))

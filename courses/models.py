@@ -16,6 +16,15 @@ from transliterate import translit, get_available_language_codes
 class CourseManager(models.Manager):
     def active(self, *args, **kwargs):
         return super(CourseManager, self).filter(draft=False)
+    def search(self, query=None):
+        qs = self.get_queryset()
+        if query is not None:
+            or_lookup = (Q(title__icontains=query) | 
+                         Q(content__icontains=query)|
+                         Q(slug__icontains=query)
+                        )
+            qs = qs.filter(or_lookup).distinct() # distinct() is often necessary with Q lookups
+        return qs
 
 
 def upload_location(instance, filename):

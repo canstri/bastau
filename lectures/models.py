@@ -29,6 +29,15 @@ class LectureManager(models.Manager):
     def filter_by_author(self, author):
         return super(LectureManager, self).filter(user=author)
 
+    def search(self, query=None):
+        qs = self.get_queryset()
+        if query is not None:
+            or_lookup = (Q(title__icontains=query) | 
+                         Q(content__icontains=query)
+                        )
+            qs = qs.filter(or_lookup).distinct() # distinct() is often necessary with Q lookups
+        return qs
+
 
 class Lecture(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete = models.PROTECT)

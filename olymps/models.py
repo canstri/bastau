@@ -18,6 +18,14 @@ from django.contrib.postgres.fields import ArrayField
 class OlympManager(models.Manager):
     def active(self, *args, **kwargs):
         return super(OlympManager, self).filter(draft=False).filter(publish__lte=timezone.now())
+    def search(self, query=None):
+        qs = self.get_queryset()
+        if query is not None:
+            or_lookup = (Q(title__icontains=query) | 
+                         Q(slug__icontains=query)
+                        )
+            qs = qs.filter(or_lookup).distinct() # distinct() is often necessary with Q lookups
+        return qs
 
 
 def upload_location(instance, filename):
