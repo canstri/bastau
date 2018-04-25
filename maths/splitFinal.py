@@ -1,8 +1,7 @@
 from sympy import *
 from mpmath import *
 
-def splitFinal(string):
-    znak = ""
+def splitFinal(string): 
     lhs = ""
     rhs = ""
     met = False
@@ -16,6 +15,5 @@ def splitFinal(string):
             lhs += string[i]
         else:
            rhs += string[i]
-    result_array = [lhs, rhs]
-    return lhs,rhs
+    return(lhs,rhs)
 #print(splitFinal('n**3-n =(n-1)*n*(n + 1) Correct'))

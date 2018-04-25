@@ -3,6 +3,7 @@ from .split import splitting
 from .splitFinal import splitFinal
 from .containsChar import ContainsChar
 from sympy.parsing.sympy_parser import parse_expr
+from .findPower import findPower
 class LemmaCode(object):
     def isEqual(input_exp):
         status = False
@@ -22,7 +23,7 @@ class LemmaCode(object):
         if status == True:
             return('Correct')
         return('Wrong')
-    print(isEqual('(a-1)*(a+1)=a**2-1'))
+    #print(isEqual('(a-1)*(a+1)=a**2-1'))
 
     def isSequence(input_exp): #uncomment lines in codes.py
 
@@ -82,6 +83,31 @@ class LemmaCode(object):
                 return('Correct')
         return('Wrong')
     #print(is_sequence('(n-1)*n*(n + 1)#24'))
+    def zamena(input_exp):
+
+        print('here')
+        status = False
+        try:
+             input_exp1, input_exp2  = input_exp.split(';')
+        except Exception as e:
+            return('Exception1')  # later need to change
+        try:
+            expressionFirst, statusFirst = splitFinal(input_exp1)
+        except Exception as e:
+            return('Exception2')  # later need to change
+
+        try:
+            part1,part2,sign = splitting(input_exp2)
+        except Exception as e:
+            return('Exception3')
+
+        expressionFirst = str(expressionFirst)
+        part1 = str(part1)
+        part2 = str(part2)
+
+        expressionFirst = expressionFirst.replace(part1, part2)
+        return(expressionFirst)
+
     def checkInequalities(input_exp): # a>b Correct; a+c > b+c                   3<=5 Correct; 5 >=3
         status =False
 
@@ -360,4 +386,39 @@ class LemmaCode(object):
         if status == True:
                 return('Correct!')
         return('Wrong')
-    #print(fourInputsEquality('a=b Correct; c=d Correct; e=f Correct; a*c*e = b*d*f'))
+    def powerInequality(input_exp):
+        status = False
+        checked = False
+        try:
+             input_exp1, input_exp2  = input_exp.split(';')
+        except Exception as e:
+            return('Wrong')
+
+        try:
+            expressionFirst, statusFirst = splitFinal(input_exp1)
+        except Exception as e:
+            return('Wrong')
+
+        try:
+            leftPartOne,rightPartOne,signOne = splitting(expressionFirst)
+        except Exception as e:
+            return('Wrong')
+
+        try:
+            leftPartTwo,rightPartTwo,signTwo = splitting(input_exp2)
+        except Exception as e:
+            return('Wrong')
+
+        baseArray,powerArray = findPower(input_exp2)
+        for i in range(len(powerArray) - 1):
+            if(powerArray[i] == powerArray[i+1]):
+                checked = True
+
+        if(signOne == signTwo and checked == True):
+            if(leftPartOne == baseArray[0] and rightPartOne == baseArray[1]):
+                status = True
+
+        if status == True:
+            return('Correct!')
+        return('Wrong')
+    print(powerInequality('x>y Correct; x**n > y**n'))
