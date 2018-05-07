@@ -5,92 +5,140 @@
 {{ object }}
 <div class='ui container' id="problem-solve">
     <h3 style="margin-top: 10px"> <a class="ui button blue" href="{{ problem.content_object.get_absolute_url }}">
-    <i class="arrow left icon"></i>Olympiad: {{ problem.content_object.title }}</a> <a href='{{ problem.content_object.rating_url }}'>Results</a>
+        <i class="arrow left icon"></i>Olympiad: {{ problem.content_object.title }}</a> <a href='{{ problem.content_object.rating_url }}'>Results</a>
                  
-    {% if request.user == problem.user %}
+        {% if request.user == problem.user %}
         <a href='{{ problem.get_delete_url }}' class="ui tiny button" style="margin-left: 30px">Delete</a>
-    {% endif %}
-</h3>
-
+        {% endif %}
+    </h3>
 </div>
 
 <div class='ui container grid' id="problem-solve" style="margin-top:33px; background-color: #2c333b;">
-    <div class="eleven wide column" >            
-        <div class="ui segment">
-            {% if check_problem.solved == False %}
-                <h4>Problem: {{ problem.title }} Not solved
-            {% else %}
-                <h4 style="color: green;">Problem: {{ problem.title }} Solved
-            {% endif %}
-            <a href="{{ problem.get_profile }}" style="margin-left: 30px">by {{ problem.user }}</a>
+    <div class="sixteen wide column" >            
+        <div class="" style="background-color: #2c333b; color: #Fff;">
+            <h4>Problem {{ problem.title }} <a href="{{ problem.get_profile }}" style="margin-left: 30px">by {{ problem.user }}</a>
             </h4>
-            {{ problem.content }}
+            {% for hs in ht_array %}
+                <a href="{{ hs.url }}" style="color: lightgrey">#{{ hs.name }}</a>
+            {% endfor %}
+            <br>
+            {{ problem.content2 }}
+            {% if check_problem.solved == False %}
+                 <h4 style="color: red;">Not solved
+            {% else %}
+                <h4 style="color: lightgreen;">Solved <i class="icon check"></i>
+            {% endif %}
+            </h4>
         </div>
     </div>
-</div>    
-<div class='ui container grid' id="problem-solve" style="background-color: #2c333b;">
-    <form method="POST" action='' enctype='multipart/form-data'> {% csrf_token %}
-        <div class='ui container grid' id="problem-solve">
-            <div class="twelve wide column" >                            
-                <div class="ui form" >
-                    <div class="ui action input">
-                        {{ check_problem_form }}
-                            
+        
+    <div class="eleven wide column" >
+        <form method="POST" action='' enctype='multipart/form-data'> {% csrf_token %}
+            <div class='ui container grid' id="problem-solve" style="background-color: #2c333b;">
+                <div class="eleven wide column" style="margin-left: 230px;">
+                    <div class="ui form" id="form-solve-problem">
+                        <div class="ui action input">
+                            {{ check_problem_form }}
+                        </div>
+                    </div>
+                    <button type='submit' name = 'check' class='ui button tiny blue' style="margin-top: 10px;">Check</button>
+                    <span class=" btn-s1" style="margin-left: 35px;color: #fff;font-weight: 600;margin-right: 25px;cursor: pointer;">√</span>
+                    <span class=" btn-s2" style="color: #fff;font-weight: 600;margin-right: 25px;cursor: pointer">sin</span>
+                    <span class=" btn-s3" style="color: #fff;font-weight: 600;margin-right: 25px;cursor: pointer">cos</span>
+                    <span class=" btn-s4" style="color: #fff;font-weight: 600;margin-right: 25px;cursor: pointer">tan</span>
+                    <span class=" btn-s5" style="color: #fff;font-weight: 600;margin-right: 25px;cursor: pointer">ctan</span>
+                    <span class=" btn-s6" style="color: #fff;font-weight: 600;margin-right: 25px;cursor: pointer">log</span>
+                    <span class=" btn-s7" style="color: #fff;font-weight: 600;margin-right: 25px;cursor: pointer">∑</span>
+                    <span class=" btn-s8" style="color: #fff;font-weight: 600;margin-right: 25px;cursor: pointer">∞</span>
+                                    <!-- <h4 style="color: white;">Your expression:</h4>
+                     --><div class="ui segment" style="background-color: #fff;">
+                            {% if check_problem.current_string == '' %}
+                                <h5 style="color: grey;">Your expression will be here 
+                            {% else %}
+                                <h5>{{ check_problem.current_string }} {{ check_problem.current_status }} 
+                            {% endif %}
+                        </h5> 
+                    </div>
+                    <button type='submit' name = 'clear' class='ui button tiny'>Clear</button>
+                    <button type='submit' name = 'save' class='ui button tiny blue '>Save</button> 
+                </div>  
+                <div class="five wide column" style="position: absolute; margin-left: -15px;">
+                    <div class="ui segment" style="border: 1px solid #8b8b8b; background-color: #2c333b;padding:10px 0 ">             
+                        <h4 style="color: white;    text-align: center;">Theorems</h4>
+                        <div class="ui category search">
+                          <div class="ui icon input">
+                            <input class="prompt" type="text" placeholder="Search theorems" style="width: 218px;border-radius: 0;">
+                            <i class="search icon"></i>
+                          </div>
+                          <div class="results"></div>
+                        </div>
+                        {% for thrm in theorems %}
+                            <button type='submit' name = '{{ thrm.name }}' style="background: transparent;border: none;margin-top: 10px;margin-bottom: 10px;color: #fff;font-weight: 600;cursor:pointer;width: 196px;text-align: left">{{ thrm.name }}</button>
+                        {% endfor %}
                     </div>
                 </div>
-                <div>
-                    <button type='submit' name = 'check' class='ui button tiny'>Check</button>
-                    <button type='submit' name = 'save' class='ui button tiny ' style="margin-top: 10px;">Save</button> 
-                </div>
-                <h4 style="color: white">Status: {{ action_check }} {{ check_problem.current_string }}</h4>     
             </div>
-        
-            <div class="four wide column" style="margin-top: -80px;">   
-                <div class="ui segment">             
-                    <h4>Theorems</h4>
-                    {% for thrm in theorems %}
-                        <div class="ui form">
-                            <div class="ui input list">
-                                <button type='submit' name = '{{ thrm.name }}' class='ui button'>{{ thrm.name }}</button>
-                            </div>
-                        </div>
-                    {% endfor %}
-                    <br>
-                </div>
-            </div>   
-        </div> 
-    </form>   
-
-    <div class="eleven wide column" >
-            <h4 style="color: white">{% if check_problem.actions|length == 0 %}
+        </form> 
+    </div>
+    <div class="five wide column" >
+<!--             <h4 style="color: white">{% if check_problem.actions|length == 0 %}
                     Here will be your saved expressions{% endif %}{% if check_problem.actions|length > 0 %}
                     {{ check_problem.actions|length }} expression{% if check_problem.actions|length > 1 %}s{% endif %}:
                 {% endif %}
             </h4>
-            <div class='ui container grid' id="problem-solve">
-                {% for c in check_problem.actions %}
-                <div class="eight wide column" >
-                <div class="ui segment">
-                    {% if c.1 != 'f' %}
-                        <form method="POST" action='' enctype='multipart/form-data'>{% csrf_token %}
-                            <div class="ui input">
-                                <input type='hidden' name='exp_id' value='{{ forloop.counter }}'>
-                                {{ c.0 }}<p style="margin-left: 10px;">{{ c.1 }}</p>
-                                <button type="submit" name = 'use' class='ui tiny green button' style="margin-left: 10px;">use</button>
-                                {% if c.2 == 'not_in_task' %}
-                                <button type='submit' name='delete' class='ui tiny red button' style="margin-left:5px;" >x
-                                </button>
-                                {% endif %}  
-                            </div>
-                        </form>
-                    {% endif %}
-                </div>    
-                </div>
-                {% endfor %}
-            </div>
-        </div>    
-    </div>
-
-
-
+    --> {% for c in check_problem.actions %}
+            <div class="ui segment" style="border: 1px solid #8b8b8b; background-color: #2c333b;">
+                {% if c.1 != 'f' %}
+                    <form method="POST" action='' enctype='multipart/form-data'>{% csrf_token %}
+                        <div class="ui input">
+                            <input type='hidden' name='exp_id' value='{{ forloop.counter }}'>
+                            <p style="color: white">{{ c.0 }}</p><p style="margin-left: 10px;">
+                                {% if c.1 == 'Need to prove' %}
+                                    <i class="icon exclamation circle" style="color: orange; font-size: 18px;"></i>
+                                {% elif c.1 == 'Correct' %}
+                                    <i class="icon check circle" style="color: green; font-size: 18px;"></i>
+                                {% elif c.1 == 'Exception' %}    
+                                    <i class="times circle icon" style="color: red; font-size: 18px;"></i>
+                                {% endif %}    
+                            </p>
+                            <button type="submit" name = 'use' class='ui tiny button' style="margin-left: 10px;">use</button>
+                            {% if c.2 == 'not_in_task' %}
+                            <button type='submit' name='delete' class='ui tiny button' style="margin-left:5px;">delete
+                            </button>
+                            {% endif %}  
+                        </div>
+                    </form>
+                {% endif %}
+            </div>    
+        {% endfor %}
+    </div>  
+<script type="text/javascript">
+    $(function (){
+        $('.btn-s1').on('click', function () {
+            $('#form-solve-problem textarea').append(" ").append('√( )').append(" ");
+        });
+         $('.btn-s2').on('click', function () {
+            $('#form-solve-problem textarea').append(" ").append('sin( )').append(" ");
+        });
+          $('.btn-s3').on('click', function () {
+            $('#form-solve-problem textarea').append(" ").append('cos( )').append(" ");
+        });
+           $('.btn-s4').on('click', function () {
+            $('#form-solve-problem textarea').append(" ").append('tan( )').append(" ");
+        
+        });
+            $('.btn-s5').on('click', function () {
+            $('#form-solve-problem textarea').append(" ").append('ctan( )').append(" ");
+        });
+             $('.btn-s6').on('click', function () {
+            $('#form-solve-problem textarea').append(" ").append('log( , )').append(" ");
+        });
+              $('.btn-s7').on('click', function () {
+            $('#form-solve-problem textarea').append(" ").append('∑').append(" ");
+        });
+              $('.btn-s8').on('click', function () {
+            $('#form-solve-problem textarea').append(" ").append('∞').append(" ");
+        });
+    });
+</script>
 {% endblock content %}

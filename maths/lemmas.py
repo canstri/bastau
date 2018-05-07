@@ -4,6 +4,8 @@ from .splitFinal import splitFinal
 from .containsChar import ContainsChar
 from sympy.parsing.sympy_parser import parse_expr
 from .findPower import findPower
+from operator import itemgetter
+
 class LemmaCode(object):
     def isEqual(input_exp):
         status = False
@@ -28,18 +30,20 @@ class LemmaCode(object):
     def isSequence(input_exp): #uncomment lines in codes.py
 
         status = False
+        print('here')
         try:
             expression, divider, sign1 = splitting(input_exp)
             expression = str(expression)
         except Exception as e:
-            return('Exception')  # later need to change to Wrong
+            return('Wrong2')  # later need to change to Wrong
 
 
         try:
-            part1, part2,part3 = containsChar(expression).split('*')
+            print(expression)
+            part1, part2,part3 = ContainsChar(expression).split('*')
 
         except Exception as e:
-            return('Exception')  # later need to change to Wrong
+            return('Wrong3')  # later need to change to Wrong
 
         arr = [int(expand(part1)),int(expand(part2)),int(expand(part3))]
         array = sorted(arr)
@@ -52,17 +56,45 @@ class LemmaCode(object):
             return('Correct')
         return('Wrong')
 
+    def sequenceDevision(input_exp):
+        status = False
+        try:
+            expression, divider, sign1 = splitting(input_exp)
+            expression = str(expression)
+        except Exception as e:
+            return('Wrong')  # later need to change to Wrong
+
+        try:
+            parts = expression.split('*')
+        except Exception as e:
+            return('Wrong')  # later need to change to Wrong
+
+        number_of_parts = len(parts)
+        
+        #Сорт без containsChar
+        #Распознать переменную, даже если она вида "x*y+z"
+        #Сказать Куанышу дописать лемму
+
+        delta = number_of_parts
+        for index in range(len(parts) - 1):
+            if (parts[index + 1] - parts[index] == delta):
+                status = True
+
+
+
+
+
 
     def finalCheck(input_exp): #n**3-n =(n-1)*n*(n + 1) Correct
                                                   #(n-1)*n*(n + 1)#24 Correct
                                                   # n**3-n#24
 
-
+        print(input_exp)
 
         try:
              input_exp1, input_exp2, input_exp3  = input_exp.split(';')
         except Exception as e:
-            return('Exception')  # later need to change
+            return('Wrong')  # later need to change
 
         status = False
         expressionFirst, statusFirst = splitFinal(input_exp1)
@@ -78,35 +110,12 @@ class LemmaCode(object):
         if((factor(partTwo) == factor(partThree)) and (statusFirst == statusSecond == 'Correct')
             and (sympify(partTwo) == sympify(partFour)) and (dividerOne == dividerTwo)):
             status = True
-
+        print(status)
         if status == True:
                 return('Correct')
         return('Wrong')
     #print(is_sequence('(n-1)*n*(n + 1)#24'))
-    def zamena(input_exp):
-
-        print('here')
-        status = False
-        try:
-             input_exp1, input_exp2  = input_exp.split(';')
-        except Exception as e:
-            return('Exception1')  # later need to change
-        try:
-            expressionFirst, statusFirst = splitFinal(input_exp1)
-        except Exception as e:
-            return('Exception2')  # later need to change
-
-        try:
-            part1,part2,sign = splitting(input_exp2)
-        except Exception as e:
-            return('Exception3')
-
-        expressionFirst = str(expressionFirst)
-        part1 = str(part1)
-        part2 = str(part2)
-
-        expressionFirst = expressionFirst.replace(part1, part2)
-        return(expressionFirst)
+    
 
     def checkInequalities(input_exp): # a>b Correct; a+c > b+c                   3<=5 Correct; 5 >=3
         status =False
@@ -195,7 +204,7 @@ class LemmaCode(object):
                 status = True
 
         if status == True:
-                return('Correct!')
+            return('Correct')
         return('Wrong')
 
     def threeInputsEquality2(input_exp):
@@ -241,7 +250,7 @@ class LemmaCode(object):
             status = True
 
         if status == True:
-                return('Correct!')
+            return('Correct')
         return('Wrong')
     def threeInputsGreaterZero(input_exp):
         status =False
@@ -285,7 +294,7 @@ class LemmaCode(object):
                     status = True
 
         if status == True:
-                return('Correct!')
+            return('Correct')
         return('Wrong')
     def threeInputsInequality(input_exp): # a>b Correct; x>y Correct; a*x +b*y > a*y +b*x
         status =False
@@ -326,7 +335,7 @@ class LemmaCode(object):
             if(sympify(leftPartThree) == sympify(left) and sympify(rightPartThree) == sympify(right)):
                 status = True
         if status == True:
-                return('Correct!')
+                return('Correct')
         return('Wrong')
     def fourInputsEquality(input_exp):
         status =False
@@ -384,7 +393,7 @@ class LemmaCode(object):
                 status = True
 
         if status == True:
-                return('Correct!')
+            return('Correct')
         return('Wrong')
     def powerInequality(input_exp):
         status = False
@@ -419,6 +428,6 @@ class LemmaCode(object):
                 status = True
 
         if status == True:
-            return('Correct!')
+            return('Correct')
         return('Wrong')
-    print(powerInequality('x>y Correct; x**n > y**n'))
+#    print(powerInequality('x>y Correct; x**n > y**n'))

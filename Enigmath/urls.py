@@ -30,9 +30,12 @@ urlpatterns = [
     url(r'^news/', include("news.urls", namespace='news')),
     url(r'^profile/', include("accounts.urls", namespace='accounts')),
     url(r'^olympiads/', include("olymps.urls", namespace='olymps')),
-    url(r'^problems/', include("problems.urls", namespace='problems')),
+    url(r'^problem/', include("problems.urls", namespace='problems')),
+    url(r'^problems/', include("hashtags.urls", namespace='hashtags')),
     url(r'^courses/', include("courses.urls", namespace='courses')),
     url(r'^lectures/', include("lectures.urls", namespace='lectures')),
+    url(r'^groups/', include("squads.urls", namespace='squads')),
+    url(r'^tasks/', include("tasks.urls", namespace='tasks')),
     url(r'^', include("main.urls", namespace='main')),
 ]
 

@@ -25,6 +25,7 @@ def news_create(request):
     if form.is_valid():
         instance = form.save(commit=False)
         instance.user = request.user
+        instance.author_profile = Profile.objects.get(user = request.user)
         instance.save()
         # message Successfully
         messages.success(request, "Successfully Created")

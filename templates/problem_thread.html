@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+{% load urlify %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}
+{{ instance.title }} | {{ block.super }}
+{% endblock head_title %}
+
+
+{% block content %}
+<div class='ui container'>
+    <div>
+        <h3>
+            {% if hashtag == 'all' %}
+                All problems
+            {% else %}
+                #{{ hashtag }} problems
+            {% endif %}
+        </h3>
+        <br>
+    </div>
+    <div class="ui grid" >    
+            <div class="ten wide column">
+                {% for element_of_user in array_of_user %}
+                <div class="ui segment">
+                    <h5> 
+                        <a href='{{ element_of_user.0.get_absolute_url }}' class="item" >
+                            {{ forloop.counter }}. <span>{{ element_of_user.0.title }}</span>
+                        </a> 
+                        {% if staff == "yes" %}
+                            <a href='{{ element_of_user.0.get_delete_url }}' class="ui tiny button" style="margin-left: 30px;">Delete</a>
+                        {% endif %}
+                    </h5>
+                    <p style="font-weight: 600; font-size: 17px;">{{ element_of_user.0.content2 }}</p>
+                </div>
+                <div class="ui grid" id="news-features" style="padding: 7px;">
+                    {% if is_auth == True %}
+                        {% if element_of_user.1.solved == False %}
+                        <span class="item" style="margin-right: 15px; color: #FE2E2E; font-weight: 600;">Not solved</span>
+                        {% else %}
+                        <span class="item" style="margin-right: 15px; color: #04B431; font-weight: 600;">Solved</span>
+                        {% endif %}
+                    {% endif %}
+                    {% for hs in element_of_user.2 %}
+                        <a href="{{ hs.url }}">#{{ hs.name }}</a>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+
+                {% if staff == "yes" %}
+                <h4 style="margin-top: 150px;"> Staff only: Create new Problem:</h4>
+                <form class="comment_form" method="POST" action='' enctype='multipart/form-data'> {% csrf_token %}
+                    <div class="ui form" id="submit-problem">
+                        {{ create_problem_form|crispy }}
+                    </div>
+                    <div class="ui input">
+                        <input type='submit' class='ui button green' style="margin-top:20px" value='Create problem'>
+                    </div>
+                </form>
+                {% endif %}
+            </div>
+            <div class="five wide column">
+                <div style="height: 50px; background-color: #f2f2f2; text-align: center; border: 1px solid rgba(34, 36, 38, 0.15);">
+                    <p style="font-size: 15px; padding: 15px; font-weight: 600;">Топ 5:</p>
+                </div>
+                <div class="ui segment">
+                    <div id="best-authors-news">
+                        <div class="ui grid one-author">
+                            <div class="three wide column">
+                                <a href="{{ rating.0.get_absolute_url }}">
+                                {% if rating.0.image %}
+                                    <img src="{{ rating.0.image.url }}">
+                                {% endif %}
+                                </a>
+                            </div>
+                            <div class="thirteen wide column ui grid right-side">
+                                <div class="eight wide column name-author">
+                                    <a href="{{ rating.0.get_absolute_url }}"><span>{{ rating.0.user.username }}</span></a>
+                                </div>
+                                <div class="seven wide column rating-autor">
+                                    <span>{{ rating.0.rating }}</span>
+                                </div>
+                                <div class="ui tiny progress success">
+                                    <div class="bar" style="width: 88%;">
+                                        <div class="progress"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui grid one-author">
+                            <div class="three wide column">
+                                <a href="{{ rating.1.get_absolute_url }}">
+                                {% if rating.1.image %}
+                                    <img src="{{ rating.1.image.url }}">
+                                {% endif %}
+                                </a>
+                            </div>
+                            <div class="thirteen wide column ui grid right-side">
+                                <div class="eight wide column name-author">
+                                    <a href="{{ rating.1.get_absolute_url }}"><span>{{ rating.1.user.username }}</span></a>
+                                </div>
+                                <div class="seven wide column rating-autor">
+                                    <span>{{ rating.1.rating }}</span>
+                                </div>
+                                <div class="ui tiny progress success">
+                                    <div class="bar" style="width: 58%;">
+                                        <div class="progress"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui grid one-author">
+                            <div class="three wide column">
+                                <a href="{{ rating.2.get_absolute_url }}">
+                                {% if rating.2.image %}
+                                    <img src="{{ rating.2.image.url }}">
+                                {% endif %}
+                                </a>
+                            </div>
+                            <div class="thirteen wide column ui grid right-side">
+                                <div class="eight wide column name-author">
+                                    <a href="{{ rating.2.get_absolute_url }}"><span>{{ rating.2.user.username }}</span></a>
+                                </div>
+                                <div class="seven wide column rating-autor">
+                                    <span>{{ rating.2.rating }}</span>
+                                </div>
+                                <div class="ui tiny progress success">
+                                    <div class="bar" style="width: 8%;">
+                                        <div class="progress"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui grid one-author">
+                            <div class="three wide column">
+                                <a href="{{ rating.3.get_absolute_url }}">
+                                {% if rating.3.image %}
+                                    <img src="{{ rating.3.image.url }}">
+                                {% endif %}
+                                </a>
+                            </div>
+                            <div class="thirteen wide column ui grid right-side">
+                                <div class="eight wide column name-author">
+                                    <a href="{{ rating.3.get_absolute_url }}"><span>{{ rating.3.user.username }}</span></a>
+                                </div>
+                                <div class="seven wide column rating-autor">
+                                    <span>{{ rating.3.rating }}</span>
+                                </div>
+                                <div class="ui tiny progress success">
+                                    <div class="bar" style="width: 8%;">
+                                        <div class="progress"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui grid one-author">
+                            <div class="three wide column">
+                                <a href="{{ rating.4.get_absolute_url }}">
+                                {% if rating.4.image %}
+                                    <img src="{{ rating.4.image.url }}">
+                                {% endif %}
+                                </a>
+                            </div>
+                            <div class="thirteen wide column ui grid right-side">
+                                <div class="eight wide column name-author">
+                                    <a href="{{ rating.4.get_absolute_url }}"><span>{{ rating.4.user.username }}</span></a>
+                                </div>
+                                <div class="seven wide column rating-autor">
+                                    <span>{{ rating.4.rating }}</span>
+                                </div>
+                                <div class="ui tiny progress success">
+                                    <div class="bar" style="width: 8%;">
+                                        <div class="progress"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="height: 50px; background-color: #f2f2f2; text-align: center; border: 1px solid rgba(34, 36, 38, 0.15);">
+                    <p style="font-size: 15px; padding: 15px; font-weight: 600;">Последние действия:</p>
+                </div>
+                <div class="ui segment">
+                    <div id="best-authors-news">
+                            <div class="post">
+                                <a href="{{ action_list.0.user.get_absolute_url }}">{{ action_list.0.user.user }}</a> solved <a href="{{ action_list.0.problem.get_absolute_url }}">{{ action_list.0.problem.title }}</a>
+                                <div class="ui divider"></div>
+                            </div>
+                            <div class="post">
+                                <a href="{{ action_list.1.user.get_absolute_url }}">{{ action_list.1.user.user }}</a> solved <a href="{{ action_list.1.problem.get_absolute_url }}">{{ action_list.1.problem.title }}</a>
+                                <div class="ui divider"></div>
+                            </div>
+                            <div class="post">
+                                <a href="{{ action_list.2.user.get_absolute_url }}">{{ action_list.2.user.user }}</a> solved <a href="{{ action_list.2.problem.get_absolute_url }}">{{ action_list.2.problem.title }}</a>
+                                <div class="ui divider"></div>
+                            </div>
+                            <div class="post">
+                                <a href="{{ action_list.3.user.get_absolute_url }}">{{ action_list.3.user.user }}</a> solved <a href="{{ action_list.3.problem.get_absolute_url }}">{{ action_list.3.problem.title }}</a>
+                                <div class="ui divider"></div>
+                            </div>
+                            <div class="post">
+                                <a href="{{ action_list.4.user.get_absolute_url }}">{{ action_list.4.user.user }}</a> solved <a href="{{ action_list.4.problem.get_absolute_url }}">{{ action_list.4.problem.title }}</a>
+                                <div class="ui divider"></div>
+                            </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

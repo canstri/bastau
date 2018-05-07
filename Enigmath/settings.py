@@ -50,6 +50,9 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
     'courses',
     'lectures',
+    'squads',
+    'tasks',
+    'hashtags'
 ]
 
 

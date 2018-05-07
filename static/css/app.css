@@ -68,6 +68,7 @@ html {
 
 body {
   margin: 0;
+  background-color: #f4f4f4 !important;
 }
 
 /**
@@ -17461,13 +17462,13 @@ ol.ui.horizontal.list li:before,
 
 .ui.segment {
   position: relative;
-  background: #FFFFFF;
+  background-color: #fff;
   -webkit-box-shadow: 0px 1px 2px 0 rgba(34, 36, 38, 0.15);
   box-shadow: 0px 1px 2px 0 rgba(34, 36, 38, 0.15);
   margin: 1rem 0em;
-  padding: 1em 1em;
-  border-radius: 0.28571429rem;
+  margin-top: 0em;
   border: 1px solid rgba(34, 36, 38, 0.15);
+  padding: 1rem;
 }
 
 .ui.segment:first-child {
@@ -20455,8 +20456,8 @@ ol.ui.horizontal.list li:before,
 /* Vertical padding when no rows */
 
 .ui.grid > .column:not(.row) {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
 }
 
 .ui.grid > .row > .column {
@@ -24196,9 +24197,7 @@ Floated Menu / Item
 
 /*--- Border ---*/
 
-.ui.inverted.menu .item:before {
-  background: rgba(255, 255, 255, 0.08);
-}
+
 
 .ui.vertical.inverted.menu .item:before {
   background: rgba(255, 255, 255, 0.08);
@@ -39804,7 +39803,6 @@ button {
 }
 
 #news-form h1 {
-  margin-top: 10px;
 }
 
 #news-form a {
@@ -39829,11 +39827,10 @@ button {
 
 #news-form .more {
   margin-top: 20px;
-  margin-bottom: 20px;
 }
 
 #reading-right-now {
-  background: #f7f7f7;
+  background: #fff;
   padding: 1rem;
 }
 
@@ -39864,11 +39861,11 @@ button {
 }
 
 #news-features {
-  border: 1px solid #8b8b8b;
-  width: 90%;
-  margin-bottom: 20px;
-  margin-top: 0;
-  margin-left: 0;
+  background-color: #F2F2F2;
+  width: 100%;
+  margin-bottom: 2rem;
+  margin-left: 0rem;
+  border: 1px solid rgba(34, 36, 38, 0.15);
 }
 
 #news-features .down {
@@ -39876,7 +39873,7 @@ button {
 }
 
 #best-authors-news {
-  background: #f7f7f7;
+  background: #fff;
   padding: 1rem;
   margin-bottom: 20px;
 }

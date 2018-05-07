@@ -81,7 +81,10 @@ def olymp_detail(request, slug=None):
 
     array_of_user = []
     for prblm in instance.problems:
-        array_of_user.append([prblm, CheckProblem.objects.filter(user = request.user.id, problem_id = prblm.id)])    
+        ht_array = []
+        for hshtg in prblm.hashtag_list.all():
+            ht_array.append(hshtg)
+        array_of_user.append([prblm, CheckProblem.objects.filter(user = request.user.id, problem_id = prblm.id), ht_array])    
     context = {
         "title": instance.title,
         "instance": instance,
@@ -124,8 +127,8 @@ def olymps_list(request):
         queryset = paginator.page(paginator.num_pages)
 
     olymps = []
-    in_olymp = False
     for ol in queryset:
+        in_olymp = False
         for usr in ol.participants.all():
             if request.user == usr:
                 in_olymp = True

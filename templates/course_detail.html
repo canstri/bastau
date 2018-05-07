@@ -11,14 +11,12 @@
 
 
 {% block content %}
-
-
 <div class='ui container' id="course-detail">
-
     <a class="button ui blue" href='{% url "courses:list" %}'>
         <i class="arrow left icon"></i>
         Back to course list
     </a>
+
     <div>
         <div class="ui horizontal list course-info">
             <h1 class="item title-course">{{ instance.title }} </h1>
@@ -65,10 +63,10 @@
     </div>
     
     {% for obj in array_of_user %}
-            <div class="ui card text-center"  id="course-details">
+            <div class="ui card text-center"  id="card-course">
                 {% if obj.0.draft %}<h4 style="color: red">Staff only: Draft</h4>{% endif %} {% if obj.0.publish > today %}<h4>Staff Only: Future Olympiad</h4>{% endif %}
                 {% if obj.0.image %}
-                    <a class="oneline" href='{{ obj.0.get_absolute_url }}'><img class="olymp-image" src='{{ obj.0.image.url }}'/></a>
+                    <a class="" href='{{ obj.0.get_absolute_url }}'><img class="olymp-image" src='{{ obj.0.image.url }}'/></a>
                 {% endif %}
                     <h2>
                         <a class="post-title" href='{{ obj.0.get_absolute_url }}'>{{ obj.0.title }}</a>
@@ -113,18 +111,16 @@
 
 
     {% if staff == "yes" %}
-    <div>
-        <h4 style="color: red"> Staff only</h4><h4>Create new Lecture:</h4>
-        <form class="comment_form" method="POST" action='' enctype='multipart/form-data'> {% csrf_token %}
-            <div class="ui form" id="course-submit">
-                {{ form|crispy }}
-                <div class="ui input">
-                    <input type='submit' class='ui button green' style="margin-top:20px" value='Create Lecture' >
-                </div>
+    <h4 style="color: red"> Staff only</h4><h4>Create new Lecture:</h4>
+    <form class="comment_form" method="POST" action='' enctype='multipart/form-data'> {% csrf_token %}
+        <div class="ui form" id="course-submit">
+            {{ form|crispy }}
+            <div class="ui input">
+                <input type='submit' class='ui button green' style="margin-top:20px" value='Create Lecture' >
             </div>
+        </div>
 
-        </form>
-    </div>
+    </form>
 
     {% endif %}   
 

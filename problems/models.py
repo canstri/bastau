@@ -19,15 +19,9 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 
 from accounts.models import Profile
-
-
-# Create your models here.\
-
+from hashtags.models import Hashtag
 
 class ProblemManager(models.Manager):
-    def all(self):
-        return super(ProblemManager, self)
-
     def filter_by_instance(self, instance):
         content_type = ContentType.objects.get_for_model(instance.__class__)
         return super(ProblemManager, self).filter(content_type=content_type, object_id= instance.id)
@@ -53,13 +47,16 @@ class Problem(models.Model):
     content_object = GenericForeignKey('content_type', 'object_id')
 
     content = models.TextField()
+    content2 = models.TextField(default='')
     title = models.CharField(max_length=120)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     level = models.IntegerField(default=1)
 
     objects = ProblemManager()
-    hashtags = ArrayField(models.TextField(), default = [''])
+    hashtags= ArrayField(models.TextField(), default = [''])
+    hashtag_list = models.ManyToManyField(Hashtag, related_name='problem_hashtags')
+
     class Meta:
         ordering = ['timestamp']
 
@@ -67,7 +64,7 @@ class Problem(models.Model):
         return str(self.user.username)
 
     def get_absolute_url(self):
-        return reverse("problems:thread", kwargs={"id": self.id})
+        return reverse("problems:detail", kwargs={"id": self.id})
 
     def get_delete_url(self):
         return reverse("problems:delete", kwargs={"id": self.id})

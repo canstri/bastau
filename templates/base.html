@@ -43,12 +43,12 @@
 
 <div class="ui inverted menu" id="main-menu">
 	<div class="ui container">
-		<a href='{% url "main:home" %}' class="header item logo">
+		<a href='{% url "news:list" %}' class="header item logo">
 			BASTAU ACADEMY
 		</a>
-        <a class="item" href='{% url "news:list" %}'>
+<!--         <a class="item" href='{% url "news:list" %}'>
             News
-        </a>
+        </a> -->
         <a class="item" href='{% url "olymps:list" %}' >
             Olympiads
         </a>
@@ -58,18 +58,22 @@
         <a class="item" href='{% url "courses:list" %}' >
             Courses
         </a>
-        <a class="item" href='{% url "main:contacts" %}'>
-            Contacts
+        <a class="item" href='{% url "squads:list" %}' >
+            Groups
+        </a>
+        <a class="item" href='{% url "hashtags:all" %}' >
+            Problems
         </a>
         <div class="right menu">
-            <div class="ui right aligned category search item search-block">
+        	<div class="ui right aligned category search item search-block">
                 <div class="ui transparent icon input">
-                    <input class="prompt" type="text" placeholder="Search theorems...">
+                    <input class="prompt" type="text" placeholder="Search">
                     <i class="search link icon"></i>
                 </div>
                 <div class="results"></div>
             </div>
-			<div class="item">
+
+            <div class="item">
 				<div class="ui floating dropdown labeled icon">
 					<i class="bell outline icon notify" style="font-size: 18px;"></i>
 					<div class="menu">
@@ -98,23 +102,28 @@
 				</div>
 			</div>
             {% if request.user.is_authenticated %}
-            <div class="item">
-                <a href='{{ profile.get_absolute_url }}' class="ui button tiny green-c"><i class="user icon"></i> {{ user }}</a>
-            </div>
-            <div class="item no-before" style="padding-left: 0px;">
-                <a href='{% url "logout" %}' class="ui button tiny green-c"><i class="sign out alternate icon"></i>Logout</a>
-            </div>
-
-            {% else %}
+                <div class="ui floating dropdown labeled icon" style="padding: 2px;">
+					<img src="{{ profile.image.url }}" style="height: 40px;">
+					<div class="menu">
+						<div class="scrolling menu">
+							<div class="item">
+								<a href='{{ profile.get_absolute_url }}' style="color: #2E9AFE"><h4>{{ profile.user }}</h4></a>
+								<a href='{{ profile.get_absolute_url }}' style="color: black">Profile</a>
+							</div>						
+							<div class="item">
+					            <a href='{% url "logout" %}' style="color: black">Logout <i class="icon sign out"></i></a>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% else %}
             <div class="item">
                 <a href='{% url "login" %}' class="ui button tiny" onclick="$('#login-modal').modal('show')">Login</a>
             </div>
             <div class="item no-before" style="padding-left: 0px;">
                 <a class="ui button tiny" onclick="$('#registration-modal').modal('show')">Sign up</a>
             </div>
-
             {% endif %}
-
         </div>
 	</div>
 </div>
@@ -150,10 +159,10 @@
 				</div>
 			</div>
 			<div class="three wide column">
-				<h4 class="ui inverted header">Contacts</h4>
+				<h4 class="ui inverted header">About us</h4>
+
 				<div class="ui inverted link list">
-					<p href="#" class="item">Write us on mail</p>
-					<a href="#" class="item">Bastau@Bastau.com</a>
+					<a class="item" href='{% url "main:contacts" %}'>Contacts</a>
 				</div>
 			</div>
 			<div class="three wide column">

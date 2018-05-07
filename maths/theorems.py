@@ -10,20 +10,20 @@ class TheoremCode(object):
         try:
              input_exp1, input_exp2  = input_exp.split(';')
         except Exception as e:
-            return('Exception1')  # later need to change
+            return('Wrong')  # later need to change
         try:
             expressionFirst, statusFirst = splitFinal(input_exp1)
         except Exception as e:
-            return('Exception2')  # later need to change
+            return('Wrong')  # later need to change
 
         try:
             part1,part2,sign = splitting(input_exp2)
         except Exception as e:
-            return('Exception3')
+            return('Wrong')
 
-        expressionFirst = str(expressionFirst)
+        result = str(expressionFirst)
         part1 = str(part1)
         part2 = str(part2)
        
-        expressionFirst = expressionFirst.replace(part1, part2)
-        return(expressionFirst)
+        result = result.replace(part1, part2)
+        return([result, statusFirst])

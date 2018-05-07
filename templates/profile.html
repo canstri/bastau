@@ -83,119 +83,42 @@
                         {% elif hisprofile.user == user %}
                             <h4>You do not have created problems: <a href="">Offer your problem to olympiad</a></h4>
                         {% endif %}
-
                     </div>
                 </div>
-
             </div>
-
             <div class="eleven wide column ui raised card">
                 <div class="ui top attached tabular menu">
                     <a class="item active" data-tab="first">MY STATS</a>
                     <a class="item" data-tab="second">GRAPHICS</a>
                 </div>
-                <div class="ui bottom attached tab segment active" data-tab="first">
-                    <div id="container-pie" style="min-width: 200px; max-width: 400px; height: 300px; margin: 0 auto;margin-bottom: 40px;"></div>
-
-                    <div style="width: 600px; height: 400px; margin: 0 auto">
-                        <div id="container-speed" style="width: 300px; height: 200px; float: left"></div>
-                        <div id="container-rpm" style="width: 300px; height: 200px; float: left"></div>
+                <div class="ui bottom attached tab segment active" data-tab="first" style="background-color: #Fff;">
+                    <div id="chart" style="text-align: left;margin: 0px auto;background: white;"></div>
+                    <div style="width: 100%; height: 400px; margin: 0 auto">
+                        <div id="container-number-theory" style="width: 25%; height: 130px; float: left"></div>
+                        <div id="container-inequalities" style="width: 25%; height: 130px; float: left"></div>
+                        <div id="container-polynoms" style="width: 25%; height: 130px; float: left"></div>
+                        <div id="container-functions" style="width: 25%; height: 130px; float: left"></div>
                     </div>
-
                 </div>
-                <div class="ui bottom attached tab segment" data-tab="second">
+                <div class="ui bottom attached tab segment" data-tab="second" style="background-color: #fff;">
                     <div id="chart-graphics"></div>
-
-
                 </div>
             </div>
-
-
-
-
 		</div>
 	</div>
 
-
 <script>
-
-
-    Highcharts.chart('container-pie', {
-
-        chart: {
-            polar: true,
-            type: 'line'
-
-        },
-
-        title: {
-
-            text: 'Budget vs spending',
-            x: -80
-        },
-
-        pane: {
-            size: '80%'
-        },
-
-        xAxis: {
-            categories: ['Sales', 'Marketing', 'Development', 'Customer Support',
-                'Information Technology', 'Administration'],
-            tickmarkPlacement: 'on',
-            lineWidth: 1
-        },
-
-        yAxis: {
-            gridLineInterpolation: 'polygon',
-            lineWidth: 0,
-            min: 0
-        },
-
-        tooltip: {
-            enabled: false,
-            shared: true,
-            pointFormat: '<span style="color:{series.color}">{series.name}: <b>${point.y:,.0f}</b><br/>'
-        },
-
-        legend: {
-            align: 'right',
-            verticalAlign: 'top',
-            y: 70,
-            layout: 'vertical'
-        },
-
-        series: [{
-            name: 'Actual Spending',
-            data: [50000, 39000, 42000, 31000, 26000, 14000],
-            pointPlacement: 'on'
-        }]
-
-    });
-</script>
-
-<script>
-
     Highcharts.chart('chart-graphics', {
 
         title: {
-            text: 'Solar Employment Growth by Sector, 2010-2016'
-        },
-
-        subtitle: {
-            text: 'Source: thesolarfoundation.com'
+            text: 'Progress in olympiads'
         },
 
         yAxis: {
             title: {
-                text: 'Number of Employees'
+                text: ''
             }
         },
-        legend: {
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'middle'
-        },
-
         plotOptions: {
             series: {
                 label: {
@@ -204,23 +127,14 @@
                 pointStart: 2010
             }
         },
+        credits: {
+            enabled: false
+        },
 
         series: [{
-            name: 'Installation',
+            name: ' ',
             data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
-        }, {
-            name: 'Manufacturing',
-            data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
-        }, {
-            name: 'Sales & Distribution',
-            data: [11744, 17722, 16005, 19771, 20185, 24377, 32147, 39387]
-        }, {
-            name: 'Project Development',
-            data: [null, null, 7988, 12169, 15112, 22452, 34400, 34227]
-        }, {
-            name: 'Other',
-            data: [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111]
-        }],
+        }, ],
 
         responsive: {
             rules: [{
@@ -258,7 +172,6 @@
             startAngle: -90,
             endAngle: 90,
             background: {
-                backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || '#EEE',
                 innerRadius: '60%',
                 outerRadius: '100%',
                 shape: 'arc'
@@ -268,13 +181,14 @@
         tooltip: {
             enabled: false
         },
+        credits: {
+            enabled: false
+        },
 
         // the value axis
         yAxis: {
             stops: [
                 [0.1, '#55BF3B'], // green
-                [0.5, '#DDDF0D'], // yellow
-                [0.9, '#DF5353'] // red
             ],
             lineWidth: 0,
             minorTickInterval: null,
@@ -299,12 +213,12 @@
     };
 
     // The speed gauge
-    var chartSpeed = Highcharts.chart('container-speed', Highcharts.merge(gaugeOptions, {
+    var chartNumbers = Highcharts.chart('container-number-theory', Highcharts.merge(gaugeOptions, {
         yAxis: {
             min: 0,
-            max: 200,
+            max: 100,
             title: {
-                text: 'Speed'
+                text: 'Number theory'
             }
         },
 
@@ -313,37 +227,96 @@
         },
 
         series: [{
-            name: 'Speed',
+            name: 'Number theory',
             data: [80],
             dataLabels: {
                 format: '<div style="text-align:center"><span style="font-size:25px;color:' +
                 ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}</span><br/>' +
-                '<span style="font-size:12px;color:silver">km/h</span></div>'
+                '<span style="font-size:12px;color:silver"></span></div>'
             },
             tooltip: {
-                valueSuffix: ' km/h'
+                valueSuffix: ''
             }
         }]
 
     }));
 
     // The RPM gauge
-    var chartRpm = Highcharts.chart('container-rpm', Highcharts.merge(gaugeOptions, {
+    var chartInequalities = Highcharts.chart('container-inequalities', Highcharts.merge(gaugeOptions, {
         yAxis: {
             min: 0,
-            max: 5,
+            max: 100,
             title: {
-                text: 'RPM'
+                text: 'Inequalities'
             }
+        },
+        credits: {
+            enabled: false
         },
 
         series: [{
-            name: 'RPM',
+            name: 'Inequalities',
             data: [1],
             dataLabels: {
                 format: '<div style="text-align:center"><span style="font-size:25px;color:' +
                 ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y:.1f}</span><br/>' +
-                '<span style="font-size:12px;color:silver">* 1000 / min</span></div>'
+                '<span style="font-size:12px;color:silver"></span></div>'
+            },
+            tooltip: {
+                valueSuffix: ''
+            }
+        }]
+
+    }));
+
+    // The RPM gauge
+    var chartPolynoms = Highcharts.chart('container-polynoms', Highcharts.merge(gaugeOptions, {
+        yAxis: {
+            min: 0,
+            max: 100,
+            title: {
+                text: 'Polynoms'
+            }
+        },
+        credits: {
+            enabled: false
+        },
+
+        series: [{
+            name: 'Polynoms',
+            data: [1],
+            dataLabels: {
+                format: '<div style="text-align:center"><span style="font-size:25px;color:' +
+                ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y:.1f}</span><br/>' +
+                '<span style="font-size:12px;color:silver"></span></div>'
+            },
+            tooltip: {
+                valueSuffix: ' revolutions/min'
+            }
+        }]
+
+    }));
+
+    // The RPM gauge
+    var chartFunctions = Highcharts.chart('container-functions', Highcharts.merge(gaugeOptions, {
+        yAxis: {
+            min: 0,
+            max: 100,
+            title: {
+                text: 'Functions'
+            }
+        },
+        credits: {
+            enabled: false
+        },
+
+        series: [{
+            name: 'Functions',
+            data: [1],
+            dataLabels: {
+                format: '<div style="text-align:center"><span style="font-size:25px;color:' +
+                ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y:.1f}</span><br/>' +
+                '<span style="font-size:12px;color:silver"></span></div>'
             },
             tooltip: {
                 valueSuffix: ' revolutions/min'
@@ -353,12 +326,199 @@
     }));
 
 
-
 </script>
 
 
 
+<script type="text/javascript">
+    $(function(){
+  $('#chart').radarChart({
+    size: [500, 400],
+    step: 1,
+    title: "",
+    values: {
+      "Number theory ": {{ hisprofile.skills.1 }},
+      "Inequalities": 3.5,
+      "Polynoms": 4,
+      "Functions": 3,
+    },
+    showAxisLabels: true
+  });
+});
 
+(function($) {
+  
+  var Radar = (function() {
+    
+    function Radar(ele, settings) {
+      this.ele = ele;
+      this.settings = $.extend({
+        showAxisLabels: false,
+        title: "Untitled",
+        step: 1,
+        size: [15,15],
+        values: {},
+        color: [0,128,255]
+      },settings);
+      this.width = settings.size[0];
+      this.height = settings.size[1];
+      $(ele).css({
+        'position': 'relative',
+        'width': this.width,
+        'height': this.height
+      });
+      this.canvases = {};
+      this.draw();
+    }
+    
+    Radar.prototype.newCanvas = function(name, delay) {
+      var delay = delay || 0;
+      var canvas = document.createElement('canvas');
+      canvas.width = this.width;
+      canvas.height = this.height;
+      $(canvas).css({
+        'position': 'absolute'
+      });
+      this.canvases[name] = canvas;
+      this.ele.appendChild(canvas);
+      this.cxt = canvas.getContext('2d');
+      if (delay != 0) {
+        $(canvas).css('opacity',0).delay(delay).animate({opacity: 1}, 500);
+      }
+    }
+    
+    Radar.prototype.draw = function() {
+      this.newCanvas('axis', 100);
+      var min = 0;
+      var max = 0;
+      
+      $.each(this.settings.values, function(i,val){
+        if (val < min)
+          min = val;
+        if (val > max)
+          max = val;
+      });
+      
+      min = Math.floor(min);
+      max = Math.ceil(max);
+
+      var spacing = 20;
+      
+      for(var i = min; i <= max; i += this.settings.step) {
+        this.cxt.beginPath();
+        this.cxt.arc(this.width/2,
+                     this.height/2,
+                     this.settings.step * spacing * i,
+                     0, 2 * Math.PI, false);
+        this.cxt.strokeStyle = "#666";
+        this.cxt.fillStyle = "#444";
+        this.cxt.stroke();
+        if (this.settings.showAxisLabels)
+          this.cxt.fillText(i,this.width/2 + this.settings.step * spacing * i+4, this.height/2-2);
+      }
+      
+      var size = 0;
+      for(var key in this.settings.values)
+        size += 1;
+      
+      for(var i = 0; i < size; i += 1) {
+        this.cxt.beginPath();
+        this.cxt.moveTo(this.width / 2, this.height /2);
+        var x = this.width / 2 + Math.cos((Math.PI * 2) * (i / size)) * spacing * max;
+        var y = this.height /2 + Math.sin((Math.PI * 2) * (i / size)) * spacing * max;
+        this.cxt.lineTo(x, y);
+        this.cxt.stroke();
+      }
+      
+      this.newCanvas('part',200);
+      
+      this.cxt.beginPath();
+      var first = true;
+      var i = 0;
+      var that = this;
+      var end = {x: null, y: null};
+      $.each(this.settings.values, function(key,val){
+        var x = that.width / 2 + Math.cos((Math.PI * 2) * (i / size)) * spacing * val;
+        var y = that.height / 2 + Math.sin((Math.PI * 2) * (i / size)) * spacing * val;
+        if (first) {
+          that.cxt.moveTo(x, y);
+          end.x = x;
+          end.y = y;
+          first = false;
+        }
+        that.cxt.lineTo(x, y);
+        i += 1;
+      });
+      
+      this.cxt.lineTo(end.x, end.y);
+      var grad = this.cxt.createLinearGradient(0, 0, 0, this.height);
+      grad.addColorStop(0,"rgba("+this.settings.color[0]+","+this.settings.color[1]+","+this.settings.color[2]+",0)");
+      grad.addColorStop(1,"rgba("+this.settings.color[0]+","+this.settings.color[1]+","+this.settings.color[2]+",1)");
+      this.cxt.fillStyle = grad;
+      this.cxt.shadowBlur = 2;
+      this.cxt.shadowColor = "rgba(0, 0, 0, .2)";
+      this.cxt.stroke();
+      this.cxt.fill();
+      
+      this.newCanvas('labels',1000);
+      
+      i = 0;
+      $.each(this.settings.values, function(key,val){
+        that.newCanvas('label-'+i, i * 250);
+        that.cxt.fillStyle = "rgba(0,0,0,.8)";
+        that.cxt.strokeStyle = "rgba(0,0,0,.5)";
+        that.cxt.font = "bold 12px Verdana";
+        var dist = Math.min(spacing * val, size * spacing);
+        var x = that.width / 2 + Math.cos((Math.PI * 2) * (i / size)) * spacing * val;
+        var y = that.height / 2 + Math.sin((Math.PI * 2) * (i / size)) * spacing * val;
+
+        var textX = that.width / 2 + Math.cos((Math.PI * 2) * (i / size)) * spacing * val;
+        var textY = that.height / 2 + Math.sin((Math.PI * 2) * (i / size)) * spacing * val * 1.5;
+        
+        if (textX < that.width/2) {
+          textX -= 75
+          that.cxt.textAlign="end";
+          that.cxt.beginPath();
+          var width = that.cxt.measureText(key).width;
+          that.cxt.moveTo(textX - width - 5, textY + 4);
+          that.cxt.lineTo(textX + 15, textY + 4);
+          that.cxt.lineTo(x - 2, y);
+          that.cxt.lineWidth = 2;
+          that.cxt.stroke();
+        } else {
+          textX += 75
+          that.cxt.textAlign="start";
+          that.cxt.beginPath();
+          var width = that.cxt.measureText(key).width;
+          that.cxt.moveTo(x + 2,y);
+          that.cxt.lineTo(textX - 15, textY + 4);
+          that.cxt.lineTo(textX + width + 5, textY + 4);
+          that.cxt.lineWidth = 2;
+          that.cxt.stroke();
+        }
+        that.cxt.fillText(key, textX, textY);
+        //For arrows that aren't done.
+        i += 1;
+      });
+      
+      
+      this.newCanvas('title',1000);
+      this.cxt.font = "bold 24px Verdana";
+      this.cxt.fillText(this.settings.title, 10, 30); 
+    }
+    
+    return Radar;
+    
+  })();
+  
+  $.fn.radarChart = function(settings){
+    this.each(function(i,ele){
+      var radar = new Radar(ele, settings);
+    });
+  }
+  
+})(jQuery);
+</script>
 
 
 

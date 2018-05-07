@@ -11,12 +11,14 @@ from .theorem_form import TheoremForm
 from .models import Problem, CheckProblem, Lemma, Theorem
 
 from olymps.models import Olymp, RatingOlymp
+from hashtags.models import Hashtag
 from maths.lemmas import LemmaCode
 from maths.theorems import TheoremCode
 from news.views import create_action
 
 def create_problem(request, input_form):
     form = input_form
+    text = ''
     if form.is_valid():
         
         new_problem, created1 = Problem.objects.get_or_create(
@@ -27,24 +29,36 @@ def create_problem(request, input_form):
                             title = form.cleaned_data.get("title"),
                             level = form.cleaned_data.get("level"),
                         )
-
+        new_problem.content2 = new_problem.content.replace("@", " ").replace("$", " ")
+        new_problem.save()
         temp_hashtag = ''
         wright = False
         hashtag_array = []
+        hashtag_string = ''
         hashtag_string = form.cleaned_data.get("hashtags")
+        new_problem.hashtags = []
+        print(form.cleaned_data.get("hashtags"), hashtag_string, new_problem.hashtags)
         hashtag_string += ' ,' 
         for i in range(0, len(hashtag_string)):
             if hashtag_string[i] == '#':
                 wright = True
             if hashtag_string[i] == ' ':
                 if temp_hashtag != '':
+                    temp_hashtag = temp_hashtag[1:]
                     new_problem.hashtags.append(temp_hashtag)
-                new_problem.save()
+                    its_ok = False
+                    for hs in Hashtag.objects.all():
+                        if hs.name == temp_hashtag:
+                            new_problem.hashtag_list.add(hs)
+                            its_ok = True
+                    if its_ok == False:
+                        new_problem.hashtag_list.create(name = temp_hashtag)
                 #print("create_hash: ", new_problem.hashtags)
                 temp_hashtag = ''
                 wright = False
             if wright == True:
                 temp_hashtag += hashtag_string[i]
+        new_problem.save()
 
         for p in Profile.objects.all():
             check_problem, created2 = CheckProblem.objects.get_or_create(
@@ -69,7 +83,7 @@ def create_problem(request, input_form):
                     temp_str1 = ''
                     counter1 = 0
 
-                if new_problem.content[i] == '!':
+                if new_problem.content[i] == '@':
                     counter2 += 1
                 if counter2 % 2 == 1:    
                     temp_str2 += new_problem.content[i]
@@ -88,8 +102,6 @@ def create_problem(request, input_form):
             for r in qset:
                 r.points.append(array_for_user)
                 r.save()
-
-
         return HttpResponseRedirect(new_problem.content_object.get_absolute_url())
     
 
@@ -128,7 +140,7 @@ def problem_delete(request, id):
     }
     return render(request, "confirm_delete.html", context)
 
-def problem_thread(request, id):
+def problem_detail(request, id):
     try:
         obj = Problem.objects.get(id=id)
     except:
@@ -158,7 +170,7 @@ def problem_thread(request, id):
     check_problem_form = CheckProblemForm(request.POST or None)
     theorem_form = TheoremForm(request.POST or None)
     expr1 = ''
-    expr3 = ''
+    expr2 = ''
     action_check = ''
 
     if len(check_problem.actions) > 0:
@@ -175,60 +187,84 @@ def problem_thread(request, id):
             if check_problem.current_string != '':
                 check_problem.current_string += '; '
                 check_problem.save()
-            check_problem.current_string += check_problem.actions[expr_id][0] + ' ' + check_problem.actions[expr_id][1]
+            check_problem.current_string = check_problem.current_string + check_problem.actions[expr_id][0] + " " + check_problem.actions[expr_id][1]
             check_problem.current_status = check_problem.actions[expr_id][1]
             check_problem.save()
+            print(check_problem.current_string)
             return HttpResponseRedirect(obj.get_absolute_url())
-
-    if theorem_form.is_valid():
-        if 'Replace variable' in request.POST:
-            expr1 = theorem_form.cleaned_data.get('expr1')
-            print(expr1)
-            if check_problem.current_string != '':
-                expr3 = check_problem.current_string
-                check_problem.current_string = ''
-            input_string = expr3 + '; ' + expr1
-            action_check = getattr(TheoremCode, 'zamena')(input_string)
-            
-            if action_check == '':
+        
+    if check_problem_form.is_valid():
+        if 'save' in request.POST:
+            cstring = check_problem.current_string
+            cstatus = check_problem.current_status
+            if cstring == '':
                 return HttpResponseRedirect(obj.get_absolute_url()) 
             found_old = False
             for actn in check_problem.actions:
-                if expr1 == actn[0]:
-                    actn[1] = action_check
+                if cstring == actn[0]:
+                    actn[1] = cstatus
                     found_old = True
                     break
             if found_old == False:
-                check_problem.actions.append([action_check, check_problem.current_status, 'not_in_task'])
+                check_problem.actions.append([cstring, cstatus, 'not_in_task'])
             check_problem.current_string = ''
+            check_problem.current_status = ''
             check_problem.save()
-            return HttpResponseRedirect(obj.get_absolute_url())
-            
-    if check_problem_form.is_valid():
-        expr1 = check_problem_form.cleaned_data.get('expr1')
-        if check_problem.current_string != '':
-            expr3 = check_problem.current_string
+            return HttpResponseRedirect(obj.get_absolute_url())  
+
+        if 'clear' in request.POST:
+            expr1 = ''
+            action_check = ''
             check_problem.current_string = ''
-            
+            check_problem.current_status = ''
+            check_problem.save()
+            return HttpResponseRedirect(obj.get_absolute_url())  
+
+        expr1 = check_problem_form.cleaned_data.get('expr1')
+        if 'Replace variable' in request.POST:
+            input_string = check_problem.current_string + '; ' + expr1
+            print("aaaa", input_string)
+            result = getattr(TheoremCode, 'zamena')(input_string)
+            if result[1] == '':
+                print("eeee")
+                return HttpResponseRedirect(obj.get_absolute_url()) 
+            check_problem.current_string = result[0]
+            check_problem.current_status = result[1]
+            print("222") 
+            check_problem.save()
+            return HttpResponseRedirect(obj.get_absolute_url())  
+
+        if check_problem.current_string != '':
+            expr2 = check_problem.current_string
+        # preparing input string for lemmas
+        input_string = ''
+        if expr1 != '' and expr2 != '':
+            input_string = expr2 + '; ' + expr1
+        if expr1 != '' and expr2 == '':
+            input_string = expr1
+
+        #run lemmas
         for i in range (0, len(Lemma.objects.filter())):
             if action_check == "Correct":
-                break
-            input_string = ''
-            if expr1 != '' and expr3 != '':
-                input_string = expr3 + '; ' + expr1
-            if expr1 != '' and expr3 == '':
-                input_string = expr1
-            print("input:",input_string)
+                break            
             action_check =  getattr(LemmaCode, Lemma.objects.filter()[i].name)(input_string) #Call all basic lemmas
+        
+        # update current expression and status
+        check_problem.current_string = expr1
+        check_problem.current_status = action_check
+        check_problem.save()
+
+        # check if problem is solved
         all_solved = True
         for actn in check_problem.actions:
             if actn[1] == 'Need to prove':
                 if actn[0] != expr1:
                     all_solved = False
-                    
+        
+        # check if problem is fully solved
         if action_check != "Correct":
             all_solved = False
-        if all_solved == True: #if problem is fully solved 
+        if all_solved == True:  
             if check_problem.solved == False: # if problem was not solved before
 
                 rating_olymp = RatingOlymp.objects.get(
@@ -263,22 +299,11 @@ def problem_thread(request, id):
                     profile.save()
                     x=create_action(profile, obj)
             check_problem.solved = True
-        check_problem.save()
-                                        
-        if 'save' in request.POST:
-            if action_check == '':
-                return HttpResponseRedirect(obj.get_absolute_url()) 
-            found_old = False
-            for actn in check_problem.actions:
-                if expr1 == actn[0]:
-                    actn[1] = action_check
-                    found_old = True
-                    break
-            if found_old == False:
-                check_problem.actions.append([expr1, action_check, 'not_in_task'])
-            check_problem.current_string = ''
-            check_problem.save()
-            return HttpResponseRedirect(obj.get_absolute_url())  
+        check_problem.save()    
+
+    ht_array = []
+    for hshtg in obj.hashtag_list.all():
+        ht_array.append(hshtg)
 
     theorems = Theorem.objects.all()
     context = {
@@ -291,5 +316,11 @@ def problem_thread(request, id):
         "action_check":action_check,
         "expression_form": expression_form,
         "theorems":theorems,
+        "current_string":check_problem.current_string,
+        "current_status":check_problem.current_status,
+        "ht_array":ht_array,
     }
     return render(request, "problem.html", context)
+
+
+

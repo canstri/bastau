@@ -50,8 +50,12 @@ def lecture_detail(request, id=None):
     number_of_solved = 0
     array_of_user = []
     for prblm in instance.problems:
+        ht_array = []
+        for hshtg in prblm.hashtag_list.all():
+            ht_array.append(hshtg)
+
         cp = CheckProblem.objects.get(user = request.user.id, problem_id = prblm.id)
-        array_of_user.append([prblm, cp])
+        array_of_user.append([prblm, cp, ht_array])
         if cp.solved == True:
             number_of_solved = number_of_solved + 1
 

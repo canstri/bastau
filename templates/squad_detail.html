@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load urlify %}
+{% load crispy_forms_tags %}
+{% block head_extra %}
+{{ form.media }}
+{% endblock head_extra %}
+
+{% block head_title %}
+{{ instance.title }} | {{ block.super }}
+{% endblock head_title %}
+
+{% block content %}
+
+<div class='ui container' id="course-detail">
+    <a class="button ui blue" href='{% url "squads:list" %}'>
+        <i class="arrow left icon"></i>
+        Back to groups list
+    </a>
+    <div>
+        <div class="ui horizontal list course-info">
+            <h1 class="item title-course">{{ instance.title }} </h1>
+        </div>
+
+        {% if staff == "yes" %} 
+            <a href='{{ instance.get_update_url }}' class="ui tiny button">Edit</a>
+            <a href='{{ instance.get_delete_url }}' class="ui tiny button">Delete</a>
+        {% endif %}
+        <div class="course-content">
+            <p class="content-markdown">{{ instance.content }}</p>
+        </div>
+        {% if instance.image %}
+            <img src='{{ instance.image.url }}'/>
+        {% endif %}
+    </div>
+    <br>
+    {% for obj in instance.tasks %}
+            <div class="ui segment">
+                {% if obj.image %}
+                <img class="olymp-image" src='{{ obj.image.url }}'/>
+                {% endif %}
+                <h2>
+                    {{ obj.title }}
+                </h2>
+                {{ obj.content }}
+                <div class="admin-rules">
+                    {% if staff == "yes" %}
+                    <a class="ui green button tiny" href='{{ obj.get_update_url }}'>Edit</a>
+                    <a class="ui green button tiny" href='{{ obj.get_delete_url }}'>Delete</a>
+                    {% endif %}
+                </div>
+
+            </div>
+    {% endfor %}
+
+
+
+    <div style="margin-top: 100px;">
+    <form class="" method="POST" action='' enctype='multipart/form-data'> {% csrf_token %}
+        <div class="ui form" id="course-submit">
+            {{ form|crispy }}
+            <div class="ui input">
+                <input type='submit' class='ui button green' style="margin-top:10px" value='Create Task' >
+            </div>
+        </div>
+    </form>
+    </div>
+</div>
+
+
+{% endblock content %}
