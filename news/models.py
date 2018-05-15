@@ -76,11 +76,11 @@ class Post(models.Model):
     def get_update_url(self):
         return reverse("news:update", kwargs={"slug": self.slug})
 
-    def get_like_url(self):
-        return reverse("news:like-toggle", kwargs={"slug": self.slug})
+    def get_api_like_url(self):
+        return reverse("news:like-api-toggle", kwargs={"slug": self.slug})
 
-    def get_dislike_url(self):
-        return reverse("news:dislike-toggle", kwargs={"slug": self.slug})
+    def get_api_dislike_url(self):
+        return reverse("news:dislike-api-toggle", kwargs={"slug": self.slug})
 
     class Meta:
         ordering = ["-timestamp", "-updated"]

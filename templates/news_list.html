@@ -19,54 +19,69 @@
                 {% for obj in object_list %}
                 <div id="news-form" class="ui segment">
                     <h2>
-                        <a class="post-title" href='{{ obj.get_absolute_url }}'>{{ obj.title }}</a>
+                        <a class="post-title" href='{{ obj.0.get_absolute_url }}'>{{ obj.0.title }}</a>
                     </h2>
                     {% if staff == "yes" %}
                         <div class="admin-rights">
-                            <a href='{{ obj.get_update_url }}' class="ui button tiny">Edit</a>
-                            <a href='{{ obj.get_delete_url }}' class="ui button tiny">Delete</a>
+                            <a href='{{ obj.0.get_update_url }}' class="ui button tiny">Edit</a>
+                            <a href='{{ obj.0.get_delete_url }}' class="ui button tiny">Delete</a>
                         </div>
-                        {% if obj.draft %}
+                        {% if obj.0.draft %}
                             <h3>Staff only: Draft</h3>
                         {% endif %}
-                        {% if obj.publish > today %}
+                        {% if obj.0.publish > today %}
                             <h3>Staff Only: Future Post</h3>
                         {% endif %}
                     {% endif %}
               
-                    {% if obj.image %}
-                        <img class="responsive-img" src='{{ obj.image.url }}'/>
+                    {% if obj.0.image %}
+                        <img class="responsive-img" src='{{ obj.0.image.url }}'/>
                     {% endif %}
-                    <h4>{{ obj.get_markdown|truncatechars_html:120 }}</h4>
+                    <h4>{{ obj.0.get_markdown|truncatechars_html:120 }}</h4>
 
                 </div>
                 <div class="ui grid" id="news-features">
-                        <div class="five wide column" style="margin-top: 7px; font-size: 16px; font-weight: 600;">
-                            <a href="{{ obj.get_like_url }}"><i class="chevron circle up icon" style="color: #BDBDBD; font-size: 15px;"></i></a>
-                            <span style="color: #585858;">{{ obj.likes.count }}</span>
-                            <a href="{{ obj.get_dislike_url }}"><i class="chevron circle down icon item" style="color: #BDBDBD; font-size: 15px;" ></i></a>
-                            <a class="item btn btn-default" href="{{ obj.get_absolute_url }}" style="margin-left: 20px; color: black">
-                                 <i class="comment icon item" style="color: #BDBDBD; font-size: 15px;"></i>
-                                <span style="color: #585858;">{{ obj.comments.count }}</span> 
-                            </a>
-                        </div>
-                        <div class="eleven wide column">
-                            <div class="ui grid">
-                                <div class="fourteen wide column" style="text-align: right;">
-                                    <a href="{{ obj.get_author }}" class="author-name" style="margin-right:5px;">
-                                        {{ obj.author_profile.user }} 
-                                    </a>
-                                    <br>
-                                    {{ obj.publish }}
-                                </div>
-                                <div class="two wide column" style="text-align: right;">
-                                    <a href="{{ obj.get_author }}" class="author-name" >
-                                        <img src="{{ obj.author_profile.image.url }}" style="height: 40px; margin-right: 20px;"> 
-                                    </a>
-                                </div>                            
+                    <div class="five wide column" style="margin-top: 7px; font-size: 16px; font-weight: 600;">
+                        <a style="cursor: pointer;" post_number='{{ forloop.counter }}' class="like-btn" data-href='{{ obj.0.get_api_like_url }}' data-likes='{{ obj.1 }}'>
+                            {% if obj.2 %}
+                            <i id='{{ forloop.counter }}up' class="chevron circle up icon" style="color: #04B431; font-size: 15px;"></i>
+                            {% else %}
+                            <i id='{{ forloop.counter }}up' class="chevron circle up icon" style="color: #BDBDBD; font-size: 15px;"></i>
+                            {% endif %}
+                        </a>
+
+                        <a id="{{ forloop.counter }}" style="color: #585858;">{{ obj.1 }}</a>
+
+                        <a style="cursor: pointer;" post_number='{{ forloop.counter }}' class="dislike-btn" data-href='{{ obj.0.get_api_dislike_url }}' data-likes='{{ obj.1 }}'>
+                            {% if obj.3 %}
+                            <i id='{{ forloop.counter }}down' class="chevron circle down icon item" style="color: #FE2E2E; font-size: 15px;" ></i>
+                            {% else %}
+                            <i id='{{ forloop.counter }}down' class="chevron circle down icon item" style="color: #BDBDBD; font-size: 15px;" ></i>
+                            {% endif %}
+                        </a>
+
+                        <a class="item btn btn-default" href="{{ obj.0.get_absolute_url }}" style="margin-left: 20px; color: black">
+                             <i class="comment icon item" style="color: #BDBDBD; font-size: 15px;"></i>
+                            <span style="color: #585858;">{{ obj.0.comments.count }}</span> 
+                        </a>
+                    </div>
+                    <div class="eleven wide column">
+                        <div class="ui grid">
+                            <div class="fourteen wide column" style="text-align: right;">
+                                <a href="{{ obj.0.get_author }}" class="author-name" style="margin-right:5px;">
+                                    {{ obj.0.author_profile.user }} 
+                                </a>
+                                <br>
+                                {{ obj.0.publish }}
                             </div>
+                            <div class="two wide column" style="text-align: right;">
+                                <a href="{{ obj.0.get_author }}" class="author-name" >
+                                    <img src="{{ obj.0.author_profile.image.url }}" style="height: 40px; margin-right: 20px;"> 
+                                </a>
+                            </div>                            
                         </div>
                     </div>
+                </div>
                 {% endfor %}
             </div>
             <div class="five wide column">
@@ -194,18 +209,18 @@
                     <div id="reading-right-now">
                         {% for obj in object_list %}
                         <div class="post">
-                            <a class="post-title" href='{{ obj.get_absolute_url }}'>
-                                <span style="font-size: 15px;">{{ obj.title|truncatechars_html:30 }}</span>
+                            <a class="post-title" href='{{ obj.0.get_absolute_url }}'>
+                                <span style="font-size: 15px;">{{ obj.0.title|truncatechars_html:30 }}</span>
                             </a>
                             <div class="ui grid news-details">
                                 <div class="ten wide column">
                                     <a href="#">
                                         <i class="like icon"></i>
-                                        <span>{{ obj.likes.count }} </span>
+                                        <span>{{ obj.1 }} </span>
                                     </a>
                                     <a href="#">
                                         <i class="comment icon"></i>
-                                        <span>{{ obj.comments.count }} </span>
+                                        <span>{{ obj.0.comments.count }} </span>
                                     </a>
                                 </div>
                             </div>
@@ -264,5 +279,62 @@
     </div>
 </div>
 
+<script>
+     $(document).ready(function(){
+      $(".like-btn").click(function(e){
+        e.preventDefault()
+        var this_ = $(this)
+        var postNumber = "#" + this_.attr("post_number")
+        var likeUrl = this_.attr("data-href")
+        var likeCount = parseInt($(postNumber).text())
+        if (likeUrl){
+           $.ajax({
+            url: likeUrl,
+            method: "GET",
+            data: {},
+            success: function(data){
+              if (data.like){
+                  $(postNumber).text(data.like_num)
+                  $(postNumber + "down").css('color', '#BDBDBD')
+              } 
+              if(data.up){
+                $(postNumber + "up").css('color', '#04B431')
+              }
+            }, error: function(error){
+              console.log(error)
+            }
+          })
+        }
+       
+      })
+      $(".dislike-btn").click(function(e){
+        e.preventDefault()
+        var this_ = $(this)
+        var postNumber = "#" + this_.attr("post_number")
+        var dislikeUrl = this_.attr("data-href")
+        var likeCount = parseInt($(postNumber).text())
+        if (dislikeUrl){
+           $.ajax({
+            url: dislikeUrl,
+            method: "GET",
+            data: {},
+            success: function(data){
+              if (data.dislike){
+                  $(postNumber).text(data.like_num)
+                  $(postNumber + "up").css('color', '#BDBDBD')
+              }
+              if(data.down){
+                $(postNumber + "down").css('color', '#FE2E2E')
+              }
+               
+            }, error: function(error){
+              console.log(error)
+            }
+          })
+        }
+       
+      })
+  })
+</script>
 
 {% endblock content %}

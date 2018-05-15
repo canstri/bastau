@@ -7,14 +7,21 @@
 {% block content %}
 
 
-<div class='ui container' id="course-list">
-    <div class="ui grid">
-        <div class=" twelve wide column">
-            <h1>{{ title }}</h1>
-                {% if staff == "yes" %}
+<div class='ui container' id="course-list" >
+    <div class="ui grid" style="margin-left: 50px;">
+        <div class="fifteen wide column">
+        <div class="ui segment" style="margin-left: -14px; width: 98%">
+            <h3>Courses</h3>
+        </div>
+        </div>
+        <div class="twelve wide column">
+            
+
+            {% if staff == "yes" %}
                 <h3> Staff only: <a class="ui button tiny" href='{% url "courses:create" %}' >Create Course</a></h3>
             {% endif %}
         </div>
+
         {% for obj in array_of_user %}
             <div class="ui card text-center" id="card-course">
                 {% if obj.0.draft %}<h4>Staff only: Draft</h4>{% endif %} {% if obj.0.publish > today %}
@@ -55,9 +62,6 @@
                         {% if obj.0.level == 3 %}
                         <span href="">Hard</span>
                         {% endif %}
-                    </div>
-                    <div class="description">
-                        <p class="content-markdown">{{ obj.0.content|truncatechars_html:200 }}</p>
                     </div>
                     {% if staff == "yes" %}
                     <a class="ui tiny button green" href='{{ obj.0.get_update_url }}'>Edit</a>

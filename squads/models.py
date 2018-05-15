@@ -9,7 +9,7 @@ from django.utils import timezone
 
 from django.utils.text import slugify
 from markdown_deux import markdown
-from tasks.models import Task
+from homeworks.models import Homework
 from django.utils.safestring import mark_safe
 from transliterate import translit, get_available_language_codes
 
@@ -66,7 +66,7 @@ class Squad(models.Model):
 
     @property
     def tasks(self):
-        qs = Task.objects.filter_by_instance(self)
+        qs = Homework.objects.filter_by_instance(self)
         return qs
 
     @property

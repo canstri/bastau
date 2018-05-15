@@ -35,7 +35,7 @@ urlpatterns = [
     url(r'^courses/', include("courses.urls", namespace='courses')),
     url(r'^lectures/', include("lectures.urls", namespace='lectures')),
     url(r'^groups/', include("squads.urls", namespace='squads')),
-    url(r'^tasks/', include("tasks.urls", namespace='tasks')),
+    url(r'^tasks/', include("homeworks.urls", namespace='tasks')),
     url(r'^', include("main.urls", namespace='main')),
 ]
 

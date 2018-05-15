@@ -71,6 +71,141 @@ body {
   background-color: #f4f4f4 !important;
 }
 
+  a#course-list.title-course{
+    font-size: 24px;
+    font-weight:600;
+  }
+  a#course-list.star-rating{
+    font-size: 20px;
+  }
+
+
+
+  #course-detail.course-info{
+    margin-top: 20px;
+}
+    #course-detail.title-course{
+      font-size: 24px;
+      font-weight:600;
+    }
+    #course-detail.star-rating{
+      position: relative;
+      top: -5px;
+      font-size: 20px;
+      color: #FFE623;
+    }
+  
+  #course-detail.select-label{
+    font-family: 'Titan One', cursive;
+    font-size: 40px;
+  }
+
+  #course-detail.course-content{
+    margin-top: 20px;
+
+  }
+  #course-detail img{
+    width: 300px;
+    height: auto;
+    margin-top: 10px;
+  }
+
+  .main-d {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+    .main-d.desk-main{
+      display: inline-flex;
+      background: url("/static/images/427.jpg") no-repeat;
+      height: 450px;
+      width: 100% !important;
+      border: 1px solid transparent;
+      border-radius:12px;
+      margin-bottom: 95px;
+
+}
+      .main-d.ui.card:first-child {
+        margin-top: 1em;
+      }
+
+   
+
+
+
+
+
+
+}
+#course-submit{
+  width:44.6%;
+}
+
+
+#card-course{
+  margin-right: 50px;
+  background-color: #2c333b;
+}
+#card-course a{
+    color:#fff;
+}
+#card-course div{
+    color:#fff;
+}
+
+#card-course.course-level{
+    font-weight: 600;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+#card-course.olymp-image{
+  width: 100%;
+  height: auto;
+}
+
+#course-details {
+  width: 13%;
+  box-shadow: none;
+  height: 85px;
+  cursor: pointer;
+  position: relative;
+  top: 20px;
+  left: 40px;
+  margin-right: 32px;
+  border: 3px solid #fff;
+  background-color: darkorange;
+  border-radius: 9px;
+}
+#course-details .admin-rules {
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
+#course-details a{
+    position: relative;
+    top: 19px;
+    left: 1px;
+    color: black;
+    font-size: 54px;
+    font-family: 'Titan One', cursive;
+  }
+
+#course-details.star-rating {
+    font-size: 21px;
+    position: relative;
+    top: 38px;
+    z-index: 100;
+    color: yellow;
+    left: 2px;
+  }
+#course-details h3{
+    margin-top: 10px;
+  }
+
+#lecture-create{
+  width:100%;
+  display: inline-block;
+}
 /**
  * Add the correct display in IE 9-.
  */

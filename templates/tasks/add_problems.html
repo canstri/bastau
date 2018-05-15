@@ -1,0 +1,76 @@
+<div class="ui modal" id="add_problem" style="background-color: #f4f4f4 !important;">
+    <div class='ui container' style="margin: 30px !important;">
+        <div>
+            <h3>
+                {% if hashtag == 'all' %}
+                    All problems
+                {% else %}
+                    #{{ hashtag }} problems
+                {% endif %}
+            </h3>
+        </div>
+        <div class="ui grid" style="margin-top: 40px;">    
+            {% for element_of_user in array_of_user %}
+            <div class="ten wide column" style="margin-top: -30px;">
+                <div class="ui segment">
+                    <h5> 
+                        <a href='{{ element_of_user.0.get_absolute_url }}' class="item" >
+                            {{ forloop.counter }}. <span>{{ element_of_user.0.title }}</span>
+                        </a> 
+                    </h5>
+                    <p style="font-weight: 600; font-size: 17px;">{{ element_of_user.0.content2 }}</p>
+                </div>
+                <div class="ui grid" id="news-features" style="padding: 7px;">
+                    {% if is_auth == True %}
+                        {% if element_of_user.1.solved == False %}
+                        <span class="item" style="margin-right: 15px; color: #FE2E2E; font-weight: 600;">Not solved</span>
+                        {% else %}
+                        <span class="item" style="margin-right: 15px; color: #04B431; font-weight: 600;">Solved</span>
+                        {% endif %}
+                    {% endif %}
+                    {% for hs in element_of_user.2 %}
+                        <a href="{{ hs.url }}">#{{ hs.name }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <a name='{{ forloop.counter }}' data-href='{{ element_of_user.0.add_problem_url }}' style="cursor: pointer;"><i class="plus circle icon" style="font-size: 20px;"></i></a>
+            </div>
+            
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- <script>
+     $(document).ready(function(){
+      $(".plus").click(function(e){
+        e.preventDefault()
+        var this_ = $(this)
+        var postNumber = "#" + this_.attr("post_number")
+        var likeUrl = this_.attr("data-href")
+        var likeCount = parseInt($(postNumber).text())
+        if (likeUrl){
+           $.ajax({
+            url: likeUrl,
+            method: "GET",
+            data: {},
+            success: function(data){
+              if (data.like){
+                  $(postNumber).text(data.like_num)
+                  $(postNumber + "down").css('color', '#BDBDBD')
+              } 
+              if(data.up){
+                $(postNumber + "up").css('color', '#04B431')
+              }
+            }, error: function(error){
+              console.log(error)
+            }
+          })
+        }
+       
+      })
+    })
+</script>
+ -->

@@ -11,8 +11,9 @@ from django.views.generic import RedirectView
 
 from .forms import SquadForm
 from .models import Squad
-from tasks.models import Task
-from tasks.forms import TaskForm
+from homeworks.models import Homework
+from homeworks.forms import TaskForm
+from problems.models import Problem, CheckProblem
 
 from accounts.models import Profile
 
@@ -59,7 +60,7 @@ def squad_detail(request, slug=None):
         obj_id = form.cleaned_data.get('object_id')
         content_data = form.cleaned_data.get("content")
         task_title = form.cleaned_data.get("title")
-        new_task, created = Task.objects.get_or_create(
+        new_task, created = Homework.objects.get_or_create(
                             content_type= content_type,
                             object_id = obj_id,
                             content = content_data,
@@ -74,7 +75,14 @@ def squad_detail(request, slug=None):
     if request.user.is_authenticated:
         profile = Profile.objects.get(user = request.user.id)
         is_auth = True
- 
+     
+    array_of_user = []
+    for prblm in Problem.objects.all():
+        ht_array = []
+        for hshtg in prblm.hashtag_list.all():
+            ht_array.append(hshtg)
+        array_of_user.append([prblm, CheckProblem.objects.get(user = request.user.id, problem_id = prblm.id), ht_array])    
+
     context = {
         "title": "Groups",
         "instance": instance,
@@ -85,8 +93,29 @@ def squad_detail(request, slug=None):
         "user":request.user,
         "is_auth":is_auth,
         "form":form,
+        "array_of_user": array_of_user,
+        "hashtag":'all',
     }
     return render(request, "squad_detail.html", context)
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import authentication, permissions
+
+class ProblemAddAPIToggle(APIView):
+    authentication_classes = (authentication.SessionAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, slug=None, format=None):
+        # slug = self.kwargs.get("slug")
+        obj = get_object_or_404(Homework, slug=slug)
+        user = self.request.user
+        
+        data = {
+            "like_num":0,
+        }
+        return Response(data)
+
 
 def squad_list(request):
     if not request.user.is_authenticated:

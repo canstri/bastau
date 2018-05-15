@@ -82,9 +82,10 @@ def olymp_detail(request, slug=None):
     array_of_user = []
     for prblm in instance.problems:
         ht_array = []
+        cp = CheckProblem.objects.filter(user = request.user.id, problem_id = prblm.id)
         for hshtg in prblm.hashtag_list.all():
             ht_array.append(hshtg)
-        array_of_user.append([prblm, CheckProblem.objects.filter(user = request.user.id, problem_id = prblm.id), ht_array])    
+        array_of_user.append([prblm, cp, ht_array])    
     context = {
         "title": instance.title,
         "instance": instance,

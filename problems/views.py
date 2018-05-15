@@ -221,16 +221,14 @@ def problem_detail(request, id):
             return HttpResponseRedirect(obj.get_absolute_url())  
 
         expr1 = check_problem_form.cleaned_data.get('expr1')
+        
         if 'Replace variable' in request.POST:
             input_string = check_problem.current_string + '; ' + expr1
-            print("aaaa", input_string)
             result = getattr(TheoremCode, 'zamena')(input_string)
             if result[1] == '':
-                print("eeee")
                 return HttpResponseRedirect(obj.get_absolute_url()) 
             check_problem.current_string = result[0]
             check_problem.current_status = result[1]
-            print("222") 
             check_problem.save()
             return HttpResponseRedirect(obj.get_absolute_url())  
 

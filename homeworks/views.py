@@ -9,7 +9,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 
 from .forms import TaskForm
-from .models import Task
+from .models import Homework
 from courses.models import Course
 
 from accounts.models import Profile

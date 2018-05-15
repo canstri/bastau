@@ -55,6 +55,7 @@
 
 
     <div style="margin-top: 100px;">
+    <a class="ui button tiny" onclick="$('#add_problem').modal('show')">Add problems</a>
     <form class="" method="POST" action='' enctype='multipart/form-data'> {% csrf_token %}
         <div class="ui form" id="course-submit">
             {{ form|crispy }}
@@ -66,5 +67,6 @@
     </div>
 </div>
 
+{% include "tasks/add_problems.html" %}
 
 {% endblock content %}

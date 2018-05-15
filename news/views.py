@@ -153,10 +153,21 @@ def news_list(request):
         profile = Profile.objects.get(user = request.user.id)
     
     action_list = Action.objects.all()
-    
     rating = Profile.objects.all()
+    user_posts = []
+    for ppost in queryset:
+        liked = False
+        disliked = False
+        #print(ppost.likes.count())
+        l = int(ppost.likes.count()) - int(ppost.dislikes.count())
+        if request.user in ppost.likes.all():
+            liked = True
+        if request.user in ppost.dislikes.all():
+            disliked = True
+        print(l)
+        user_posts.append([ppost, l, liked, disliked])
     context = {
-        "object_list": queryset, 
+        "object_list": user_posts, 
         "title": "News",
         "page_request_var": page_request_var,
         "today": today,
@@ -169,92 +180,76 @@ def news_list(request):
     return render(request, "news_list.html", context)
 
 
-class PostLikeToggle(RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        slug = self.kwargs.get("slug")
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import authentication, permissions
+
+class PostLikeAPIToggle(APIView):
+    authentication_classes = (authentication.SessionAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, slug=None, format=None):
+        # slug = self.kwargs.get("slug")
         obj = get_object_or_404(Post, slug=slug)
+        url_ = obj.get_absolute_url()
         user = self.request.user
-        if user.is_authenticated:
-            if user in obj.likes.all():
-                obj.likes.remove(user)
-            else:
-                if user in obj.dislikes.all():
-                    obj.dislikes.remove(user)
-                obj.likes.add(user)
-        return obj.get_absolute_url()
-class PostDisLikeToggle(RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        slug = self.kwargs.get("slug")
-        obj = get_object_or_404(Post, slug=slug)
-        user = self.request.user
+        updated = False
+        like = False
+        up = False
+
         if user.is_authenticated:
             if user in obj.dislikes.all():
                 obj.dislikes.remove(user)
+                like = True
             else:
+                up = True
                 if user in obj.likes.all():
-                    obj.likes.remove(user)
-                obj.dislikes.add(user)
-        return obj.get_absolute_url()
+                    like = False
+                else:
+                    like = True
+                    obj.likes.add(user)
+            updated = True
+        like_num = int(obj.likes.count()) - int(obj.dislikes.count())
+        data = {
+            "updated": updated,
+            "like": like,
+            "up":up,
+            "like_num":like_num,
+        }
+        return Response(data)
 
+class PostDisLikeAPIToggle(APIView):
+    authentication_classes = (authentication.SessionAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
 
-
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
-# from rest_framework import authentication, permissions
-
-# class PostLikeAPIToggle(APIView):
-#     authentication_classes = (authentication.SessionAuthentication,)
-#     permission_classes = (permissions.IsAuthenticated,)
-
-#     def get(self, request, slug=None, format=None):
-#         # slug = self.kwargs.get("slug")
-#         obj = get_object_or_404(Post, slug=slug)
-#         url_ = obj.get_absolute_url()
-#         user = self.request.user
-#         updated = False
-#         liked = False
-#         if user.is_authenticated:
-#             if user in obj.likes.all():
-#                 liked = False
-#                 obj.likes.remove(user)
-#             else:
-#                 if user in obj.dislikes.all():
-#                     obj.dislikes.remove(user)
-#                 liked = True
-#                 obj.likes.add(user)
-#             updated = True
-#         data = {
-#             "updated": updated,
-#             "liked": liked
-#         }
-#         return Response(data)
-
-# class PostDisLikeAPIToggle(APIView):
-#     authentication_classes = (authentication.SessionAuthentication,)
-#     permission_classes = (permissions.IsAuthenticated,)
-
-#     def get(self, request, slug=None, format=None):
-#         # slug = self.kwargs.get("slug")
-#         obj = get_object_or_404(Post, slug=slug)
-#         url_ = obj.get_absolute_url()
-#         user = self.request.user
-#         updated = False
-#         disliked = False
-#         if user.is_authenticated:
-#             if user in obj.dislikes.all():
-#                 disliked = False
-#                 obj.dislikes.remove(user)
-#             else:
-#                 if user in obj.likes.all():
-#                     obj.likes.remove(user)
-#                 disliked = True
-#                 obj.dislikes.add(user)
-#             updated = True
-#         data = {
-#             "updated": updated,
-#             "disliked": disliked
-#         }
-#         return Response(data)
+    def get(self, request, slug=None, format=None):
+        # slug = self.kwargs.get("slug")
+        obj = get_object_or_404(Post, slug=slug)
+        url_ = obj.get_absolute_url()
+        user = self.request.user
+        updated = False
+        dislike = False
+        down = False
+        if user.is_authenticated:
+            if user in obj.likes.all():
+                obj.likes.remove(user)
+                dislike = True
+            else:
+                down = True
+                if user in obj.dislikes.all():
+                    dislike = False
+                else:
+                    dislike = True
+                    obj.dislikes.add(user)    
+            updated = True
+        like_num = int(obj.likes.count()) - int(obj.dislikes.count())
+        data = {
+            "updated": updated,
+            "dislike": dislike,
+            "down":down,
+            "like_num":like_num,
+        }
+        return Response(data)
 
 
 def news_update(request, slug=None):

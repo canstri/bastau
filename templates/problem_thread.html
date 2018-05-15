@@ -10,6 +10,7 @@
 {% block content %}
 <div class='ui container'>
     <div>
+    <div class="ui segment">
         <h3>
             {% if hashtag == 'all' %}
                 All problems
@@ -17,6 +18,7 @@
                 #{{ hashtag }} problems
             {% endif %}
         </h3>
+    </div>
         <br>
     </div>
     <div class="ui grid" >    
@@ -46,18 +48,6 @@
                     {% endfor %}
                 </div>
                 {% endfor %}
-
-                {% if staff == "yes" %}
-                <h4 style="margin-top: 150px;"> Staff only: Create new Problem:</h4>
-                <form class="comment_form" method="POST" action='' enctype='multipart/form-data'> {% csrf_token %}
-                    <div class="ui form" id="submit-problem">
-                        {{ create_problem_form|crispy }}
-                    </div>
-                    <div class="ui input">
-                        <input type='submit' class='ui button green' style="margin-top:20px" value='Create problem'>
-                    </div>
-                </form>
-                {% endif %}
             </div>
             <div class="five wide column">
                 <div style="height: 50px; background-color: #f2f2f2; text-align: center; border: 1px solid rgba(34, 36, 38, 0.15);">

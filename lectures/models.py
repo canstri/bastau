@@ -19,9 +19,6 @@ from problems.models import Problem
 
 
 class LectureManager(models.Manager):
-    def all(self):
-        return super(LectureManager, self)
-
     def filter_by_instance(self, instance):
         content_type = ContentType.objects.get_for_model(instance.__class__)
         return super(LectureManager, self).filter(content_type=content_type, object_id= instance.id)
