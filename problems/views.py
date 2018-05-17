@@ -160,7 +160,6 @@ def problem_detail(request, id):
             "content_type": obj.content_type,
             "object_id": obj.object_id
     }
-    
     if request.user.id:
         check_problem = CheckProblem.objects.get(problem_id = obj.id, user = request.user.id)
     else:
@@ -208,9 +207,59 @@ def problem_detail(request, id):
                     break
             if found_old == False:
                 check_problem.actions.append([cstring, cstatus, 'not_in_task'])
+            # check if problem is solved
+            all_solved = True
+            for actn in check_problem.actions:
+                if actn[1] == 'Need to prove':
+                    print("eboy", actn[0], '#', cstring, "#")
+                    if actn[0] != cstring:
+                        all_solved = False
+                        print('False')
+            #print('current_status', cstatus)
+            # check if problem is fully solved
+            if cstatus != "Correct":
+                all_solved = False
+            if all_solved == True:
+                #print('solved')
+                if check_problem.solved == False: # if problem was not solved before
+                    rating_olymp = RatingOlymp.objects.get(
+                            user = profile,
+                            olymp = content_object,
+                        )
+                    for prblm in rating_olymp.points:
+                        if prblm[0] == obj.title:
+                            prblm[1] = '7'
+                    rating_olymp.points[0][1] = str(int(rating_olymp.points[0][1])+7)
+                    rating_olymp.summary = rating_olymp.points[0][1]
+                    rating_olymp.save()
+
+                    for hashtag in obj.hashtags: 
+                        hashtag = hashtag[1:]  # cross out "#" from hashtag name
+                        number_theory_skill = 0
+                        inequalities_skill = 0
+                        for skill in profile.number_theory_skills: #search in number theory skills
+                            if hashtag == skill[0]:  # if found needed skill of user
+                                skill[1] = str(int(skill[1]) + obj.level) # increase this skill
+                            number_theory_skill += int(skill[1])
+                        for skill in profile.inequalities_skills: #search in inequality skills
+                            if hashtag == skill[0]:  # if found needed skill of user
+                                skill[1] = str(int(skill[1]) + obj.level) # increase this skill
+                            inequalities_skill += int(skill[1])
+                        profile.skills[0][1] = str(number_theory_skill/len(profile.number_theory_skills))
+                        profile.skills[1][1] = str(inequalities_skill/len(profile.inequalities_skills))
+                        rating = 0
+                        for skill in profile.skills:
+                            rating += float(skill[1])
+                        profile.rating = rating
+                        profile.save()
+                        x=create_action(profile, obj)
+                check_problem.solved = True
+            check_problem.save()    
+
             check_problem.current_string = ''
             check_problem.current_status = ''
             check_problem.save()
+
             return HttpResponseRedirect(obj.get_absolute_url())  
 
         if 'clear' in request.POST:
@@ -246,6 +295,8 @@ def problem_detail(request, id):
         for i in range (0, len(Lemma.objects.filter())):
             if action_check == "Correct":
                 break            
+            print("input_string", input_string)
+            
             action_check =  getattr(LemmaCode, Lemma.objects.filter()[i].name)(input_string) #Call all basic lemmas
         
         # update current expression and status
@@ -253,52 +304,6 @@ def problem_detail(request, id):
         check_problem.current_status = action_check
         check_problem.save()
 
-        # check if problem is solved
-        all_solved = True
-        for actn in check_problem.actions:
-            if actn[1] == 'Need to prove':
-                if actn[0] != expr1:
-                    all_solved = False
-        
-        # check if problem is fully solved
-        if action_check != "Correct":
-            all_solved = False
-        if all_solved == True:  
-            if check_problem.solved == False: # if problem was not solved before
-
-                rating_olymp = RatingOlymp.objects.get(
-                        user = profile,
-                        olymp = content_object,
-                    )
-                for prblm in rating_olymp.points:
-                    if prblm[0] == obj.title:
-                        prblm[1] = '7'
-                rating_olymp.points[0][1] = str(int(rating_olymp.points[0][1])+7)
-                rating_olymp.summary = rating_olymp.points[0][1]
-                rating_olymp.save()
-
-                for hashtag in obj.hashtags: 
-                    hashtag = hashtag[1:]  # cross out "#" from hashtag name
-                    number_theory_skill = 0
-                    inequalities_skill = 0
-                    for skill in profile.number_theory_skills: #search in number theory skills
-                        if hashtag == skill[0]:  # if found needed skill of user
-                            skill[1] = str(int(skill[1]) + obj.level) # increase this skill
-                        number_theory_skill += int(skill[1])
-                    for skill in profile.inequalities_skills: #search in inequality skills
-                        if hashtag == skill[0]:  # if found needed skill of user
-                            skill[1] = str(int(skill[1]) + obj.level) # increase this skill
-                        inequalities_skill += int(skill[1])
-                    profile.skills[0][1] = str(number_theory_skill/len(profile.number_theory_skills))
-                    profile.skills[1][1] = str(inequalities_skill/len(profile.inequalities_skills))
-                    rating = 0
-                    for skill in profile.skills:
-                        rating += float(skill[1])
-                    profile.rating = rating
-                    profile.save()
-                    x=create_action(profile, obj)
-            check_problem.solved = True
-        check_problem.save()    
 
     ht_array = []
     for hshtg in obj.hashtag_list.all():

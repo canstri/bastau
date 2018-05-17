@@ -81,7 +81,8 @@ class CheckProblem(models.Model):
     solved = models.BooleanField(default=False) 
     current_string = models.TextField(default = 'de')
     current_status = models.TextField(default = 'Wrong')
-
+    current_input = models.TextField(default = '')
+    current_output = models.TextField(default = '')
 
 class Lemma(models.Model):
     name = models.TextField(default='')

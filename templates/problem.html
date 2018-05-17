@@ -50,13 +50,20 @@
                     <span class=" btn-s6" style="color: #fff;font-weight: 600;margin-right: 25px;cursor: pointer">log</span>
                     <span class=" btn-s7" style="color: #fff;font-weight: 600;margin-right: 25px;cursor: pointer">∑</span>
                     <span class=" btn-s8" style="color: #fff;font-weight: 600;margin-right: 25px;cursor: pointer">∞</span>
-                                    <!-- <h4 style="color: white;">Your expression:</h4>
-                     --><div class="ui segment" style="background-color: #fff;">
-                            {% if check_problem.current_string == '' %}
-                                <h5 style="color: grey;">Your expression will be here 
-                            {% else %}
-                                <h5>{{ check_problem.current_string }} {{ check_problem.current_status }} 
-                            {% endif %}
+                    <div class="ui segment" style="background-color: #fff;">
+                        {% if check_problem.current_string == '' %}
+                            <h5 style="color: grey;">Your expression will be here 
+                        {% else %}
+                            <h5>{{ check_problem.current_string }} 
+                                {% if check_problem.current_status == 'Need to prove' %}
+                                    <i class="icon exclamation circle" style="color: orange; font-size: 18px;"></i>
+                                {% elif check_problem.current_status == 'Correct' %}
+                                    <i class="icon check circle" style="color: green; font-size: 18px;"></i>
+                                {% elif check_problem.current_status == 'Exception' %}    
+                                    <i class="times circle icon" style="color: red; font-size: 18px;"></i>
+                                {% endif %}
+                                 
+                        {% endif %}
                         </h5> 
                     </div>
                     <button type='submit' name = 'clear' class='ui button tiny'>Clear</button>

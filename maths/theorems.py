@@ -26,4 +26,6 @@ class TheoremCode(object):
         part2 = str(part2)
        
         result = result.replace(part1, part2)
+        result = result[:-1]
+        print("result", result, '#')
         return([result, statusFirst])
