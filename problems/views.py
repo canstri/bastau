@@ -160,6 +160,7 @@ def problem_detail(request, id):
             "content_type": obj.content_type,
             "object_id": obj.object_id
     }
+    
     if request.user.id:
         check_problem = CheckProblem.objects.get(problem_id = obj.id, user = request.user.id)
     else:

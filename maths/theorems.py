@@ -1,7 +1,7 @@
 from sympy import *
 from maths.split import splitting
 from maths.splitFinal import splitFinal
-from maths.containsChar import ContainsChar
+from maths.containsChar import containsChar
 from sympy.parsing.sympy_parser import parse_expr
 class TheoremCode(object):
     def zamena(input_exp):

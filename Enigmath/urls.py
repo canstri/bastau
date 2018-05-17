@@ -19,7 +19,7 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from accounts.views import (login_view, register_view, logout_view)
-from main.views import(main_view)
+from main.views import(ratings_view, contacts_view)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,16 +27,17 @@ urlpatterns = [
     url(r'^register/', register_view, name='register'),
     url(r'^login/', login_view, name='login'),
     url(r'^logout/', logout_view, name='logout'),
-    url(r'^news/', include("news.urls", namespace='news')),
     url(r'^profile/', include("accounts.urls", namespace='accounts')),
     url(r'^olympiads/', include("olymps.urls", namespace='olymps')),
+    url(r'^ratings/', ratings_view, name='ratings'),
+    url(r'^contacts/', contacts_view, name='contacts'),
     url(r'^problem/', include("problems.urls", namespace='problems')),
     url(r'^problems/', include("hashtags.urls", namespace='hashtags')),
     url(r'^courses/', include("courses.urls", namespace='courses')),
     url(r'^lectures/', include("lectures.urls", namespace='lectures')),
     url(r'^groups/', include("squads.urls", namespace='squads')),
     url(r'^tasks/', include("homeworks.urls", namespace='tasks')),
-    url(r'^', include("main.urls", namespace='main')),
+    url(r'^', include("news.urls", namespace='news')),
 ]
 
 if settings.DEBUG:

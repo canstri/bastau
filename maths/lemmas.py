@@ -1,10 +1,9 @@
 from sympy import *
 from .split import splitting
 from .splitFinal import splitFinal
-from .containsChar import ContainsChar
+from .containsChar import containsChar
 from sympy.parsing.sympy_parser import parse_expr
 from .findPower import findPower
-from operator import itemgetter
 
 class LemmaCode(object):
     def isEqual(input_exp):
@@ -27,23 +26,21 @@ class LemmaCode(object):
         return('Wrong')
     #print(isEqual('(a-1)*(a+1)=a**2-1'))
 
-    def isSequence(input_exp): #uncomment lines in codes.py
+    def isSequence(input_exp):
 
         status = False
-        print('here')
         try:
             expression, divider, sign1 = splitting(input_exp)
             expression = str(expression)
         except Exception as e:
-            return('Wrong2')  # later need to change to Wrong
+            return('Wrong')
 
 
         try:
-            print(expression)
-            part1, part2,part3 = ContainsChar(expression).split('*')
+            part1, part2,part3 = containsChar(expression).split('*')
 
         except Exception as e:
-            return('Wrong3')  # later need to change to Wrong
+            return('Wrong')
 
         arr = [int(expand(part1)),int(expand(part2)),int(expand(part3))]
         array = sorted(arr)
@@ -56,47 +53,93 @@ class LemmaCode(object):
             return('Correct')
         return('Wrong')
 
-    def sequenceDevision(input_exp):
+    def checkForEven(input_exp):
         status = False
         try:
-            expression, divider, sign1 = splitting(input_exp)
+            expression, divider, signOne = splitting(input_exp)
             expression = str(expression)
         except Exception as e:
-            return('Wrong')  # later need to change to Wrong
+            return('Wrong')
 
         try:
-            parts = expression.split('*')
+            part1, part2 = expression.split('*')
         except Exception as e:
-            return('Wrong')  # later need to change to Wrong
+            return('Wrong')
 
-        number_of_parts = len(parts)
-        
-        #Сорт без containsChar
-        #Распознать переменную, даже если она вида "x*y+z"
-        #Сказать Куанышу дописать лемму
+        if(((abs(sympify(part1)-sympify(part2)))%4==2)):
+            status = True
 
-        delta = number_of_parts
-        for index in range(len(parts) - 1):
-            if (parts[index + 1] - parts[index] == delta):
-                status = True
+        if status == True:
+            return('Correct')
+        return('Wrong')
 
+    def preLastCheck(input_exp): # (n-1)*n*(n + 1)#3 Correct; (n-1)*(n+1)#8 Correct; (n-1)*n*(n + 1)#24
 
+        status = False
+        result = 1
+        try:
+            input_exp1, input_exp2, input_exp3  = input_exp.split(';')
+        except Exception as e:
+            return('Wrong')
 
+        try:
+            expressionFirst, statusFirst = splitFinal(input_exp1)
+        except Exception as e:
+            return('Wrong')
 
+        try:
+            expressionSecond, statusSecond = splitFinal(input_exp2)
+        except Exception as e:
+            return('Wrong')
+        try:
+            partOne, dividerOne, signOne = splitting(expressionFirst)
+        except Exception as e:
+            return('Wrong')
 
+        try:
+            partTwo, dividerTwo, signTwo = splitting(expressionSecond)
+        except Exception as e:
+            return('Wrong')
+        try:
+            partThree, dividerThree, signThree = splitting(input_exp3)
+        except Exception as e:
+            return('Wrong')
+
+        try:
+            partOne = str(partOne)
+            input1,input2,input3 = sympify(partOne.split('*'))
+        except Exception as e:
+            return('Wrong')
+        try:
+            partTwo = str(partTwo)
+            input4,input5 = sympify(partTwo.split('*'))
+        except Exception as e:
+            return('Wrong')
+
+        arr = set([input1,input2,input3,input4,input5])
+        for value in arr:
+            result = result * sympify(value)
+
+        if((result == sympify(partThree)) and (gcd(sympify(dividerOne),sympify(dividerTwo)) == 1)
+            and (dividerOne%3 == 0) and (statusFirst and statusSecond == 'Correct') ):
+            status = True
+
+        if (status == True):
+            return('Correct')
+        else:
+            return('Wrong')
+    #print(preLastCheck('(n-1)*n*(n + 1)#3 Correct; (n-1)*(n+1)#8 Correct; (n-1)*n*(n + 1)#24'))
 
     def finalCheck(input_exp): #n**3-n =(n-1)*n*(n + 1) Correct
                                                   #(n-1)*n*(n + 1)#24 Correct
                                                   # n**3-n#24
-
-        print(input_exp)
-
+        status = False
         try:
              input_exp1, input_exp2, input_exp3  = input_exp.split(';')
         except Exception as e:
-            return('Wrong')  # later need to change
+            return('Exception')  # later need to change
 
-        status = False
+
         expressionFirst, statusFirst = splitFinal(input_exp1)
         expressionSecond, statusSecond = splitFinal(input_exp2)
 
@@ -110,28 +153,47 @@ class LemmaCode(object):
         if((factor(partTwo) == factor(partThree)) and (statusFirst == statusSecond == 'Correct')
             and (sympify(partTwo) == sympify(partFour)) and (dividerOne == dividerTwo)):
             status = True
-        print(status)
+
         if status == True:
-                return('Correct')
+            return('Correct')
         return('Wrong')
     #print(is_sequence('(n-1)*n*(n + 1)#24'))
-    
+    def zamena(input_exp):
 
-    def checkInequalities(input_exp): # a>b Correct; a+c > b+c                   3<=5 Correct; 5 >=3
+        print('here')
+        status = False
+        try:
+             input_exp1, input_exp2  = input_exp.split(';')
+        except Exception as e:
+            return('Wrong')  # later need to change
+        try:
+            expressionFirst, statusFirst = splitFinal(input_exp1)
+        except Exception as e:
+            return('Wrong')  # later need to change
+
+        try:
+            part1,part2,sign = splitting(input_exp2)
+        except Exception as e:
+            return('Wrong')
+
+        expressionFirst = str(expressionFirst)
+        part1 = str(part1)
+        part2 = str(part2)
+
+        expressionFirst = expressionFirst.replace(part1, part2)
+        return(expressionFirst)
+
+    def checkInequalities(input_exp): # a>b; a+c > b+c                   3<=5 Correct; 5 >=3
         status =False
-
+        print('hereee')
         try:
              input_exp1, input_exp2  = input_exp.split(';')
         except Exception as e:
             return('Wrong')
 
-        try:
-            expressionFirst, statusFirst = splitFinal(input_exp1)
-        except Exception as e:
-            return('Wrong')
 
         try:
-            leftPartOne,rightPartOne,signOne = splitting(expressionFirst)
+            leftPartOne,rightPartOne,signOne = splitting(input_exp1)
         except Exception as e:
             return('Wrong')
 
@@ -146,20 +208,20 @@ class LemmaCode(object):
         divisionLeft = leftPartOne / rightPartOne
         divisionRight = leftPartTwo / rightPartTwo
 
-        if((subtractionFirst == subtractionSecond) and (statusFirst == 'Correct')
-            and ((signOne == signTwo) and (signOne != '=')) and (simplify(input_exp2)==True)):
+        if((subtractionFirst == subtractionSecond) 
+            and ((signOne == signTwo) and (signOne != '=')) ):
             status = True
-        elif((divisionLeft ==divisionRight) and (statusFirst == 'Correct') and (simplify(input_exp2)==True) ):
+        elif((divisionLeft ==divisionRight) ):
             status = True
-        elif((leftPartOne == rightPartTwo) and (rightPartOne == leftPartTwo) and (statusFirst == 'Correct')
-            and  (signOne!= signTwo) and (simplify(input_exp2)==True) ):
+        elif((leftPartOne == rightPartTwo) and (rightPartOne == leftPartTwo)
+            and  (signOne!= signTwo)):
             status = True
-        elif((leftPartOne == 1/leftPartTwo) and (rightPartOne == 1/ rightPartTwo) and (statusFirst == 'Correct')
-            and  (signOne!= signTwo) and (simplify(input_exp2)==True)):
+        elif((leftPartOne == 1/leftPartTwo) and (rightPartOne == 1/ rightPartTwo) 
+            and  (signOne!= signTwo)):
             status = True
 
         if status == True:
-                return('Correct!')
+                return('Correct')
         return('Wrong')
 
     def threeInputsEquality(input_exp):
@@ -204,7 +266,7 @@ class LemmaCode(object):
                 status = True
 
         if status == True:
-            return('Correct')
+                return('Correct!')
         return('Wrong')
 
     def threeInputsEquality2(input_exp):
@@ -250,7 +312,7 @@ class LemmaCode(object):
             status = True
 
         if status == True:
-            return('Correct')
+                return('Correct!')
         return('Wrong')
     def threeInputsGreaterZero(input_exp):
         status =False
@@ -294,7 +356,7 @@ class LemmaCode(object):
                     status = True
 
         if status == True:
-            return('Correct')
+                return('Correct!')
         return('Wrong')
     def threeInputsInequality(input_exp): # a>b Correct; x>y Correct; a*x +b*y > a*y +b*x
         status =False
@@ -335,7 +397,7 @@ class LemmaCode(object):
             if(sympify(leftPartThree) == sympify(left) and sympify(rightPartThree) == sympify(right)):
                 status = True
         if status == True:
-                return('Correct')
+                return('Correct!')
         return('Wrong')
     def fourInputsEquality(input_exp):
         status =False
@@ -393,7 +455,7 @@ class LemmaCode(object):
                 status = True
 
         if status == True:
-            return('Correct')
+                return('Correct!')
         return('Wrong')
     def powerInequality(input_exp):
         status = False
@@ -428,6 +490,6 @@ class LemmaCode(object):
                 status = True
 
         if status == True:
-            return('Correct')
+            return('Correct!')
         return('Wrong')
-#    print(powerInequality('x>y Correct; x**n > y**n'))
+    #print(powerInequality('x>y Correct; x**n > y**n'))

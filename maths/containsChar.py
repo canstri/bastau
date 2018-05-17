@@ -1,6 +1,6 @@
 from sympy import *
 import mpmath
-def ContainsChar(input):
+def containsChar(input):
     set = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz'
     for c in set:
         if c in input:
