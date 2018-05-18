@@ -207,6 +207,7 @@ def problem_detail(request, id):
                     break
             if found_old == False:
                 check_problem.actions.append([cstring, cstatus, 'not_in_task'])
+                print(cstring, cstatus, 'not_in_task')
             # check if problem is solved
             all_solved = True
             for actn in check_problem.actions:
@@ -220,7 +221,7 @@ def problem_detail(request, id):
             if cstatus != "Correct":
                 all_solved = False
             if all_solved == True:
-                #print('solved')
+                print('solved')
                 if check_problem.solved == False: # if problem was not solved before
                     rating_olymp = RatingOlymp.objects.get(
                             user = profile,
@@ -252,7 +253,8 @@ def problem_detail(request, id):
                             rating += float(skill[1])
                         profile.rating = rating
                         profile.save()
-                        x=create_action(profile, obj)
+                        print('create_action in problem')
+                    x=create_action(profile, obj)
                 check_problem.solved = True
             check_problem.save()    
 
@@ -297,6 +299,9 @@ def problem_detail(request, id):
                 break            
             print("input_string", input_string)
             
+            b = input_string.replace('√', 'sqrt')
+            input_string = b
+            print(input_string)
             action_check =  getattr(LemmaCode, Lemma.objects.filter()[i].name)(input_string) #Call all basic lemmas
         
         # update current expression and status

@@ -2,53 +2,59 @@
 {% block content %}
 
 
-
 <div class='ui container'>
-    <div style="margin-left: 50px;">
-    <div class="ui grid">
-        <div class="sixteen wide column">
-            {% if staff == "yes" %}
-                <h3> Staff only: <a class="ui button tiny" href='{% url "olymps:create" %}' >Create Olympiad</a></h3>
-            {% endif %}
-        </div>
-        <div class="ten wide column">
+    <div>
+        <div class="ui grid">
+            <div class="sixteen wide column">
+                {% if staff == "yes" %}
+                <h3> Staff only: <a class="ui button tiny" href='{% url "olymps:create" %}'>Create Olympiad</a></h3>
+                {% endif %}
+            </div>
+            <div class="eleven wide column">
                 <div id="news-form" class="ui segment">
                     <h3>Olympiads</h3>
                 </div>
 
-            {% for ol in olymps %}
-            <div class="ui segment" >
-                <div class="ui grid" >
-                    {% if ol.0.draft %}
-                    <h4 style="color: red">Staff only: Draft</h4>{% endif %} {% if ol.0.publish > today %}<h4>Staff Only: Future Olympiad</h4>{% endif %}
-                    <div class="five wide column">
-                    {% if ol.0.image %}
-                        <a class="" href='{{ ol.0.get_absolute_url }}'><img class="olymp-image" src='{{ ol.0.image.url }}'/></a>
-                    {% endif %}
-                    </div>
-                    <div class="eleven wide column">
-                        <h3 class=""><a href='{{ ol.0.get_absolute_url }}' >{{ ol.0.title }}</a> 
-                            <a style="margin-left: 30px;" href='{{ ol.0.rating_url }}'>Results</a>
-                        </h3>
-                        {% if ol.1 == False %}
-                            <a href="{{ ol.0.get_like_url }}">Register to olympiad</a>
-                        {% endif %}
-                        {% if ol.1 == True %}
+                {% for ol in olymps %}
+                <div class="ui segment">
+                    <div class="ui grid">
+                        <!--      {% if ol.0.draft %}
+                              <h4 style="color: red">Staff only: Draft</h4>{% endif %} {% if ol.0.publish > today %}<h4>Staff Only: Future Olympiad</h4>
+                              {% endif %}-->
+                        <div class="five wide column">
+                            {% if ol.0.image %}
+                            <a class="" href='{{ ol.0.get_absolute_url }}'><img class="olymp-image"
+                                                                                src='{{ ol.0.image.url }}'/></a>
+                            {% endif %}
+                        </div>
+                        <div class="eleven wide column">
+                            <h3 class=""><a href='{{ ol.0.get_absolute_url }}' style="color:#333; font-weight:500"
+                                            class="hover-me">{{ ol.0.title }}</a>
+                                <a style="margin-left: 30px; color:#333; font-weight:700" class="hover-me"
+                                   href='{{ ol.0.rating_url }}'>Results</a>
+                            </h3>
+                            {% if ol.1 == False %}
+                            <a href="{{ ol.0.get_like_url }}"
+                               style="color:#333; font-weight:500;text-decoration: underline" class="hover-me">Register
+                                to olympiad</a>
+                            {% endif %}
+                            {% if ol.1 == True %}
                             You are registered to this olympiad
-                        {% endif %}
-                        {% if staff == "yes" %}
+                            {% endif %}
+                            {% if staff == "yes" %}
                             <br><br>
                             <a href='{{ ol.0.get_update_url }}' class="ui button tiny">Edit</a>
                             <a href='{{ ol.0.get_delete_url }}' class="ui button tiny">Delete</a>
-                        {% endif %}
-                        <h5 class="">Start: <a href="" >{{ ol.0.start_time }}</a></h5>
-                    <!--     <p class="">Authors: <a href="{{ ol.0.get_author }}" >{{ ol.0.user.username }}</a> </p> -->
+                            {% endif %}
+                            <h5 class="">Start: <a style="color:#333; font-weight:700" href="">{{ ol.0.start_time }}</a>
+                            </h5>
+                            <!--     <p class="">Authors: <a href="{{ ol.0.get_author }}" >{{ ol.0.user.username }}</a> </p> -->
+                        </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
-        {% endfor %}
-        </div>
-        <div class="five wide column">
+            <div class="five wide column" id="right-col-seg">
                 <div style="height: 50px; background-color: #f2f2f2; text-align: center; border: 1px solid rgba(34, 36, 38, 0.15);">
                     <p style="font-size: 15px; padding: 15px; font-weight: 600;">Топ 5:</p>
                 </div>
@@ -57,14 +63,15 @@
                         <div class="ui grid one-author">
                             <div class="three wide column">
                                 <a href="{{ rating.0.get_absolute_url }}">
-                                {% if rating.0.image %}
+                                    {% if rating.0.image %}
                                     <img src="{{ rating.0.image.url }}">
-                                {% endif %}
+                                    {% endif %}
                                 </a>
                             </div>
                             <div class="thirteen wide column ui grid right-side">
                                 <div class="eight wide column name-author">
-                                    <a href="{{ rating.0.get_absolute_url }}"><span>{{ rating.0.user.username }}</span></a>
+                                    <a href="{{ rating.0.get_absolute_url }}"><span style="  color: #333 !important;
+    font-weight: 500;">{{ rating.0.user.username }}</span></a>
                                 </div>
                                 <div class="seven wide column rating-autor">
                                     <span>{{ rating.0.rating }}</span>
@@ -79,9 +86,9 @@
                         <div class="ui grid one-author">
                             <div class="three wide column">
                                 <a href="{{ rating.1.get_absolute_url }}">
-                                {% if rating.1.image %}
+                                    {% if rating.1.image %}
                                     <img src="{{ rating.1.image.url }}">
-                                {% endif %}
+                                    {% endif %}
                                 </a>
                             </div>
                             <div class="thirteen wide column ui grid right-side">
@@ -101,9 +108,9 @@
                         <div class="ui grid one-author">
                             <div class="three wide column">
                                 <a href="{{ rating.2.get_absolute_url }}">
-                                {% if rating.2.image %}
+                                    {% if rating.2.image %}
                                     <img src="{{ rating.2.image.url }}">
-                                {% endif %}
+                                    {% endif %}
                                 </a>
                             </div>
                             <div class="thirteen wide column ui grid right-side">
@@ -123,9 +130,9 @@
                         <div class="ui grid one-author">
                             <div class="three wide column">
                                 <a href="{{ rating.3.get_absolute_url }}">
-                                {% if rating.3.image %}
+                                    {% if rating.3.image %}
                                     <img src="{{ rating.3.image.url }}">
-                                {% endif %}
+                                    {% endif %}
                                 </a>
                             </div>
                             <div class="thirteen wide column ui grid right-side">
@@ -145,9 +152,9 @@
                         <div class="ui grid one-author">
                             <div class="three wide column">
                                 <a href="{{ rating.4.get_absolute_url }}">
-                                {% if rating.4.image %}
+                                    {% if rating.4.image %}
                                     <img src="{{ rating.4.image.url }}">
-                                {% endif %}
+                                    {% endif %}
                                 </a>
                             </div>
                             <div class="thirteen wide column ui grid right-side">
@@ -199,38 +206,38 @@
                 </div>
                 <div class="ui segment">
                     <div id="best-authors-news">
-                            <div class="post">
-                                <a href="{{ action_list.0.user.get_absolute_url }}">{{ action_list.0.user.user }}</a> solved <a href="{{ action_list.0.problem.get_absolute_url }}">{{ action_list.0.problem.title }}</a>
-                                <div class="ui divider"></div>
-                            </div>
-                            <div class="post">
-                                <a href="{{ action_list.1.user.get_absolute_url }}">{{ action_list.1.user.user }}</a> solved <a href="{{ action_list.1.problem.get_absolute_url }}">{{ action_list.1.problem.title }}</a>
-                                <div class="ui divider"></div>
-                            </div>
-                            <div class="post">
-                                <a href="{{ action_list.2.user.get_absolute_url }}">{{ action_list.2.user.user }}</a> solved <a href="{{ action_list.2.problem.get_absolute_url }}">{{ action_list.2.problem.title }}</a>
-                                <div class="ui divider"></div>
-                            </div>
-                            <div class="post">
-                                <a href="{{ action_list.3.user.get_absolute_url }}">{{ action_list.3.user.user }}</a> solved <a href="{{ action_list.3.problem.get_absolute_url }}">{{ action_list.3.problem.title }}</a>
-                                <div class="ui divider"></div>
-                            </div>
-                            <div class="post">
-                                <a href="{{ action_list.4.user.get_absolute_url }}">{{ action_list.4.user.user }}</a> solved <a href="{{ action_list.4.problem.get_absolute_url }}">{{ action_list.4.problem.title }}</a>
-                                <div class="ui divider"></div>
-                            </div>
+                        <div class="post">
+                            <a href="{{ action_list.0.user.get_absolute_url }}">{{ action_list.0.user.user }}</a> solved
+                            <a href="{{ action_list.0.problem.get_absolute_url }}">{{ action_list.0.problem.title }}</a>
+                            <div class="ui divider"></div>
+                        </div>
+                        <div class="post">
+                            <a href="{{ action_list.1.user.get_absolute_url }}">{{ action_list.1.user.user }}</a> solved
+                            <a href="{{ action_list.1.problem.get_absolute_url }}">{{ action_list.1.problem.title }}</a>
+                            <div class="ui divider"></div>
+                        </div>
+                        <div class="post">
+                            <a href="{{ action_list.2.user.get_absolute_url }}">{{ action_list.2.user.user }}</a> solved
+                            <a href="{{ action_list.2.problem.get_absolute_url }}">{{ action_list.2.problem.title }}</a>
+                            <div class="ui divider"></div>
+                        </div>
+                        <div class="post">
+                            <a href="{{ action_list.3.user.get_absolute_url }}">{{ action_list.3.user.user }}</a> solved
+                            <a href="{{ action_list.3.problem.get_absolute_url }}">{{ action_list.3.problem.title }}</a>
+                            <div class="ui divider"></div>
+                        </div>
+                        <div class="post">
+                            <a href="{{ action_list.4.user.get_absolute_url }}">{{ action_list.4.user.user }}</a> solved
+                            <a href="{{ action_list.4.problem.get_absolute_url }}">{{ action_list.4.problem.title }}</a>
+                            <div class="ui divider"></div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>    
-    
+        </div>
 
 
-
-
-
-
-    <div class="pagination">
+        <div class="pagination">
         <span class="step-links">
             {% if object_list.has_previous %}
                 <a href="?{{ page_request_var }}={{ object_list.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">previous</a>
@@ -244,13 +251,12 @@
                 <a href="?{{ page_request_var }}={{ object_list.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">next</a>
             {% endif %}
         </span>
+        </div>
+
     </div>
 
 </div>
-
 </div>
-</div>
-
 
 
 {% endblock content %}

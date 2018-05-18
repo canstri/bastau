@@ -7,21 +7,14 @@
 
 
 {% block content %}
-<style type="text/css">
-    .target-courses{
-        color: #ff7477 !important;
-    }
-</style>
 
-
-<div class='ui container'>
-	<div class="ui segment" style="width:50%;line-height: 40px;">
+<div class='ui container' id="course-create">
+	<div class="ui segment course-segment">
 		<h1>Create Course</h1>
 		<form method='POST' action='' enctype='multipart/form-data'>{% csrf_token %}
 			{{ form|crispy }}
-			<input type='submit' class='ui button green' style="margin-top: 20px;margin-bottom: 20px" value='Create Course' />
+			<input type='submit' class='ui button green btn-go' value='Create Course' />
 		</form>
 	</div>
-
 </div>
 {% endblock content %}

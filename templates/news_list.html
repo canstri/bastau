@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
-
-<div class='ui container'>    
-    <div style="margin-left: 50px;">
-        <div class="ui grid" >
+{% include "modals/registration.html" %}
+{% include "modals/login.html" %}
+<div class='ui container'>
+    <div>
+        <div class="ui grid">
             {% if staff == "yes" %}
             <div class="sixteen wide column">
                 <h3>
@@ -11,82 +12,223 @@
                 </h3>
             </div>
             {% endif %}
-            <div class="ten wide column">
+            <div class="eleven wide column">
                 <div id="news-form" class="ui segment">
                     <h3>News</h3>
                 </div>
 
                 {% for obj in object_list %}
                 <div id="news-form" class="ui segment">
-                    <h2>
-                        <a class="post-title" href='{{ obj.0.get_absolute_url }}'>{{ obj.0.title }}</a>
+                    <h2 class="hover-me">
+                        <a class="post-title hover-me" href='{{ obj.0.get_absolute_url }}'>{{ obj.0.title }}</a>
                     </h2>
                     {% if staff == "yes" %}
-                        <div class="admin-rights">
-                            <a href='{{ obj.0.get_update_url }}' class="ui button tiny">Edit</a>
-                            <a href='{{ obj.0.get_delete_url }}' class="ui button tiny">Delete</a>
-                        </div>
-                        {% if obj.0.draft %}
-                            <h3>Staff only: Draft</h3>
-                        {% endif %}
-                        {% if obj.0.publish > today %}
-                            <h3>Staff Only: Future Post</h3>
-                        {% endif %}
+                    <div class="admin-rights">
+                        <a href='{{ obj.0.get_update_url }}' class="ui button tiny">Edit</a>
+                        <a href='{{ obj.0.get_delete_url }}' class="ui button tiny">Delete</a>
+                    </div>
+                    {% if obj.0.draft %}
+                    <h3>Staff only: Draft</h3>
                     {% endif %}
-              
+                    {% if obj.0.publish > today %}
+                    <h3>Staff Only: Future Post</h3>
+                    {% endif %}
+                    {% endif %}
+
                     {% if obj.0.image %}
-                        <img class="responsive-img" src='{{ obj.0.image.url }}'/>
+                    <img class="responsive-img" src='{{ obj.0.image.url }}'/>
                     {% endif %}
                     <h4>{{ obj.0.get_markdown|truncatechars_html:120 }}</h4>
 
                 </div>
                 <div class="ui grid" id="news-features">
                     <div class="five wide column" style="margin-top: 7px; font-size: 16px; font-weight: 600;">
-                        <a style="cursor: pointer;" post_number='{{ forloop.counter }}' class="like-btn" data-href='{{ obj.0.get_api_like_url }}' data-likes='{{ obj.1 }}'>
+                        <a style="cursor: pointer;" post_number='{{ forloop.counter }}' class="like-btn"
+                           data-href='{{ obj.0.get_api_like_url }}' data-likes='{{ obj.1 }}'>
                             {% if obj.2 %}
-                            <i id='{{ forloop.counter }}up' class="chevron circle up icon" style="color: #04B431; font-size: 15px;"></i>
+                            <i id='{{ forloop.counter }}up' class="chevron circle up icon"
+                               style="color: #04B431; font-size: 15px;"></i>
                             {% else %}
-                            <i id='{{ forloop.counter }}up' class="chevron circle up icon" style="color: #BDBDBD; font-size: 15px;"></i>
+                            <i id='{{ forloop.counter }}up' class="chevron circle up icon"
+                               style="color: #BDBDBD; font-size: 15px;"></i>
                             {% endif %}
                         </a>
 
                         <a id="{{ forloop.counter }}" style="color: #585858;">{{ obj.1 }}</a>
 
-                        <a style="cursor: pointer;" post_number='{{ forloop.counter }}' class="dislike-btn" data-href='{{ obj.0.get_api_dislike_url }}' data-likes='{{ obj.1 }}'>
+                        <a style="cursor: pointer;" post_number='{{ forloop.counter }}' class="dislike-btn"
+                           data-href='{{ obj.0.get_api_dislike_url }}' data-likes='{{ obj.1 }}'>
                             {% if obj.3 %}
-                            <i id='{{ forloop.counter }}down' class="chevron circle down icon item" style="color: #FE2E2E; font-size: 15px;" ></i>
+                            <i id='{{ forloop.counter }}down' class="chevron circle down icon item"
+                               style="color: #FE2E2E; font-size: 15px;"></i>
                             {% else %}
-                            <i id='{{ forloop.counter }}down' class="chevron circle down icon item" style="color: #BDBDBD; font-size: 15px;" ></i>
+                            <i id='{{ forloop.counter }}down' class="chevron circle down icon item"
+                               style="color: #BDBDBD; font-size: 15px;"></i>
                             {% endif %}
                         </a>
 
-                        <a class="item btn btn-default" href="{{ obj.0.get_absolute_url }}" style="margin-left: 20px; color: black">
-                             <i class="comment icon item" style="color: #BDBDBD; font-size: 15px;"></i>
-                            <span style="color: #585858;">{{ obj.0.comments.count }}</span> 
+                        <a class="item btn btn-default" href="{{ obj.0.get_absolute_url }}"
+                           style="margin-left: 20px; color: black">
+                            <i class="comment icon item" style="color: #BDBDBD; font-size: 15px;"></i>
+                            <span style="color: #585858;">{{ obj.0.comments.count }}</span>
                         </a>
                     </div>
                     <div class="eleven wide column">
                         <div class="ui grid">
-                            <div class="fourteen wide column" style="text-align: right;">
-                                <a href="{{ obj.0.get_author }}" class="author-name" style="margin-right:5px;">
-                                    {{ obj.0.author_profile.user }} 
+                            <div class="fourteen wide column" style="text-align: right;padding-right:0">
+                                <a href="{{ obj.0.get_author }}" class="author-name"
+                                   style="color: #333 !important;font-weight: 500;">
+                                    {{ obj.0.author_profile.user }}
                                 </a>
                                 <br>
                                 {{ obj.0.publish }}
                             </div>
                             <div class="two wide column" style="text-align: right;">
-                                <a href="{{ obj.0.get_author }}" class="author-name" >
-                                    {% if obj.0.author_profile.image %}
-                                    <img src="{{ obj.0.author_profile.image.url }}" style="height: 40px; margin-right: 20px;"> 
-                                    {% endif %}
+                                <a href="{{ obj.0.get_author }}" class="author-name">
+                                    <img src="{{ obj.0.author_profile.image.url }}" class="avatar image ui"
+                                         style="margin-top: 5px;">
                                 </a>
-                            </div>                            
+                            </div>
                         </div>
                     </div>
                 </div>
+                <br><br>
                 {% endfor %}
+                <div class="pagination">
+                    <span class="step-links">
+                {% if object_list.has_previous %}
+                    <a href="?{{ page_request_var }}={{ object_list.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.
+                </span>
+
+                {% if object_list.has_next %}
+                    <a href="?{{ page_request_var }}={{ object_list.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">next</a>
+                {% endif %}
+            </span>
+                </div>
             </div>
-            <div class="five wide column">
+            <div class="five wide column" id="right-col-seg">
+                <div style="height: 50px; background-color: #f2f2f2; text-align: center; border: 1px solid rgba(34, 36, 38, 0.15);">
+                    <p style="font-size: 15px; padding: 15px; font-weight: 600;">Топ 5:</p>
+                </div>
+                <div class="ui segment">
+                    <div id="best-authors-news">
+                        <div class="ui grid one-author">
+                            <div class="three wide column">
+                                <a href="{{ rating.0.get_absolute_url }}">
+                                    {% if rating.0.image %}
+                                    <img src="{{ rating.0.image.url }}">
+                                    {% endif %}
+                                </a>
+                            </div>
+                            <div class="thirteen wide column ui grid right-side">
+                                <div class="eight wide column name-author">
+                                    <a href="{{ rating.0.get_absolute_url }}"><span style="color: #333 !important;
+                                        font-weight: 500;">{{ rating.0.user.username }}</span></a>
+                                </div>
+                                <div class="seven wide column rating-autor">
+                                    <span>{{ rating.0.rating }}</span>
+                                </div>
+                                <div class="ui tiny progress success">
+                                    <div class="bar" style="width: 88%;">
+                                        <div class="progress"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui grid one-author">
+                            <div class="three wide column">
+                                <a href="{{ rating.1.get_absolute_url }}">
+                                    {% if rating.1.image %}
+                                    <img src="{{ rating.1.image.url }}">
+                                    {% endif %}
+                                </a>
+                            </div>
+                            <div class="thirteen wide column ui grid right-side">
+                                <div class="eight wide column name-author">
+                                    <a href="{{ rating.1.get_absolute_url }}"><span>{{ rating.1.user.username }}</span></a>
+                                </div>
+                                <div class="seven wide column rating-autor">
+                                    <span>{{ rating.1.rating }}</span>
+                                </div>
+                                <div class="ui tiny progress success">
+                                    <div class="bar" style="width: 58%;">
+                                        <div class="progress"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui grid one-author">
+                            <div class="three wide column">
+                                <a href="{{ rating.2.get_absolute_url }}">
+                                    {% if rating.2.image %}
+                                    <img src="{{ rating.2.image.url }}">
+                                    {% endif %}
+                                </a>
+                            </div>
+                            <div class="thirteen wide column ui grid right-side">
+                                <div class="eight wide column name-author">
+                                    <a href="{{ rating.2.get_absolute_url }}"><span>{{ rating.2.user.username }}</span></a>
+                                </div>
+                                <div class="seven wide column rating-autor">
+                                    <span>{{ rating.2.rating }}</span>
+                                </div>
+                                <div class="ui tiny progress success">
+                                    <div class="bar" style="width: 8%;">
+                                        <div class="progress"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui grid one-author">
+                            <div class="three wide column">
+                                <a href="{{ rating.3.get_absolute_url }}">
+                                    {% if rating.3.image %}
+                                    <img src="{{ rating.3.image.url }}">
+                                    {% endif %}
+                                </a>
+                            </div>
+                            <div class="thirteen wide column ui grid right-side">
+                                <div class="eight wide column name-author">
+                                    <a href="{{ rating.3.get_absolute_url }}"><span>{{ rating.3.user.username }}</span></a>
+                                </div>
+                                <div class="seven wide column rating-autor">
+                                    <span>{{ rating.3.rating }}</span>
+                                </div>
+                                <div class="ui tiny progress success">
+                                    <div class="bar" style="width: 8%;">
+                                        <div class="progress"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui grid one-author">
+                            <div class="three wide column">
+                                <a href="{{ rating.4.get_absolute_url }}">
+                                    {% if rating.4.image %}
+                                    <img src="{{ rating.4.image.url }}">
+                                    {% endif %}
+                                </a>
+                            </div>
+                            <div class="thirteen wide column ui grid right-side">
+                                <div class="eight wide column name-author">
+                                    <a href="{{ rating.4.get_absolute_url }}"><span>{{ rating.4.user.username }}</span></a>
+                                </div>
+                                <div class="seven wide column rating-autor">
+                                    <span>{{ rating.4.rating }}</span>
+                                </div>
+                                <div class="ui tiny progress success">
+                                    <div class="bar" style="width: 8%;">
+                                        <div class="progress"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div style="height: 50px; background-color: #f2f2f2; text-align: center; border: 1px solid rgba(34, 36, 38, 0.15);">
                     <p style="font-size: 15px; padding: 15px; font-weight: 600;">Новости:</p>
                 </div>
@@ -115,84 +257,102 @@
                     </div>
                 </div>
 
+                <div style="height: 50px; background-color: #f2f2f2; text-align: center; border: 1px solid rgba(34, 36, 38, 0.15);">
+                    <p style="font-size: 15px; padding: 15px; font-weight: 600;">Последние действия:</p>
+                </div>
+                <div class="ui segment">
+                    <div id="best-authors-news">
+                        <div class="post">
+                            <a href="{{ action_list.0.user.get_absolute_url }}">{{ action_list.0.user.user }}</a> solved
+                            <a href="{{ action_list.0.problem.get_absolute_url }}">{{ action_list.0.problem.title }}</a>
+                            <div class="ui divider"></div>
+                        </div>
+                        <div class="post">
+                            <a href="{{ action_list.1.user.get_absolute_url }}">{{ action_list.1.user.user }}</a> solved
+                            <a href="{{ action_list.1.problem.get_absolute_url }}">{{ action_list.1.problem.title }}</a>
+                            <div class="ui divider"></div>
+                        </div>
+                        <div class="post">
+                            <a href="{{ action_list.2.user.get_absolute_url }}">{{ action_list.2.user.user }}</a> solved
+                            <a href="{{ action_list.2.problem.get_absolute_url }}">{{ action_list.2.problem.title }}</a>
+                            <div class="ui divider"></div>
+                        </div>
+                        <div class="post">
+                            <a href="{{ action_list.3.user.get_absolute_url }}">{{ action_list.3.user.user }}</a> solved
+                            <a href="{{ action_list.3.problem.get_absolute_url }}">{{ action_list.3.problem.title }}</a>
+                            <div class="ui divider"></div>
+                        </div>
+                        <div class="post">
+                            <a href="{{ action_list.4.user.get_absolute_url }}">{{ action_list.4.user.user }}</a> solved
+                            <a href="{{ action_list.4.problem.get_absolute_url }}">{{ action_list.4.problem.title }}</a>
+                            <div class="ui divider"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
 
-        <div class="pagination">
-            <span class="step-links">
-                {% if object_list.has_previous %}
-                    <a href="?{{ page_request_var }}={{ object_list.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">previous</a>
-                {% endif %}
-
-                <span class="current">
-                    Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.
-                </span>
-
-                {% if object_list.has_next %}
-                    <a href="?{{ page_request_var }}={{ object_list.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">next</a>
-                {% endif %}
-            </span>
-        </div>
     </div>
 </div>
 
+
 <script>
-     $(document).ready(function(){
-      $(".like-btn").click(function(e){
-        e.preventDefault()
-        var this_ = $(this)
-        var postNumber = "#" + this_.attr("post_number")
-        var likeUrl = this_.attr("data-href")
-        var likeCount = parseInt($(postNumber).text())
-        if (likeUrl){
-           $.ajax({
-            url: likeUrl,
-            method: "GET",
-            data: {},
-            success: function(data){
-              if (data.like){
-                  $(postNumber).text(data.like_num)
-                  $(postNumber + "down").css('color', '#BDBDBD')
-              } 
-              if(data.up){
-                $(postNumber + "up").css('color', '#04B431')
-              }
-            }, error: function(error){
-              console.log(error)
+    $(document).ready(function () {
+        $(".like-btn").click(function (e) {
+            e.preventDefault()
+            var this_ = $(this)
+            var postNumber = "#" + this_.attr("post_number")
+            var likeUrl = this_.attr("data-href")
+            var likeCount = parseInt($(postNumber).text())
+            if (likeUrl) {
+                $.ajax({
+                    url: likeUrl,
+                    method: "GET",
+                    data: {},
+                    success: function (data) {
+                        if (data.like) {
+                            $(postNumber).text(data.like_num)
+                            $(postNumber + "down").css('color', '#BDBDBD')
+                        }
+                        if (data.up) {
+                            $(postNumber + "up").css('color', '#04B431')
+                        }
+                    }, error: function (error) {
+                        console.log(error)
+                    }
+                })
             }
-          })
-        }
-       
-      })
-      $(".dislike-btn").click(function(e){
-        e.preventDefault()
-        var this_ = $(this)
-        var postNumber = "#" + this_.attr("post_number")
-        var dislikeUrl = this_.attr("data-href")
-        var likeCount = parseInt($(postNumber).text())
-        if (dislikeUrl){
-           $.ajax({
-            url: dislikeUrl,
-            method: "GET",
-            data: {},
-            success: function(data){
-              if (data.dislike){
-                  $(postNumber).text(data.like_num)
-                  $(postNumber + "up").css('color', '#BDBDBD')
-              }
-              if(data.down){
-                $(postNumber + "down").css('color', '#FE2E2E')
-              }
-               
-            }, error: function(error){
-              console.log(error)
+
+        })
+        $(".dislike-btn").click(function (e) {
+            e.preventDefault()
+            var this_ = $(this)
+            var postNumber = "#" + this_.attr("post_number")
+            var dislikeUrl = this_.attr("data-href")
+            var likeCount = parseInt($(postNumber).text())
+            if (dislikeUrl) {
+                $.ajax({
+                    url: dislikeUrl,
+                    method: "GET",
+                    data: {},
+                    success: function (data) {
+                        if (data.dislike) {
+                            $(postNumber).text(data.like_num)
+                            $(postNumber + "up").css('color', '#BDBDBD')
+                        }
+                        if (data.down) {
+                            $(postNumber + "down").css('color', '#FE2E2E')
+                        }
+
+                    }, error: function (error) {
+                        console.log(error)
+                    }
+                })
             }
-          })
-        }
-       
-      })
-  })
+
+        })
+    })
 </script>
 
 {% endblock content %}

@@ -1,27 +1,23 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 
-{% block head_extra %} 
-	{{ form.media }}
+{% block head_extra %}
+{{ form.media }}
 {% endblock head_extra %}
 
 
 {% block content %}
-<style type="text/css">
-    .target-olymps{
-        color: #ff7477 !important;
-    }
-</style>
 
 
 <div class='ui container'>
-	<div class="ui segment" style="width:50%;line-height: 40px;">
-		<h1>Create Olympiad</h1>
-		<form method='POST' action='' enctype='multipart/form-data'>{% csrf_token %}
-			{{ form|crispy }}
-			<input type='submit' class='ui button green' style="margin-top: 20px;margin-bottom: 20px" value='Create Olymp' />
-		</form>
-	</div>
+    <div class="ui segment" style="width:50%;line-height: 40px;">
+        <h1>Create Olympiad</h1>
+        <form method='POST' action='' enctype='multipart/form-data'>{% csrf_token %}
+            {{ form|crispy }}
+            <input type='submit' class='ui button green' style="margin-top: 20px;margin-bottom: 20px"
+                   value='Create Olymp'/>
+        </form>
+    </div>
 
 </div>
 {% endblock content %}

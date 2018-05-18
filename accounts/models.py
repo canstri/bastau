@@ -40,8 +40,10 @@ class Profile(models.Model):
     height_field = models.IntegerField(default=0)
     width_field = models.IntegerField(default=0)
     skills = ArrayField(ArrayField(models.TextField()), default=[['number theory', '0'], ['inequalities', '0'], ['polynoms', '0'], ['functions', '0']])
-    number_theory_skills = ArrayField(ArrayField(models.TextField()), default=[['Четность', '0'], ['Делимость', '0']])
+    number_theory_skills = ArrayField(ArrayField(models.TextField()), default=[['Четность', '0'], ['Делимость', '0'], ['Индукция', '0']])
     inequalities_skills = ArrayField(ArrayField(models.TextField()), default=[['AM-GM', '0'], ['Неравенство Коши', '0']])
+    polynom_skills = ArrayField(ArrayField(models.TextField()), default=[['ФСУ', '0'], ['Замена переменных', '0']])
+    function_skills = ArrayField(ArrayField(models.TextField()), default=[['Переменные', '0']])
     achievments = ArrayField(models.TextField(), default=['None'])
     class Meta:
         ordering = ["-rating"]

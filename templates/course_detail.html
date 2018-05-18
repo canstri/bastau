@@ -19,60 +19,67 @@
         <i class="arrow left icon"></i>
         Back to course list
     </a>
-    <div>
-        <div class="ui horizontal list course-info">
-            <h1 class="item title-course">{{ instance.title }} </h1>
-            <div class="item star-rating">
-                {% if is_course_passed == 0 %}
-                <i class="icon star outline"></i><i class="icon star outline"></i><i class="icon star outline"></i>
+    <div class="ui grid course-grid">
+        <div class="five wide column">
+            <div class="ui horizontal list course-info">
+                <h1 class="item title-course">{{ instance.title }} </h1>
+                <div class="item star-rating">
+                    {% if is_course_passed == 0 %}
+                    <i class="icon star outline"></i><i class="icon star outline"></i><i class="icon star outline"></i>
+                    {% endif %}
+                    {% if is_course_passed == 1 %}
+                    <i class="icon star "></i><i class="icon star outline"></i><i class="icon star outline"></i>
+                    {% endif %}
+                    {% if is_course_passed == 2 %}
+                    <i class="icon star "></i><i class="icon star "></i><i class="icon star outline"></i>
+                    {% endif %}
+                    {% if is_course_passed == 3 %}
+                    <i class="icon star "></i><i class="icon star "></i><i class="icon star "></i>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="course-lvl">
+                Level:
+                {% if instance.level == 1 %}
+                <span href="">Easy</span>
                 {% endif %}
-                {% if is_course_passed == 1 %}
-                <i class="icon star "></i><i class="icon star outline"></i><i class="icon star outline"></i>
+                {% if instance.level == 2 %}
+                <span href="">Middle</span>
                 {% endif %}
-                {% if is_course_passed == 2 %}
-                <i class="icon star "></i><i class="icon star "></i><i class="icon star outline"></i>
-                {% endif %}
-                {% if is_course_passed == 3 %}
-                <i class="icon star "></i><i class="icon star "></i><i class="icon star "></i>
+                {% if instance.level == 3 %}
+                <span href="">Hard</span>
                 {% endif %}
             </div>
-        </div>
 
-
-        <div class="course-lvl">
-            Level:
-            {% if instance.level == 1 %}
-                <span href="">Easy</span>
-            {% endif %}
-            {% if instance.level == 2 %}
-                <span href="">Middle</span>
-            {% endif %}
-            {% if instance.level == 3 %}
-                <span href="">Hard</span>
-            {% endif %}
-        </div>
-
-        {% if staff == "yes" %} 
+            {% if staff == "yes" %}
             <a href='{{ instance.get_update_url }}' class="ui tiny button">Edit</a>
             <a href='{{ instance.get_delete_url }}' class="ui tiny button">Delete</a>
-        {% endif %}
-        <div class="course-content">
-            <p>{{ instance.content }}</p>
+            {% endif %}
+            <div class="course-content">
+                <p>{{ instance.content }}</p>
+            </div>
+
         </div>
-        {% if instance.image %}
+        <div class="eleven wide column">
+
+            {% if instance.image %}
             <img src='{{ instance.image.url }}'/>
-        {% endif %}
+            {% endif %}
+        </div>
     </div>
+
+
     <div class="ui divider"></div>
 
     <h2 class="text-center select-label">Select lecture</h2>
     <div class="main-d">
         <div class="desk-main">
             {% for obj in array_of_user %}
-            <div class="ui card text-center"  id="course-details">
-                {% if obj.0.draft %}<h4 style="color: red">Staff only: Draft</h4>{% endif %} {% if obj.0.publish > today %}<h4>Staff Only: Future Olympiad</h4>{% endif %}
+            <div class="ui card text-center" id="course-details">
+                {% if obj.0.draft %}<h4 style="color: red">Staff only: Draft</h4>{% endif %}
                 {% if obj.0.image %}
-                <a class="oneline" href='{{ obj.0.get_absolute_url }}'><img class="olymp-image" src='{{ obj.0.image.url }}'/></a>
+                <a class="oneline" href='{{ obj.0.get_absolute_url }}'><img class="olymp-image"
+                                                                            src='{{ obj.0.image.url }}'/></a>
                 {% endif %}
 
                 <a class="post-title" href='{{ obj.0.get_absolute_url }}'>{{ forloop.counter }}</a>
@@ -86,7 +93,7 @@
                     {% if obj.1.passed == 2 %}
                     <i class="icon star"></i><i class="icon star"></i><i class="icon star outline"></i>
                     {% endif %}
-                    {% if obj.1.passed  == 3 %}
+                    {% if obj.1.passed == 3 %}
                     <i class="icon star "></i><i class="icon star "></i><i class="icon star "></i>
                     {% endif %}
                 </div>
@@ -105,28 +112,22 @@
     </div>
 
 
-
-
-
-
-
     {% if staff == "yes" %}
-    <br> <p></p>
-    <div id="lecture-create" style="margin-top: 200px;">
+    <div id="lecture-create">
         <div class="ui form" id="course-submit">
             <h3>Staff only: Create new lecture</h3>
             <form class="comment_form" method="POST" action='' enctype='multipart/form-data'> {% csrf_token %}
 
                 {{ form|crispy }}
                 <div class="ui input">
-                    <input type='submit' class='ui button green' style="margin-top:20px" value='Create Lecture' >
+                    <input type='submit' class='ui button green' style="margin-top:20px" value='Create Lecture'>
                 </div>
             </form>
 
         </div>
     </div>
 
-    {% endif %}   
+    {% endif %}
 
 
 </div>

@@ -17,6 +17,12 @@ from lectures.forms import LectureForm
 
 from accounts.models import Profile
 
+from django.contrib.auth.models import User
+
+from django.shortcuts import render, redirect
+
+from accounts.forms import UserLoginForm, UserRegisterForm, ProfileForm
+
 
 
 
@@ -124,6 +130,18 @@ def course_detail(request, slug=None):
     if percent >= 0.6:
         is_course_passed.passed = 3
         is_course_passed.save()
+
+    next = request.GET.get('next')
+    title = "Login"
+    log_form = UserLoginForm(request.POST or None)
+    if log_form.is_valid():
+        username = log_form.cleaned_data.get("username")
+        password = log_form.cleaned_data.get('password')
+        user = authenticate(username=username, password=password)
+        login(request, user)
+        if next:
+            return redirect(next)
+        return redirect("/")
 
     context = {
         "title": instance.title,

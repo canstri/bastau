@@ -3,20 +3,21 @@
 
 
 {% block content %}
-<div class='ui container'>
+<div class='ui container' id="forms">
 	<div class="ui one column centered grid">
 		<div class="column six wide">
-
-			<h1 style="text-align: center;">{{ title }}</h1>
+			<h1 class="text-center">{{ title }}</h1>
 			<form method='POST' action='' enctype='multipart/form-data' CLASS="ui form">{% csrf_token %}
-				<div class="ui input" style="display:block;">
+				<div class="ui input login-part text-center">
 					{{ form }}
 				</div>
-				<input type='submit' class='ui button green'style="margin-top:20px;width:100%;" value='{{ title }}' />
+				<input type='submit' class='ui button green btn-go' value='{{ title }}' />
 			</form>
-
 		</div>
 	</div>
 
 </div>
+
 {% endblock content %}
+
+

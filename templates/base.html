@@ -2,239 +2,269 @@
 <!--DOCTYPE html -->
 <html>
 <head>
-	<meta charset="utf-8">
-	<title>{% block head_title %}Bastau{% endblock head_title %}</title>
+    <meta charset="utf-8">
+    <title>{% block head_title %}Bastau{% endblock head_title %}</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
+    <!-- CSS -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500&amp;subset=cyrillic" rel="stylesheet">
+    <link rel='stylesheet' href='{% static "css/app.css" %}'/>
+    <link rel="shortcut icon" href='{% static "images/favicon.ico" %}' type="image/png">
 
-	<!-- CSS -->
-	<link href="https://fonts.googleapis.com/css?family=Roboto:400,500&amp;subset=cyrillic" rel="stylesheet">
-	<link rel='stylesheet' href='{% static "css/app.css" %}' />
-	<link rel="shortcut icon" href='{% static "images/favicon.ico" %}' type="image/png">
+    <!-- Charts -->
 
-	<!-- Charts -->
-
-	<script src="https://code.highcharts.com/highcharts.js"></script>
-	<script src="https://code.highcharts.com/modules/series-label.js"></script>
-	<script src="https://code.highcharts.com/modules/exporting.js"></script>
-	<script src="https://code.highcharts.com/modules/export-data.js"></script>
-
-
-	<!-- Statistics -->
-
-	<script src="http://code.highcharts.com/highcharts-more.js"></script>
-	<script src="http://code.highcharts.com/modules/solid-gauge.src.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
 
 
-	<link href="https://fonts.googleapis.com/css?family=Anton|Francois+One|Kanit|Oswald" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Changa:800|Montserrat:900" rel="stylesheet">
+    <!-- Statistics -->
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-	<script src='{% static "js/scripts.js" %}'></script>
+    <script src="http://code.highcharts.com/highcharts-more.js"></script>
+    <script src="http://code.highcharts.com/modules/solid-gauge.src.js"></script>
 
 
-	<style>
-		{% block style %}{% endblock style %}
-	</style>
-	{% block head_extra %} {% endblock head_extra %}
+    <link href="https://fonts.googleapis.com/css?family=Anton|Francois+One|Kanit|Oswald" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Changa:800|Montserrat:900" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src='{% static "js/scripts.js" %}'></script>
+
+    <link rel="stylesheet" type="text/css" href='{% static "css/tooltipster/tooltipster.bundle.min.css" %}'/>
+
+    <script type="text/javascript" src='{% static "js/tooltipster/tooltipster.bundle.min.js" %}'></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.tooltip').tooltipster({
+                theme: 'tooltipster-shadow'
+            });
+        });
+    </script>
+    <style>
+        {
+        %
+        block
+        style
+        %
+        }
+        {
+        %
+        endblock
+        style
+        %
+        }
+    </style>
+    {% block head_extra %} {% endblock head_extra %}
 </head>
 
 <body>
 
-<div class="ui inverted menu" id="main-menu">
-	<div class="ui container">
-		<a href='{% url "news:list" %}' class="header item logo">
-			BASTAU ACADEMY
-		</a>
-<!--         <a class="item" href='{% url "news:list" %}'>
-            News
-        </a> -->
-        <a class="item" href='{% url "olymps:list" %}' >
+<div class="ui stackable inverted menu" id="main-menu">
+    <div class="ui container">
+        <a href='{% url "news:list" %}' class="header item logo">
+            BASTAU ACADEMY
+        </a>
+        <a class="item" href='{% url "olymps:list" %}'>
             Olympiads
         </a>
         <a class="item" href='{% url "ratings" %}'>
             Ratings
         </a>
-        <a class="item" href='{% url "courses:list" %}' >
+        <a class="item"
+           {% if user.is_authenticated %}
+           href='{% url "courses:list" %}'
+           {% else %}
+           onclick="$('#no-access-modal').modal('show')"
+           {% endif %}>
             Courses
         </a>
-        <a class="item" href='{% url "squads:list" %}' >
+        <a class="item"
+           {% if user.is_authenticated %}
+           href='{% url "squads:list" %}'
+           {% else %}
+           onclick="$('#no-access-modal').modal('show')"
+           {% endif %}>
             Groups
         </a>
-        <a class="item" href='{% url "hashtags:all" %}' >
+        <a class="item"
+           {% if user.is_authenticated %}
+           href='{% url "hashtags:all" %}'
+           {% else %}
+           onclick="$('#no-access-modal').modal('show')"
+           {% endif %}>
             Problems
         </a>
-        <div class="right menu">
-        	<div class="ui right aligned category search item search-block">
-                <div class="ui transparent icon input">
-                    <input class="prompt" type="text" placeholder="Search">
-                    <i class="search link icon"></i>
-                </div>
-                <div class="results"></div>
-            </div>
 
-            <div class="item">
-				<div class="ui floating dropdown labeled icon">
-					<i class="bell outline icon notify" style="font-size: 18px;"></i>
-					<div class="menu">
-						<div class="header">
-							Notifications
-						</div>
-						<div class="scrolling menu">
-							<div class="item">
-								<div class="ui red empty circular label"></div>
-								John Weak added you to his friends list.
-							</div>
-							<div class="item">
-								<div class="ui blue empty circular label"></div>
-								Announcement has been reported.
-							</div>
-							<div class="item">
-								<div class="ui black empty circular label"></div>
-								Kuanysh Oteu changed his status to Married.
-							</div>
-							<div class="item">
-								<div class="ui purple empty circular label"></div>
-								Kuanysh Oteu does not recognize his name.
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-            {% if request.user.is_authenticated %}
-                <div class="ui floating dropdown labeled icon" style="padding: 2px;">
-					<img src="{{ profile.image.url }}" style="height: 40px;">
-					<div class="menu">
-						<div class="scrolling menu">
-							<div class="item">
-								<a href='{{ profile.get_absolute_url }}' style="color: #2E9AFE"><h4><i class="user icon"></i>{{ profile.user }}</h4></a>
-							</div>						
-							<div class="item">
-					            <a href='{% url "logout" %}' style="color: black"><i class="power off icon"></i> Logout</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			{% else %}
-            <div class="item">
-                <a href='{% url "login" %}' class="ui button tiny" onclick="$('#login-modal').modal('show')">Login</a>
+
+        <div class="item tooltip mobile-hide" title="This function is under development!">
+            <div class="ui floating dropdown labeled icon">
+                <i class="bell outline icon notify" style="font-size: 18px;"></i>
+                <!--	<div class="menu">
+                        <div class="header">
+                            Notifications
+                        </div>
+                        <div class="scrolling menu">
+                            <div class="item">
+                                <div class="ui red empty circular label"></div>
+                                John Weak added you to his friends list.
+                            </div>
+                            <div class="item">
+                                <div class="ui blue empty circular label"></div>
+                                Announcement has been reported.
+                            </div>
+                            <div class="item">
+                                <div class="ui black empty circular label"></div>
+                                Kuanysh Oteu changed his status to Married.
+                            </div>
+                            <div class="item">
+                                <div class="ui purple empty circular label"></div>
+                                Kuanysh Oteu does not recognize his name.
+                            </div>
+                        </div>
+                    </div>-->
             </div>
-            <div class="item no-before" style="padding-left: 0px;">
+        </div>
+        {% if request.user.is_authenticated %}
+        <div class="right menu">
+            <div class="ui floating dropdown labeled icon" style="padding: 8px 0px;">
+                <i class="user circle icon" style="    color: #fff;
+					font-size: 28px;
+					position: relative;
+					top: 4px;
+					left: 2px;"></i>
+                <div class="menu" style="margin-top: 0 !important;left: -44px;">
+                    <div class="scrolling menu">
+                        <div class="item">
+                            <a href='{{ profile.get_absolute_url }}' style="  color: #333 !important;font-weight: 500;">
+                                <h4><i class="user icon"></i>{{ profile.user }}</h4></a>
+                        </div>
+                        <div class="item">
+                            <a href='{% url "logout" %}' style="color: black"><i class="power off icon"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% else %}
+        <div class="right menu">
+            <div class="item">
+                <a class="ui button tiny" onclick="$('#login-modal').modal('show')">Login</a>
+            </div>
+            <div class="item no-before">
                 <a class="ui button tiny" onclick="$('#registration-modal').modal('show')">Sign up</a>
             </div>
-            {% endif %}
         </div>
-	</div>
+
+        {% endif %}
+    </div>
 </div>
 
 
+{% include "messages_display.html" %}{% include "modals/no-access.html" %}
 
-
-
-
-
-{% include "messages_display.html" %}
-{% include "modals/registration.html" %}
 <div class='content-container'>
-	{% block content %}{% endblock content %}
+    {% block content %}{% endblock content %}
 </div>
-	
 
 
 <div class="ui inverted vertical footer segment" id="footer">
-	<div class="ui center aligned container">
-		<div class="ui stackable inverted divided grid">
-			<div class="seven wide column">
-				<h4 class="ui inverted header">Start from yourself</h4>
-				<p>Your motivation creates a great opportunity to be on the top of the world</p>
-			</div>
-			<div class="three wide column">
-				<h4 class="ui inverted header">About</h4>
-				<div class="ui inverted link list">
-					<a href="#" class="item">News</a>
-					<a href="#" class="item">Our team</a>
-					<a href="#" class="item">Our supporters</a>
-					<a href="#" class="item">Our contributors</a>
-				</div>
-			</div>
-			<div class="three wide column">
-				<h4 class="ui inverted header">About us</h4>
+    <div class="ui center aligned container">
+        <div class="ui stackable inverted divided grid">
+            <div class="seven wide column">
+                <h4 class="ui inverted header">Start from yourself</h4>
+                <p>Your motivation creates a great opportunity to be on the top of the world</p>
+            </div>
+            <div class="three wide column">
+                <h4 class="ui inverted header">About</h4>
+                <div class="ui inverted link list">
+                    <a href="#" class="item">News</a>
+                    <a href="#" class="item">Our team</a>
+                    <a href="#" class="item">Our supporters</a>
+                    <a href="#" class="item">Our contributors</a>
+                </div>
+            </div>
+            <div class="three wide column">
+                <h4 class="ui inverted header">About us</h4>
 
-				<div class="ui inverted link list">
-					<a class="item" href='{% url "contacts" %}'>Contacts</a>
-				</div>
-			</div>
-			<div class="three wide column">
-				<h4 class="ui inverted header">Subjects</h4>
-				<div class="ui inverted link list">
-					<a href="#" class="item">Math for silly</a>
-					<a href="#" class="item">Math for old</a>
-					<a href="#" class="item">Math for animals</a>
-					<a href="#" class="item">Math for olympiads</a>
-				</div>
-			</div>
+                <div class="ui inverted link list">
+                    <a class="item" href='{% url "contacts" %}'>Contacts</a>
+                </div>
+            </div>
+            <div class="three wide column">
+                <h4 class="ui inverted header">Subjects</h4>
+                <div class="ui inverted link list">
+                    <a href="#" class="item">Math for silly</a>
+                    <a href="#" class="item">Math for old</a>
+                    <a href="#" class="item">Math for animals</a>
+                    <a href="#" class="item">Math for olympiads</a>
+                </div>
+            </div>
 
-		</div>
-		<div class="ui inverted section divider"></div>
-		<div class="logo-footer centered">Bastau</div>
-		<div class="ui horizontal inverted small divided link list">
-			<a class="item" href="#">Site Map</a>
-			<a class="item" href="#">Contact Us</a>
-			<a class="item" href="#">Terms and Conditions</a>
-			<a class="item" href="#">Privacy Policy</a>
-		</div>
-	</div>
+        </div>
+        <div class="ui inverted section divider"></div>
+        <div class="logo-footer centered">Bastau</div>
+        <div class="ui horizontal inverted small divided link list">
+            <a class="item" href="#">Site Map</a>
+            <a class="item" href="#">Contact Us</a>
+            <a class="item" href="#">Terms and Conditions</a>
+            <a class="item" href="#">Privacy Policy</a>
+        </div>
+    </div>
 </div>
-
-
-
-
 
 
 <script src='https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js'></script>
 
 
 <script type="text/javascript">
-$(document).ready(function(){
-    $(".content-markdown").each(function(){
+    $(document).ready(function () {
+        $(".content-markdown").each(function () {
             var content = $(this).text()
             var markedContent = marked(content)
             $(this).html(markedContent)
-    })
-    $(".post-detail-item img").each(function(){
-            $(this).addClass("img-responsive");
-    })
-    
-    var contentInput = $("#id_content");
-    function setContent(value){
-        var markedContent = marked(value)
-        $("#preview-content").html(markedContent)
-        $("#preview-content img").each(function(){
-            $(this).addClass("img-responsive")
         })
-    }
-    setContent(contentInput.val())
-    contentInput.keyup(function(){
-        var newContent = $(this).val()
-        setContent(newContent)
+        $(".post-detail-item img").each(function () {
+            $(this).addClass("img-responsive");
+        })
+
+        var contentInput = $("#id_content");
+
+        function setContent(value) {
+            var markedContent = marked(value)
+            $("#preview-content").html(markedContent)
+            $("#preview-content img").each(function () {
+                $(this).addClass("img-responsive")
+            })
+        }
+
+        setContent(contentInput.val())
+        contentInput.keyup(function () {
+            var newContent = $(this).val()
+            setContent(newContent)
+        })
+        var titleInput = $("#id_title");
+
+        function setTitle(value) {
+            $("#preview-title").text(value)
+        }
+
+        setTitle(titleInput.val())
+        titleInput.keyup(function () {
+            var newContent = $(this).val()
+            setTitle(newContent)
+        })
+        $(".comment-reply-btn").click(function (event) {
+            event.preventDefault();
+            $(this).parent().parent().next(".comment-reply").fadeToggle();
+        })
+        // preview-title
+        // preview-content
     })
-    var titleInput = $("#id_title");
-    
-    function setTitle(value) {
-        $("#preview-title").text(value)
-    }
-    setTitle(titleInput.val())
-    titleInput.keyup(function(){
-        var newContent = $(this).val()
-        setTitle(newContent)
-    })
-    $(".comment-reply-btn").click(function(event){
-        event.preventDefault();
-        $(this).parent().parent().next(".comment-reply").fadeToggle();
-    })
-    // preview-title
-    // preview-content
-})
 </script>
 
 </body>

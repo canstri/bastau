@@ -186,14 +186,20 @@ class LemmaCode(object):
     def checkInequalities(input_exp): # a>b; a+c > b+c                   3<=5 Correct; 5 >=3
         status =False
         print('hereee')
+        status =False
+
         try:
              input_exp1, input_exp2  = input_exp.split(';')
         except Exception as e:
             return('Wrong')
 
+        try:
+            expressionFirst, statusFirst = splitFinal(input_exp1)
+        except Exception as e:
+            return('Wrong')
 
         try:
-            leftPartOne,rightPartOne,signOne = splitting(input_exp1)
+            leftPartOne,rightPartOne,signOne = splitting(expressionFirst)
         except Exception as e:
             return('Wrong')
 
@@ -202,8 +208,10 @@ class LemmaCode(object):
         except Exception as e:
             return('Wrong')
 
-        subtractionFirst = leftPartOne - rightPartOne
-        subtractionSecond = leftPartTwo - rightPartTwo
+        subtractionFirst = (leftPartOne) - (rightPartOne)
+        subtractionSecond = (leftPartTwo) - (rightPartTwo)
+
+        print(leftPartOne, type(leftPartOne))
 
         divisionLeft = leftPartOne / rightPartOne
         divisionRight = leftPartTwo / rightPartTwo
@@ -220,7 +228,8 @@ class LemmaCode(object):
             and  (signOne!= signTwo)):
             status = True
 
-        if status == True:
+        if statusFirst == 'Correct':
+            if status == True:
                 return('Correct')
         return('Wrong')
 
@@ -401,9 +410,9 @@ class LemmaCode(object):
         return('Wrong')
     def fourInputsEquality(input_exp):
         status =False
-
+       
         try:
-             input_exp1, input_exp2, input_exp3,input_exp4 = input_exp.split(';')
+            input_exp1, input_exp2, input_exp3,input_exp4 = input_exp.split(';')
         except Exception as e:
             return('Wrong')
 
@@ -426,27 +435,32 @@ class LemmaCode(object):
             leftPartTwo,rightPartTwo,signTwo = splitting(expressionSecond)
         except Exception as e:
             return('Wrong')
+
         try:
             expressionThree, statusThree = splitFinal(input_exp3)
         except Exception as e:
             return('Wrong')
-
+     
         try:
             leftPartThree,rightPartThree,signThree = splitting(expressionThree)
         except Exception as e:
             return('Wrong')
+       
         try:
             leftPartFour,rightPartFour,signFour = splitting(input_exp4)
         except Exception as e:
             return('Wrong')
+       
 
         left = leftPartOne + leftPartTwo + leftPartThree
         right = rightPartOne + rightPartTwo + rightPartThree
-
+        
         leftMul = leftPartOne * leftPartTwo * leftPartThree
         rightMul = rightPartOne * rightPartTwo * rightPartThree
+
+        print(leftMul, rightMul)
         #lemma18
-        if(signOne == signTwo == signThree == signFour == '='): # and simplify(input_exp4) == True
+        if(signOne == signTwo == signThree == signFour == '>'): # and simplify(input_exp4) == True
 
             if(sympify(left) == sympify(leftPartFour) and sympify(right) == sympify(rightPartFour)):
                 status = True
@@ -455,7 +469,7 @@ class LemmaCode(object):
                 status = True
 
         if status == True:
-                return('Correct!')
+                return('Correct')
         return('Wrong')
     def powerInequality(input_exp):
         status = False

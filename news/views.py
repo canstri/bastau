@@ -1,3 +1,10 @@
+from django.contrib.auth import (
+    authenticate,
+    get_user_model,
+    login,
+    logout,
+
+    )
 from urllib.parse import quote_plus
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
@@ -15,6 +22,11 @@ from comments.models import Comment
 from comments.forms import CommentForm
 
 from accounts.models import Profile
+from django.contrib.auth.models import User
+
+from django.shortcuts import render, redirect
+
+from accounts.forms import UserLoginForm, UserRegisterForm, ProfileForm
 
 
 def news_create(request):
@@ -38,11 +50,54 @@ def news_create(request):
     if request.user.is_authenticated:
         profile = Profile.objects.get(user = request.user.id)
     
+    next = request.GET.get('next')
+    title = "Login"
+    log_form = UserLoginForm(request.POST or None)
+    if log_form.is_valid():
+        username = log_form.cleaned_data.get("username")
+        password = log_form.cleaned_data.get('password')
+        user = authenticate(username=username, password=password)
+        login(request, user)
+        if next:
+            return redirect(next)
+        return redirect("/")
+
+    reg_form = UserRegisterForm(request.POST or None)
+    if reg_form.is_valid():
+        user = reg_form.save(commit=False)
+        password = reg_form.cleaned_data.get('password')
+        password2 = reg_form.cleaned_data.get('password2')
+        user.set_password(password)
+        user.save()
+        new_user = authenticate(username=user.username, password=password)
+        login(request, new_user)
+
+        for prblm in Problem.objects.filter():
+            c = CheckProblem.objects.get_or_create(
+                user = user.id,
+                problem_id = prblm.id,
+                solved = False,
+            )
+        for crs in Course.objects.filter():
+            c = PassCourse.objects.get_or_create(
+                user = user.id,
+                course_id = crs.id,
+                passed = 0,
+            )
+        profile = Profile.objects.get(user = new_user)
+        profile.rating = 0
+        profile.save()
+        if next:
+            return redirect(next)
+        return redirect("/")
+
     context = {
         "form": form,
         "staff":staff,
         "user":request.user,
         "profile":profile,
+        "log_form":log_form,
+        "reg_form":reg_form,
     }
     return render(request, "news_create.html", context)
 
@@ -101,6 +156,46 @@ def news_detail(request, slug=None):
     rating = Profile.objects.all()
     news_list = Post.objects.active() #.order_by("-timestamp")
 
+    next = request.GET.get('next')
+    title = "Login"
+    log_form = UserLoginForm(request.POST or None)
+    if log_form.is_valid():
+        username = log_form.cleaned_data.get("username")
+        password = log_form.cleaned_data.get('password')
+        user = authenticate(username=username, password=password)
+        login(request, user)
+        if next:
+            return redirect(next)
+        return redirect("/")
+
+    reg_form = UserRegisterForm(request.POST or None)
+    if reg_form.is_valid():
+        user = reg_form.save(commit=False)
+        password = reg_form.cleaned_data.get('password')
+        password2 = reg_form.cleaned_data.get('password2')
+        user.set_password(password)
+        user.save()
+        new_user = authenticate(username=user.username, password=password)
+        login(request, new_user)
+
+        for prblm in Problem.objects.filter():
+            c = CheckProblem.objects.get_or_create(
+                user = user.id,
+                problem_id = prblm.id,
+                solved = False,
+            )
+        for crs in Course.objects.filter():
+            c = PassCourse.objects.get_or_create(
+                user = user.id,
+                course_id = crs.id,
+                passed = 0,
+            )
+        profile = Profile.objects.get(user = new_user)
+        profile.rating = 0
+        profile.save()
+        if next:
+            return redirect(next)
+        return redirect("/")
     context = {
         "title": instance.title,
         "instance": instance,
@@ -116,6 +211,8 @@ def news_detail(request, slug=None):
         "action_list":action_list,
         "rating":rating,
         "news_list": news_list, 
+        "log_form":log_form,
+        "reg_form":reg_form,
     }
     return render(request, "news_detail.html", context)
 
@@ -166,6 +263,48 @@ def news_list(request):
             disliked = True
         print(l)
         user_posts.append([ppost, l, liked, disliked])
+    
+    next = request.GET.get('next')
+    title = "Login"
+    log_form = UserLoginForm(request.POST or None)
+    if log_form.is_valid():
+        username = log_form.cleaned_data.get("username")
+        password = log_form.cleaned_data.get('password')
+        user = authenticate(username=username, password=password)
+        login(request, user)
+        if next:
+            return redirect(next)
+        return redirect("/")
+
+    reg_form = UserRegisterForm(request.POST or None)
+    if reg_form.is_valid():
+        user = reg_form.save(commit=False)
+        password = reg_form.cleaned_data.get('password')
+        password2 = reg_form.cleaned_data.get('password2')
+        user.set_password(password)
+        user.save()
+        new_user = authenticate(username=user.username, password=password)
+        login(request, new_user)
+
+        for prblm in Problem.objects.filter():
+            c = CheckProblem.objects.get_or_create(
+                user = user.id,
+                problem_id = prblm.id,
+                solved = False,
+            )
+        for crs in Course.objects.filter():
+            c = PassCourse.objects.get_or_create(
+                user = user.id,
+                course_id = crs.id,
+                passed = 0,
+            )
+        profile = Profile.objects.get(user = new_user)
+        profile.rating = 0
+        profile.save()
+        if next:
+            return redirect(next)
+        return redirect("/")
+
     context = {
         "object_list": user_posts, 
         "title": "News",
@@ -176,6 +315,8 @@ def news_list(request):
         "user":request.user,
         "action_list":action_list,
         "rating":rating,
+        "log_form":log_form,
+        "reg_form":reg_form,
     }
     return render(request, "news_list.html", context)
 
@@ -308,3 +449,4 @@ def create_action(profile, problem):
                             user = profile,
                             problem = problem,
                         )
+    print("create_action")

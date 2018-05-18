@@ -1,3 +1,14 @@
+from django.contrib.auth import (
+    authenticate,
+    get_user_model,
+    login,
+    logout,
+
+    )
+
+from django.shortcuts import render, redirect
+
+from accounts.forms import UserLoginForm, UserRegisterForm, ProfileForm
 from urllib.parse import quote_plus
 
 from django.contrib import messages
@@ -44,12 +55,55 @@ def olymp_create(request):
     if request.user.is_staff or request.user.is_superuser:
         staff = "yes"
     
-    
+
+    next = request.GET.get('next')
+    title = "Login"
+    log_form = UserLoginForm(request.POST or None)
+    if log_form.is_valid():
+        username = log_form.cleaned_data.get("username")
+        password = log_form.cleaned_data.get('password')
+        user = authenticate(username=username, password=password)
+        login(request, user)
+        if next:
+            return redirect(next)
+        return redirect("/")
+
+    reg_form = UserRegisterForm(request.POST or None)
+    if reg_form.is_valid():
+        user = reg_form.save(commit=False)
+        password = reg_form.cleaned_data.get('password')
+        password2 = reg_form.cleaned_data.get('password2')
+        user.set_password(password)
+        user.save()
+        new_user = authenticate(username=user.username, password=password)
+        login(request, new_user)
+
+        for prblm in Problem.objects.filter():
+            c = CheckProblem.objects.get_or_create(
+                user = user.id,
+                problem_id = prblm.id,
+                solved = False,
+            )
+        for crs in Course.objects.filter():
+            c = PassCourse.objects.get_or_create(
+                user = user.id,
+                course_id = crs.id,
+                passed = 0,
+            )
+        profile = Profile.objects.get(user = new_user)
+        profile.rating = 0
+        profile.save()
+        if next:
+            return redirect(next)
+        return redirect("/")
+
     context = {
         "form": form,
         "staff":staff,
         "user":request.user,
         "profile":profile,
+        "log_form":log_form,
+        "reg_form":reg_form,
     }
     return render(request, "olymp_create.html", context)
 
@@ -86,6 +140,51 @@ def olymp_detail(request, slug=None):
         for hshtg in prblm.hashtag_list.all():
             ht_array.append(hshtg)
         array_of_user.append([prblm, cp, ht_array])    
+    
+        reg_form = UserRegisterForm(request.POST or None)
+    
+    next = request.GET.get('next')
+    title = "Login"
+    log_form = UserLoginForm(request.POST or None)
+    if log_form.is_valid():
+        username = log_form.cleaned_data.get("username")
+        password = log_form.cleaned_data.get('password')
+        user = authenticate(username=username, password=password)
+        login(request, user)
+        if next:
+            return redirect(next)
+        return redirect("/")
+
+    reg_form = UserRegisterForm(request.POST or None)
+    if reg_form.is_valid():
+        user = reg_form.save(commit=False)
+        password = reg_form.cleaned_data.get('password')
+        password2 = reg_form.cleaned_data.get('password2')
+        user.set_password(password)
+        user.save()
+        new_user = authenticate(username=user.username, password=password)
+        login(request, new_user)
+
+        for prblm in Problem.objects.filter():
+            c = CheckProblem.objects.get_or_create(
+                user = user.id,
+                problem_id = prblm.id,
+                solved = False,
+            )
+        for crs in Course.objects.filter():
+            c = PassCourse.objects.get_or_create(
+                user = user.id,
+                course_id = crs.id,
+                passed = 0,
+            )
+        profile = Profile.objects.get(user = new_user)
+        profile.rating = 0
+        profile.save()
+        if next:
+            return redirect(next)
+        return redirect("/")
+
+
     context = {
         "title": instance.title,
         "instance": instance,
@@ -97,6 +196,8 @@ def olymp_detail(request, slug=None):
         "profile":profile,
         "user":request.user,
         "is_auth": is_auth,
+        "log_form":log_form,
+        "reg_form":reg_form,
     }
     return render(request, "olymp_detail.html", context)
 
@@ -144,6 +245,46 @@ def olymps_list(request):
     rating = Profile.objects.all()
     news_list = Post.objects.active() #.order_by("-timestamp")
 
+    next = request.GET.get('next')
+    log_form = UserLoginForm(request.POST or None)
+    if log_form.is_valid():
+        username = log_form.cleaned_data.get("username")
+        password = log_form.cleaned_data.get('password')
+        user = authenticate(username=username, password=password)
+        login(request, user)
+        if next:
+            return redirect(next)
+        return redirect("/")
+    
+    reg_form = UserRegisterForm(request.POST or None)
+    if reg_form.is_valid():
+        user = reg_form.save(commit=False)
+        password = reg_form.cleaned_data.get('password')
+        password2 = reg_form.cleaned_data.get('password2')
+        user.set_password(password)
+        user.save()
+        new_user = authenticate(username=user.username, password=password)
+        login(request, new_user)
+
+        for prblm in Problem.objects.filter():
+            c = CheckProblem.objects.get_or_create(
+                user = user.id,
+                problem_id = prblm.id,
+                solved = False,
+            )
+        for crs in Course.objects.filter():
+            c = PassCourse.objects.get_or_create(
+                user = user.id,
+                course_id = crs.id,
+                passed = 0,
+            )
+        profile = Profile.objects.get(user = new_user)
+        profile.rating = 0
+        profile.save()
+        if next:
+            return redirect(next)
+        return redirect("/")
+
     context = {
         "object_list": queryset, 
         "title": "Olympiads",
@@ -156,6 +297,8 @@ def olymps_list(request):
         "rating":rating,
         "news_list": news_list,
         "olymps":olymps,         
+        "log_form":log_form,
+        "reg_form":reg_form,
     }
     return render(request, "olymps_list.html", context)
 
@@ -192,12 +335,56 @@ def olymp_update(request, slug=None):
     if request.user.is_authenticated:
         profile = Profile.objects.get(user = request.user.id)
 
+    next = request.GET.get('next')
+    title = "Login"
+    log_form = UserLoginForm(request.POST or None)
+    if log_form.is_valid():
+        username = log_form.cleaned_data.get("username")
+        password = log_form.cleaned_data.get('password')
+        user = authenticate(username=username, password=password)
+        login(request, user)
+        if next:
+            return redirect(next)
+        return redirect("/")
+
+
+    reg_form = UserRegisterForm(request.POST or None)
+    if reg_form.is_valid():
+        user = reg_form.save(commit=False)
+        password = reg_form.cleaned_data.get('password')
+        password2 = reg_form.cleaned_data.get('password2')
+        user.set_password(password)
+        user.save()
+        new_user = authenticate(username=user.username, password=password)
+        login(request, new_user)
+
+        for prblm in Problem.objects.filter():
+            c = CheckProblem.objects.get_or_create(
+                user = user.id,
+                problem_id = prblm.id,
+                solved = False,
+            )
+        for crs in Course.objects.filter():
+            c = PassCourse.objects.get_or_create(
+                user = user.id,
+                course_id = crs.id,
+                passed = 0,
+            )
+        profile = Profile.objects.get(user = new_user)
+        profile.rating = 0
+        profile.save()
+        if next:
+            return redirect(next)
+        return redirect("/")
+
     context = {
         "title": instance.title,
         "instance": instance,
         "form":form,
         "user":request.user,
         "profile":profile,
+        "log_form":log_form,
+        "reg_form":reg_form,
     }
     return render(request, "olymp_create.html", context)
 
@@ -245,6 +432,49 @@ def rating_page(request, slug):
     problem_names = []
     for i in range(0, len(table[0].points)):
         problem_names.append(table[0].points[i][0])
+
+    next = request.GET.get('next')
+    title = "Login"
+    log_form = UserLoginForm(request.POST or None)
+    if log_form.is_valid():
+        username = log_form.cleaned_data.get("username")
+        password = log_form.cleaned_data.get('password')
+        user = authenticate(username=username, password=password)
+        login(request, user)
+        if next:
+            return redirect(next)
+        return redirect("/")
+    
+    reg_form = UserRegisterForm(request.POST or None)
+    if reg_form.is_valid():
+        user = reg_form.save(commit=False)
+        password = reg_form.cleaned_data.get('password')
+        password2 = reg_form.cleaned_data.get('password2')
+        user.set_password(password)
+        user.save()
+        new_user = authenticate(username=user.username, password=password)
+        login(request, new_user)
+
+        for prblm in Problem.objects.filter():
+            c = CheckProblem.objects.get_or_create(
+                user = user.id,
+                problem_id = prblm.id,
+                solved = False,
+            )
+        for crs in Course.objects.filter():
+            c = PassCourse.objects.get_or_create(
+                user = user.id,
+                course_id = crs.id,
+                passed = 0,
+            )
+        profile = Profile.objects.get(user = new_user)
+        profile.rating = 0
+        profile.save()
+        if next:
+            return redirect(next)
+        return redirect("/")
+
+
     context = {
         "table": table,
         "problem_names":problem_names,
@@ -253,5 +483,7 @@ def rating_page(request, slug):
         "user":request.user,
         "is_auth": is_auth,
         "olymp":olymp,
+        "log_form":log_form,
+        "reg_form":reg_form,
     }
     return render(request, "olymp_rating.html", context)
