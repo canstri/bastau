@@ -25,8 +25,9 @@ from accounts.models import Profile
 from django.contrib.auth.models import User
 
 from django.shortcuts import render, redirect
-
 from accounts.forms import UserLoginForm, UserRegisterForm, ProfileForm
+
+from problems.models import Problem
 
 
 def news_create(request):
@@ -268,6 +269,7 @@ def news_list(request):
     title = "Login"
     log_form = UserLoginForm(request.POST or None)
     if log_form.is_valid():
+        print('login start 2')
         username = log_form.cleaned_data.get("username")
         password = log_form.cleaned_data.get('password')
         user = authenticate(username=username, password=password)

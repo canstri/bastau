@@ -223,17 +223,22 @@ def problem_detail(request, id):
             if all_solved == True:
                 print('solved')
                 if check_problem.solved == False: # if problem was not solved before
-                    rating_olymp = RatingOlymp.objects.get(
+                    rating_olymp = ''
+                    try: 
+                        rating_olymp = RatingOlymp.objects.get(
                             user = profile,
                             olymp = content_object,
                         )
-                    for prblm in rating_olymp.points:
-                        if prblm[0] == obj.title:
-                            prblm[1] = '7'
-                    rating_olymp.points[0][1] = str(int(rating_olymp.points[0][1])+7)
-                    rating_olymp.summary = rating_olymp.points[0][1]
-                    rating_olymp.save()
+                        for prblm in rating_olymp.points:
+                            if prblm[0] == obj.title:
+                                prblm[1] = '7'
+                        rating_olymp.points[0][1] = str(int(rating_olymp.points[0][1])+7)
+                        rating_olymp.summary = rating_olymp.points[0][1]
+                        rating_olymp.save()
 
+                    except Exception as e:
+                        print('dd')
+                    
                     for hashtag in obj.hashtags: 
                         hashtag = hashtag[1:]  # cross out "#" from hashtag name
                         number_theory_skill = 0
